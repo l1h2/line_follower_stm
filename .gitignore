@@ -1,0 +1,13 @@
+# Build
+build/
+cmake/
+CMakeFiles/
+Drivers/
+.mxproject
+build.ninja
+cmake_install.cmake
+CMakeCache.txt
+CMakePresets.json
+compile_commands.json
+startup_stm32f411xe.s
+STM32F411XX_FLASH.ld
