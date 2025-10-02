@@ -21,8 +21,9 @@
     X(PID_KP, 1)                 \
     X(PID_KI, 1)                 \
     X(PID_KD, 2)                 \
-    X(PID_KFF, 1)                \
     X(PID_KB, 1)                 \
+    X(PID_KFF, 1)                \
+    X(PID_ACCEL, 2)              \
     X(PID_BASE_PWM, 2)           \
     X(PID_MAX_PWM, 2)            \
     X(TURBINE_PWM, 2)

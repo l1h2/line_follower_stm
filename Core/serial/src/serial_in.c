@@ -65,13 +65,22 @@ static void handle_message(void) {
             set_log_data((bool)current_msg.payload[0]);
             break;
         case PID_KP:
-            set_kp((uint8_t)current_msg.payload[0]);
+            set_pwm_kp((uint8_t)current_msg.payload[0]);
             break;
         case PID_KI:
-            set_ki((uint8_t)current_msg.payload[0]);
+            set_pwm_ki((uint8_t)current_msg.payload[0]);
             break;
         case PID_KD:
-            set_kd(parse_uint16(current_msg.payload));
+            set_pwm_kd(parse_uint16(current_msg.payload));
+            break;
+        case PID_KB:
+            set_pwm_kb((uint8_t)current_msg.payload[0]);
+            break;
+        case PID_KFF:
+            set_pwm_kff((uint8_t)current_msg.payload[0]);
+            break;
+        case PID_ACCEL:
+            set_pwm_accel(parse_uint16(current_msg.payload));
             break;
         case PID_BASE_PWM:
             set_base_pwm(parse_uint16(current_msg.payload));

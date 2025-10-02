@@ -24,24 +24,6 @@ const PidStruct* get_pid(void);
 bool update_pid(void);
 
 /**
- * @brief Set the proportional gain (Kp) value for the PID controller.
- * @param kp The new proportional gain value to be set.
- */
-void set_kp(const uint8_t kp);
-
-/**
- * @brief Set the integral gain (Ki) value for the PID controller.
- * @param ki The new integral gain value to be set.
- */
-void set_ki(const uint8_t ki);
-
-/**
- * @brief Set the derivative gain (Kd) value for the PID controller.
- * @param kd The new derivative gain value to be set.
- */
-void set_kd(const uint16_t kd);
-
-/**
  * @brief Resets the current PWM used to the base PWM value.
  */
 void reset_pwm(void);
@@ -69,5 +51,42 @@ void set_current_pwm(const int16_t pwm);
  * @note This function is used for gradually stopping the motors.
  */
 void set_max_pwm(const uint16_t pwm);
+
+/**
+ * @brief Sets the acceleration step for PWM changes.
+ * @param accel The new acceleration step value to be set.
+ */
+void set_pwm_accel(const uint16_t accel);
+
+/**
+ * @brief Set the proportional gain (Kp) value for the Delta PWM PID controller.
+ * @param kp The new proportional gain value to be set.
+ */
+void set_pwm_kp(const uint8_t kp);
+
+/**
+ * @brief Set the integral gain (Ki) value for the Delta PWM PID controller.
+ * @param ki The new integral gain value to be set.
+ */
+void set_pwm_ki(const uint8_t ki);
+
+/**
+ * @brief Set the derivative gain (Kd) value for the Delta PWM PID controller.
+ * @param kd The new derivative gain value to be set.
+ */
+void set_pwm_kd(const uint16_t kd);
+
+/**
+ * @brief Set the base proportional gain (Kb) value for the Base PWM PID
+ * controller.
+ * @param kb The new base proportional gain value to be set.
+ */
+void set_pwm_kb(const uint8_t kb);
+
+/**
+ * @brief Set the feedforward gain (Kff) value for the Base PWM PID controller.
+ * @param kff The new feedforward gain value to be set.
+ */
+void set_pwm_kff(const uint8_t kff);
 
 #endif  // PID_H

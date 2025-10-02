@@ -5,22 +5,20 @@
 #include "hal/ir_sensors.h"
 #include "sensors/sensors.h"
 
-#define ERROR_WEIGHT 2  // Weight for error calculation
-
-// Average error value
+#define ERROR_WEIGHT 2
 #define AVG_ERROR ((ERROR_WEIGHT * (TOTAL_CENTRAL_SENSORS - 1)) / 2)
 
-// Maximum error value
 #define MAX_ERROR (TOTAL_CENTRAL_SENSORS - 1) * ERROR_WEIGHT - AVG_ERROR
-#define MIN_ERROR (-MAX_ERROR)        // Minimum error value
-#define MAX_ERROR_SUM 127             // Maximum error sum value
-#define MIN_ERROR_SUM -MAX_ERROR_SUM  // Minimum error sum value
+#define MIN_ERROR (-MAX_ERROR)
+#define MAX_ERROR_SUM 1000
+#define MIN_ERROR_SUM -MAX_ERROR_SUM
 
 static ErrorStruct errors = {
     .error = 0,
     .last_error = 0,
     .delta_error = 0,
     .error_sum = 0,
+    .feedforward = 0,
     .error_weight = ERROR_WEIGHT,
     .max_error = MAX_ERROR,
     .min_error = MIN_ERROR,
@@ -63,6 +61,11 @@ static inline void update_delta_error(void) {
 
 static inline void update_last_error(void) { errors.last_error = errors.error; }
 
+static void update_feedforward(void) {
+    // TODO: Implement feedforward based on sensor data
+    errors.feedforward = 0;
+}
+
 static inline bool check_sensor_update(void) {
     if (!is_updating_sensors) {
         start_async_sensors_read();
@@ -83,10 +86,12 @@ void init_errors(void) {
 
 void update_errors(const uint16_t timeout) {
     update_sensors(timeout);
+
     update_error();
     update_error_sum();
     update_delta_error();
     update_last_error();
+    update_feedforward();
 }
 
 bool update_errors_async(void) {
@@ -96,6 +101,7 @@ bool update_errors_async(void) {
     update_error_sum();
     update_delta_error();
     update_last_error();
+    update_feedforward();
 
     return true;
 }

@@ -83,6 +83,8 @@
     "encoders.h": "c",
     "encoder.h": "c",
     "stdlib.h": "c",
-    "motors.h": "c"
+    "motors.h": "c",
+    "delta_pid.h": "c",
+    "base_pwm_pid.h": "c"
   }
 }

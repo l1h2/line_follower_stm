@@ -21,55 +21,58 @@ void send_message(const SerialMessages msg) {
 
     switch (msg) {
         case START:
-            send_data(START, NULL);
+            send_data(msg, NULL);
             break;
         case STOP:
-            send_data(STOP, NULL);
+            send_data(msg, NULL);
             break;
         case STATE:
-            send_data(STATE, (const uint8_t*)&sm->current_state);
+            send_data(msg, (const uint8_t*)&sm->current_state);
             break;
         case RUNNING_MODE:
-            send_data(RUNNING_MODE, (const uint8_t*)&sm->running_mode);
+            send_data(msg, (const uint8_t*)&sm->running_mode);
             break;
         case STOP_MODE:
-            send_data(STOP_MODE, (const uint8_t*)&sm->stop_mode);
+            send_data(msg, (const uint8_t*)&sm->stop_mode);
             break;
         case LAPS:
-            send_data(LAPS, (const uint8_t*)&sm->laps);
+            send_data(msg, (const uint8_t*)&sm->laps);
             break;
         case STOP_TIME: {
             const uint8_t stop_time = (uint8_t)(sm->stop_time / 1000);
-            send_data(STOP_TIME, (const uint8_t*)&stop_time);
+            send_data(msg, (const uint8_t*)&stop_time);
             break;
         }
         case LOG_DATA:
-            send_data(LOG_DATA, (const uint8_t*)&sm->log_data);
+            send_data(msg, (const uint8_t*)&sm->log_data);
             break;
         case PID_KP:
-            send_data(PID_KP, (const uint8_t*)&pid->kp);
+            send_data(msg, (const uint8_t*)&pid->delta_pid->kp);
             break;
         case PID_KI:
-            send_data(PID_KI, (const uint8_t*)&pid->ki);
+            send_data(msg, (const uint8_t*)&pid->delta_pid->ki);
             break;
         case PID_KD:
-            send_data(PID_KD, (const uint8_t*)&pid->kd);
-            break;
-        case PID_KFF:
-            send_data(PID_KFF, (const uint8_t*)&pid->kff);
+            send_data(msg, (const uint8_t*)&pid->delta_pid->kd);
             break;
         case PID_KB:
-            send_data(PID_KB, (const uint8_t*)&pid->kb);
+            send_data(msg, (const uint8_t*)&pid->base_pwm_pid->kp);
+            break;
+        case PID_KFF:
+            send_data(msg, (const uint8_t*)&pid->base_pwm_pid->kff);
+            break;
+        case PID_ACCEL:
+            send_data(msg, (const uint8_t*)&pid->acceleration);
             break;
         case PID_BASE_PWM:
-            send_data(PID_BASE_PWM, (const uint8_t*)&pid->base_pwm);
+            send_data(msg, (const uint8_t*)&pid->base_pwm);
             break;
         case PID_MAX_PWM:
-            send_data(PID_MAX_PWM, (const uint8_t*)&pid->max_pwm);
+            send_data(msg, (const uint8_t*)&pid->max_pwm);
             break;
         case TURBINE_PWM:
             const uint16_t turbine_pwm = get_turbine_pwm();
-            send_data(TURBINE_PWM, (const uint8_t*)&turbine_pwm);
+            send_data(msg, (const uint8_t*)&turbine_pwm);
             break;
         default:
             debug_print("Attempted to send unknown message");

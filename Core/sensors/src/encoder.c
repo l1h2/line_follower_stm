@@ -42,7 +42,7 @@ void clear_encoder_data(void) {
 }
 
 void start_encoders(void) {
-    restart_encoders();
     clear_encoder_data();
+    restart_encoders();
     update_encoder_data();
 }
