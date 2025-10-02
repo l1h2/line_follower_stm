@@ -56,4 +56,10 @@ bool sensors_are_reading(void);
  */
 bool update_sensors_async(void);
 
+/**
+ * @brief Restarts the sensors by clearing their data and reinitializing them.
+ * @note This function is useful for resetting the sensors to a known state.
+ */
+void restart_sensors(void);
+
 #endif  // SENSORS_H

@@ -6,7 +6,6 @@
 // Other modules
 #include "logger/logger.h"
 #include "pid/pid.h"
-#include "sensors/mpu.h"
 #include "sensors/sensors.h"
 #include "serial/serial_base.h"
 #include "state_machine/handlers/state_handler.h"
@@ -23,7 +22,6 @@ void handle_init(void) {
     init_timer();
     init_sensors();
     init_pid();
-    init_mpu();
 
     request_next_state(STATE_IDLE);
 }

@@ -99,6 +99,20 @@ void debug_print_mpu_data(void) {
     print_new_line();
 }
 
+void debug_print_encoder_data(void) {
+    const SensorState *sensors = get_sensors();
+
+    print_string("Pulses [L R]: ");
+    print_signed_word(sensors->encoders->left_encoder);
+    print_string(", ");
+    print_signed_word(sensors->encoders->right_encoder);
+    print_new_line();
+
+    print_string("Distance (mm): ");
+    print_signed_long((int32_t)sensors->encoders->distance);
+    print_new_line();
+}
+
 bool debug_print_diagnostics(void) {
     if (!time_elapsed(last_log_time, LOG_INTERVAL)) return false;
 
@@ -106,12 +120,19 @@ bool debug_print_diagnostics(void) {
     update_errors(SENSOR_READ_DEBUG_TIMEOUT_US);
 
     debug_print_new_line();
+
     debug_print_ir_sensors();
     debug_print_new_line();
+
     debug_print_errors();
     debug_print_new_line();
+
     debug_print_mpu_data();
     debug_print_new_line();
+
+    debug_print_encoder_data();
+    debug_print_new_line();
+
     debug_print(
         "**********************************************************************"
         "*");

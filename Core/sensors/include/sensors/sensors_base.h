@@ -30,12 +30,23 @@ typedef struct {
 } MpuData;
 
 /**
+ * @struct EncoderData
+ * @brief Structure to hold the encoder values.
+ */
+typedef struct {
+    int16_t left_encoder;   // Left encoder value
+    int16_t right_encoder;  // Right encoder value
+    float distance;         // Distance calculated from encoder values
+} EncoderData;
+
+/**
  * @struct SensorState
  * @brief Structure to hold the state of the peripheral sensors.
  */
 typedef struct {
     const IrSensorData* ir_sensors;  // Pointer to the infrared sensor data
     const MpuData* mpu_data;         // Pointer to the MPU data
+    const EncoderData* encoders;     // Pointer to the encoder data
 } SensorState;
 
 #endif  // SENSORS_BASE_H

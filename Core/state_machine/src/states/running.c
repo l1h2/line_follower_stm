@@ -1,6 +1,7 @@
 #include "state_machine/states/running.h"
 
 #include "logger/logger.h"
+#include "sensors/sensors.h"
 #include "state_machine/handlers/config_handler.h"
 #include "state_machine/handlers/state_handler.h"
 #include "turbine/turbine.h"
@@ -12,6 +13,7 @@
 
 void handle_running(const StateMachine* sm) {
     debug_print("RUNNING State: Choosing running mode");
+    restart_sensors();
 
     switch (sm->running_mode) {
         case RUNNING_INIT:

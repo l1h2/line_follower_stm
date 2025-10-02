@@ -143,12 +143,18 @@ void debug_print_errors(void);
 void debug_print_mpu_data(void);
 
 /**
+ * @brief Prints the encoder data, including left and right encoder values.
+ */
+void debug_print_encoder_data(void);
+
+/**
  * @brief Prints periodic diagnostics information.
  * @return true if diagnostics were printed, false otherwise.
- * @note This function uses a predefined interval (LOG_INTERVAL) to limit the
- * frequency of logs.
- * @note This function also updates all data used in the diagnostics printout.
- * , so it doesn't need to be called in a separate update function.
+ * @note This function uses a predefined interval (LOG_INTERVAL) to limit
+ * the frequency of logs.
+ * @note This function also updates all data used in the diagnostics
+ * printout. , so it doesn't need to be called in a separate update
+ * function.
  */
 bool debug_print_diagnostics(void);
 

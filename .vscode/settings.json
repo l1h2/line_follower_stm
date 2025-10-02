@@ -79,6 +79,8 @@
     "stm32f4xx_ll_spi.h": "c",
     "stm32f4xx_ll_bus.h": "c",
     "stm32f4xx_ll_rcc.h": "c",
-    "mpu.h": "c"
+    "mpu.h": "c",
+    "encoders.h": "c",
+    "encoder.h": "c"
   }
 }
