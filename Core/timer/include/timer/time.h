@@ -5,6 +5,11 @@
 #include <stdint.h>
 
 /**
+ * @brief Initializes the timer module and system timer (SysTick).
+ */
+void init_timer(void);
+
+/**
  * @brief Returns the current system time.
  *
  * @return The current system time in milliseconds.

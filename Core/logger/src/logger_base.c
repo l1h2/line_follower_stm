@@ -4,6 +4,8 @@
 
 #include "hal/usart.h"
 
+static const char HEX_CHARS[] = "0123456789ABCDEF";
+
 void print_char(const char c) { usart_transmit((uint8_t)c); }
 
 void print_bit(const uint8_t bit_position, const uint8_t byte) {
@@ -16,6 +18,11 @@ void print_byte(const uint8_t byte) {
     usart_transmit('0' + byte / 100);
     usart_transmit('0' + (byte % 100) / 10);
     usart_transmit('0' + byte % 10);
+}
+
+void print_hex(const uint8_t byte) {
+    usart_transmit(HEX_CHARS[(byte >> 4) & 0x0F]);  // High nibble
+    usart_transmit(HEX_CHARS[byte & 0x0F]);         // Low nibble
 }
 
 void print_signed_byte(int8_t byte) {

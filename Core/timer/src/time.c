@@ -2,6 +2,8 @@
 
 #include "hal/timer.h"
 
+void init_timer(void) { init_system_timer(); }
+
 uint32_t time(void) { return get_system_time(); }
 
 uint32_t time_us(void) { return get_system_time_us(); }

@@ -26,6 +26,12 @@ void print_bit(const uint8_t bit_position, const uint8_t byte);
 void print_byte(const uint8_t byte);
 
 /**
+ * @brief Prints a byte in hexadecimal format to the USART.
+ * @param byte The byte to print.
+ */
+void print_hex(const uint8_t byte);
+
+/**
  * @brief Prints a signed byte in decimal format to the USART.
  * @param byte The byte to print.
  */

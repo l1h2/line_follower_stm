@@ -3,6 +3,7 @@
     "clangd",
     "CLKSOURCE",
     "cubemx",
+    "DLPF",
     "endforeach",
     "GPIOA",
     "GPIOB",

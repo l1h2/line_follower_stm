@@ -32,6 +32,14 @@ void debug_print_bit(const uint8_t bit_position, const uint8_t byte);
 void debug_print_byte(const uint8_t byte);
 
 /**
+ * @brief Debug wrapper for the print_hex function.
+ * @param byte The byte to print in hexadecimal format.
+ * @note This function can be used to add print statements that won't be
+ * compiled without the DEBUG_MODE directive.
+ */
+void debug_print_hex(const uint8_t byte);
+
+/**
  * @brief Debug wrapper for the print_signed_byte function.
  * @param byte The signed byte to print.
  * @note This function can be used to add print statements that won't be

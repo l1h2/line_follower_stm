@@ -1,22 +1,24 @@
 #ifndef HAL_SPI_H
 #define HAL_SPI_H
 
+#include <stdbool.h>
 #include <stdint.h>
 
-#define ACCEL_REG_X 0x3B
-#define ACCEL_REG_Y 0x3D
-#define ACCEL_REG_Z 0x3F
-#define TEMP_REG 0x41
-#define GYRO_REG_X 0x43
-#define GYRO_REG_Y 0x45
-#define GYRO_REG_Z 0x47
+#define ACCEL_REG_X 0x3B  // Starting register for accelerometer data
+#define ACCEL_REG_Y 0x3D  // Register for accelerometer Y data
+#define ACCEL_REG_Z 0x3F  // Register for accelerometer Z data
+#define TEMP_REG 0x41     // Register for temperature data
+#define GYRO_REG_X 0x43   // Starting register for gyroscope data
+#define GYRO_REG_Y 0x45   // Register for gyroscope Y data
+#define GYRO_REG_Z 0x47   // Register for gyroscope Z data
 
-#define TOTAL_REGISTERS 14
+#define TOTAL_REGISTERS 14  // Total registers to read for accel, temp, gyro
 
 /**
  * @brief Initialize the SPI peripheral.
+ * @return true if initialization was successful, false otherwise.
  */
-void init_spi(void);
+bool init_spi(void);
 
 /**
  * @brief Read multiple registers from the MPU-6050 sensor via SPI.

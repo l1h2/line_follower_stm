@@ -15,6 +15,7 @@ void debug_print_bit(const uint8_t bit_position, const uint8_t byte) {
     print_bit(bit_position, byte);
 }
 void debug_print_byte(const uint8_t byte) { print_byte(byte); }
+void debug_print_hex(const uint8_t byte) { print_hex(byte); }
 void debug_print_signed_byte(int8_t byte) { print_signed_byte(byte); }
 void debug_print_word(const uint16_t word) { print_word(word); }
 void debug_print_signed_word(int16_t word) { print_signed_word(word); }
@@ -104,10 +105,10 @@ bool debug_print_diagnostics(void) {
     last_log_time = time();
     update_errors(SENSOR_READ_DEBUG_TIMEOUT_US);
 
-    // debug_print_new_line();
-    // debug_print_ir_sensors();
-    // debug_print_new_line();
-    // debug_print_errors();
+    debug_print_new_line();
+    debug_print_ir_sensors();
+    debug_print_new_line();
+    debug_print_errors();
     debug_print_new_line();
     debug_print_mpu_data();
     debug_print_new_line();

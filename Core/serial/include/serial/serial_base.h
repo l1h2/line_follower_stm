@@ -74,6 +74,11 @@ typedef struct {
 } SerialMessage;
 
 /**
+ * @brief Initializes the serial communication module.
+ */
+void init_serial(void);
+
+/**
  * @brief Create a SerialMessage struct.
  * @param message The type of the serial message.
  * @param payload Pointer to the payload data.

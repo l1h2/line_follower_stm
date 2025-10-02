@@ -17,6 +17,8 @@ static inline uint8_t get_checksum(const SerialMessages msg,
     return c;
 }
 
+void init_serial(void) { init_usart(); }
+
 SerialMessage serial_message(const SerialMessages message,
                              const uint8_t* const payload) {
     SerialMessage msg;

@@ -1,9 +1,22 @@
 #include "sensors/mpu.h"
 
+#include <stdint.h>
+
 #include "hal/spi.h"
+#include "logger/logger.h"
 
 static MpuData mpu_data_struct = {0};
 static uint8_t mpu_data[TOTAL_REGISTERS] = {0};
+
+void init_mpu(void) {
+    debug_print("Attempting to initialize MPU peripheral...");
+
+    if (init_spi()) {
+        debug_print("MPU initialized successfully");
+    } else {
+        debug_print("Failed to initialize MPU");
+    }
+}
 
 const MpuData* get_mpu_data(void) { return &mpu_data_struct; }
 

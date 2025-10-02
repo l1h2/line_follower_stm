@@ -10,6 +10,7 @@
 #define debug_print_char(c) ((void)0)
 #define debug_print_bit(bit_position, byte) ((void)0)
 #define debug_print_byte(byte) ((void)0)
+#define debug_print_hex(byte) ((void)0)
 #define debug_print_signed_byte(byte) ((void)0)
 #define debug_print_word(word) ((void)0)
 #define debug_print_signed_word(word) ((void)0)
