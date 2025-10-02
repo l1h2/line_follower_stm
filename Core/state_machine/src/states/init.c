@@ -1,10 +1,7 @@
 #include "state_machine/states/init.h"
 
-// HAL includes
-#include "hal/pwm.h"
-
-// Other modules
 #include "logger/logger.h"
+#include "motors/motors.h"
 #include "pid/pid.h"
 #include "sensors/sensors.h"
 #include "serial/serial_base.h"
@@ -14,13 +11,10 @@
 void handle_init(void) {
     debug_print("INIT State: Initializing state machine");
 
-    // HAL initialization
-    init_pwm();
-
-    // Other modules initialization
     init_serial();
     init_timer();
     init_sensors();
+    init_motors();
     init_pid();
 
     request_next_state(STATE_IDLE);

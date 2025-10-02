@@ -26,7 +26,8 @@ void running_turbine_test(const StateMachine* sm) {
 
         if (current_pwm != turbine_pwm) {
             debug_print("Turbine PWM changed, updating turbine PWM");
-            update_turbine_pwm(current_pwm);
+            turbine_pwm = current_pwm;
+            update_turbine_pwm(turbine_pwm);
         }
     }
 

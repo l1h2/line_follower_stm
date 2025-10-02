@@ -2,7 +2,7 @@
 
 #include <stdlib.h>
 
-#include "hal/pwm.h"
+#include "motors/motors.h"
 #include "pid/errors.h"
 #include "timer/time.h"
 
@@ -23,8 +23,8 @@ static PidStruct pid = {
     .kb = KB,
     .base_pwm = BASE_PWM,
     .current_pwm = INITIAL_PWM < BASE_PWM ? INITIAL_PWM : BASE_PWM,
-    .max_pwm = MAX_PWM,
-    .min_pwm = -MAX_PWM,
+    .max_pwm = 0,
+    .min_pwm = 0,
     .frame_interval = PID_FRAME_INTERVAL,
     .last_pid_time = 0,
     .errors = 0,
@@ -70,14 +70,13 @@ static void update_motors(const int16_t delta_pwm) {
     const int16_t pwm_a = get_new_pwm(delta_pwm);
     const int16_t pwm_b = get_new_pwm(-delta_pwm);
 
-    set_motor_left_dir(pwm_a > 0);
-    set_motor_right_dir(pwm_b > 0);
-
-    set_pwm(MOTOR_LEFT, (uint16_t)abs(pwm_a));
-    set_pwm(MOTOR_RIGHT, (uint16_t)abs(pwm_b));
+    set_motors(pwm_a, pwm_b);
 }
 
 void init_pid(void) {
+    pid.max_pwm = get_max_pwm();
+    pid.min_pwm = -pid.max_pwm;
+
     if (pid.errors == 0) {
         init_errors();
         pid.errors = get_errors();
@@ -117,10 +116,12 @@ void restart_pwm(void) {
 }
 
 void set_base_pwm(const uint16_t pwm) {
+    const uint16_t min_pwm = get_min_pwm();
+
     if (pwm >= pid.max_pwm) {
         pid.base_pwm = pid.max_pwm;
-    } else if (pwm <= MIN_PWM) {
-        pid.base_pwm = MIN_PWM;
+    } else if (pwm <= min_pwm) {
+        pid.base_pwm = min_pwm;
     } else {
         pid.base_pwm = pwm;
     }
@@ -139,10 +140,13 @@ void set_current_pwm(const int16_t pwm) {
 }
 
 void set_max_pwm(const uint16_t pwm) {
-    if (pwm > MAX_PWM) {
-        pid.max_pwm = MAX_PWM;
-    } else if (pwm < MIN_PWM) {
-        pid.max_pwm = MIN_PWM;
+    const uint16_t max_pwm = get_max_pwm();
+    const uint16_t min_pwm = get_min_pwm();
+
+    if (pwm > max_pwm) {
+        pid.max_pwm = max_pwm;
+    } else if (pwm < min_pwm) {
+        pid.max_pwm = min_pwm;
     } else {
         pid.max_pwm = pwm;
     }

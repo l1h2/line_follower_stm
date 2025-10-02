@@ -45,6 +45,7 @@ set(USER_MODULES
     timer
     led
     sensors
+    motors
     pid
     serial
     turbine

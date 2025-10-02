@@ -81,6 +81,8 @@
     "stm32f4xx_ll_rcc.h": "c",
     "mpu.h": "c",
     "encoders.h": "c",
-    "encoder.h": "c"
+    "encoder.h": "c",
+    "stdlib.h": "c",
+    "motors.h": "c"
   }
 }

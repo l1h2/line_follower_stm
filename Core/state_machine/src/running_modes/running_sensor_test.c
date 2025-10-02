@@ -15,5 +15,5 @@ void running_sensor_test(const StateMachine* sm) {
 }
 
 void running_sensor_test_to_stopped(void) {
-    // TODO: Implement the logic to stop the sensor test mode
+    // No actions needed when transitioning to stopped state
 }
