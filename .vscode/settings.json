@@ -85,6 +85,8 @@
     "stdlib.h": "c",
     "motors.h": "c",
     "delta_pid.h": "c",
-    "base_pwm_pid.h": "c"
+    "base_pwm_pid.h": "c",
+    "speed_pid.h": "c",
+    "running_base.h": "c"
   }
 }

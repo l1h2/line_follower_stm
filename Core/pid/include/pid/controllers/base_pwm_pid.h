@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include "pid_base.h"
+#include "../pid_base.h"
 
 /**
  * @brief Initialize the Base PWM PID controller with the given error structure.
@@ -13,16 +13,16 @@
 void init_base_pwm_pid(const ErrorStruct* error_struct);
 
 /**
- * @brief Calculate and return the Base PWM PID value.
- * @return The calculated Base PWM PID value.
- */
-int16_t get_base_pwm_pid(void);
-
-/**
  * @brief Get a pointer to the Base PID structure.
  * @return Pointer to the BasePwmPid structure.
  */
 const BasePwmPid* get_base_pwm_pid_ptr(void);
+
+/**
+ * @brief Calculate and return the Base PWM PID value.
+ * @return The calculated Base PWM PID value.
+ */
+int16_t get_base_pwm_pid(void);
 
 /**
  * @brief Check if an update is pending for the Base PWM PID controller.

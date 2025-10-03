@@ -6,19 +6,36 @@
 #include "sensors/sensors_base.h"
 
 /**
+ * @struct SpeedErrors
+ * @brief Structure to hold speed error values for PID control.
+ */
+typedef struct {
+    float left_target_speed;   // Target speed for the left motor in cm/s
+    float right_target_speed;  // Target speed for the right motor in cm/s
+    float left_error;          // Error for the left motor in cm/s
+    float right_error;         // Error for the right motor in cm/s
+    float left_last_error;     // Last error for the left motor in cm/s
+    float right_last_error;    // Last error for the right motor in cm/s
+    float left_delta_error;    // Delta error for the left motor in cm/s
+    float right_delta_error;   // Delta error for the right motor in cm/s
+    float left_error_sum;      // Sum of errors for the left motor in cm/s
+    float right_error_sum;     // Sum of errors for the right motor in cm/s
+} SpeedErrors;
+
+/**
  * @struct ErrorStruct
  * @brief Structure to hold error values for PID control.
  */
 typedef struct {
-    int8_t error;                // The current error value.
-    int8_t last_error;           // The last error value.
-    int8_t delta_error;          // The delta error value.
-    int16_t error_sum;           // The sum of errors.
-    int8_t feedforward;          // The feedforward value.
-    uint8_t error_weight;        // The weight of the error for PID control.
-    int8_t max_error;            // Maximum error value.
-    int8_t min_error;            // Minimum error value.
-    const SensorState* sensors;  // Pointer to sensor state information.
+    int8_t error;                     // Current error value.
+    int8_t last_error;                // Last error value.
+    int8_t delta_error;               // Delta error value.
+    int16_t error_sum;                // Sum of errors.
+    int8_t feedforward;               // Feedforward value.
+    int8_t max_error;                 // Maximum error value.
+    int8_t min_error;                 // Minimum error value.
+    const SpeedErrors* speed_errors;  // Speed error values for PID control.
+    const SensorState* sensors;       // Pointer to sensor state information.
 } ErrorStruct;
 
 /**
@@ -29,7 +46,7 @@ typedef struct {
     uint8_t kp;               // Proportional gain
     uint8_t ki;               // Integral gain
     uint16_t kd;              // Derivative gain
-    uint32_t frame_interval;  // PID frame interval
+    uint32_t frame_interval;  // PID frame interval in ms
     uint32_t last_pid_time;   // Last time the PID was updated
 } DeltaPid;
 
@@ -42,9 +59,21 @@ typedef struct {
     uint8_t ki;               // Integral gain
     uint16_t kd;              // Derivative gain
     uint8_t kff;              // Feedforward gain
-    uint32_t frame_interval;  // PID frame interval
+    uint32_t frame_interval;  // PID frame interval in ms
     uint32_t last_pid_time;   // Last time the PID was updated
 } BasePwmPid;
+
+/**
+ * @struct BaseSpeedPid
+ * @brief Structure to hold base speed PID control parameters and state.
+ */
+typedef struct {
+    uint8_t kp;               // Proportional gain
+    uint8_t ki;               // Integral gain
+    uint16_t kd;              // Derivative gain
+    uint32_t frame_interval;  // PID frame interval in ms
+    uint32_t last_pid_time;   // Last time the PID was updated
+} BaseSpeedPid;
 
 /**
  * @struct PidStruct
@@ -56,9 +85,10 @@ typedef struct {
     uint16_t max_pwm;                // Maximum PWM value for the motors
     int16_t min_pwm;                 // Minimum PWM value for the motors
     uint16_t acceleration;           // Acceleration step for PWM changes
-    const ErrorStruct* errors;       // Pointer to the error structure
-    const DeltaPid* delta_pid;       // Pointer to the Delta PID structure
-    const BasePwmPid* base_pwm_pid;  // Pointer to the Base PWM PID structure
+    const ErrorStruct* errors;       // Pointer to errors
+    const DeltaPid* delta_pid;       // Pointer to Delta PID
+    const BasePwmPid* base_pwm_pid;  // Pointer to Base PWM PID
+    const BaseSpeedPid* speed_pid;   // Pointer to Base Speed PID
 } PidStruct;
 
 #endif  // PID_BASE_H

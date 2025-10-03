@@ -7,6 +7,7 @@
 #include "turbine/turbine.h"
 
 // Running modes
+#include "state_machine/running_modes/running_encoder_test.h"
 #include "state_machine/running_modes/running_pid.h"
 #include "state_machine/running_modes/running_sensor_test.h"
 #include "state_machine/running_modes/running_turbine_test.h"
@@ -32,6 +33,10 @@ void handle_running(const StateMachine* sm) {
                 return;
             }
             running_turbine_test(sm);
+            break;
+        case RUNNING_ENCODER_TEST:
+            debug_print("Running mode set to RUNNING_ENCODER_TEST");
+            running_encoder_test(sm);
             break;
         case RUNNING_PID:
             debug_print("Running mode set to RUNNING_PID");
@@ -65,6 +70,9 @@ static bool handle_running_to_stopped(const RunningModes running_mode) {
             break;
         case RUNNING_TURBINE_TEST:
             running_turbine_test_to_stopped();
+            break;
+        case RUNNING_ENCODER_TEST:
+            running_encoder_test_to_stopped();
             break;
         default:
             debug_print("Unknown running mode, going to error state");

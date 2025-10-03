@@ -3,25 +3,27 @@
 #include <stdlib.h>
 
 #include "motors/motors.h"
-#include "pid/base_pwm_pid.h"
-#include "pid/delta_pid.h"
-#include "pid/errors.h"
+#include "pid/controllers/base_pwm_pid.h"
+#include "pid/controllers/delta_pid.h"
+#include "pid/controllers/speed_pid.h"
+#include "pid/errors/errors.h"
+#include "pid/errors/speed_errors.h"
 #include "pid/pid_base.h"
 #include "timer/time.h"
 
-#define INITIAL_PWM 200
 #define BASE_PWM 300
 #define ACCELERATION_STEP 1  // PWM units per update
 
 static PidStruct pid = {
     .base_pwm = BASE_PWM,
-    .current_pwm = INITIAL_PWM < BASE_PWM ? INITIAL_PWM : BASE_PWM,
+    .current_pwm = BASE_PWM,
     .max_pwm = 0,
     .min_pwm = 0,
     .acceleration = ACCELERATION_STEP,
     .errors = NULL,
     .delta_pid = NULL,
     .base_pwm_pid = NULL,
+    .speed_pid = NULL,
 };
 
 static bool is_updating_errors = false;
@@ -79,6 +81,9 @@ void init_pid(void) {
 
     init_base_pwm_pid(pid.errors);
     pid.base_pwm_pid = get_base_pwm_pid_ptr();
+
+    init_base_speed_pid(pid.errors);
+    pid.speed_pid = get_base_speed_pid_ptr();
 }
 
 const PidStruct* get_pid(void) { return &pid; }
@@ -87,24 +92,38 @@ bool update_pid(void) {
     if (!updates_pending()) return false;
 
     if (!is_updating_errors) {
-        update_errors_async();
+        update_errors_async(false);
         is_updating_errors = true;
         return false;
     }
 
-    if (!update_errors_async()) return false;
+    if (!update_errors_async(false)) return false;
 
-    is_updating_errors = false;
     update_pid_times();
+    is_updating_errors = false;
+
     update_motors();
+
+    return true;
+}
+
+bool update_speed_pid(void) {
+    if (!update_pending_base_speed_pid()) return false;
+
+    update_speed_errors();
+    update_base_speed_pid();
+
+    int16_t left_pwm;
+    int16_t right_pwm;
+    get_base_speed_pid(&left_pwm, &right_pwm);
+    set_motors(left_pwm, right_pwm);
+
     return true;
 }
 
 void reset_pwm(void) { pid.current_pwm = pid.base_pwm; }
 
-void restart_pwm(void) {
-    pid.current_pwm = INITIAL_PWM < pid.base_pwm ? INITIAL_PWM : pid.base_pwm;
-}
+void restart_pwm(void) { pid.current_pwm = pid.base_pwm; }
 
 void set_base_pwm(const uint16_t pwm) {
     const uint16_t min_pwm = get_min_pwm();

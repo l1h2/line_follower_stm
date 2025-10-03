@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include "pid_base.h"
+#include "../pid_base.h"
 
 /**
  * @brief Initialize the Delta PWM PID controller with the given error

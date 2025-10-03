@@ -1,7 +1,7 @@
 #include "logger/logger_debug.h"
 
 #include "logger/logger_base.h"
-#include "pid/errors.h"
+#include "pid/errors/errors.h"
 #include "sensors/sensors.h"
 #include "sensors/vision.h"
 #include "timer/time.h"
@@ -103,9 +103,9 @@ void debug_print_encoder_data(void) {
     const SensorState *sensors = get_sensors();
 
     print_string("Pulses [L R]: ");
-    print_signed_word(sensors->encoders->left_encoder);
+    print_signed_long(sensors->encoders->left_encoder);
     print_string(", ");
-    print_signed_word(sensors->encoders->right_encoder);
+    print_signed_long(sensors->encoders->right_encoder);
     print_new_line();
 
     print_string("Distance (mm): ");
@@ -117,7 +117,7 @@ bool debug_print_diagnostics(void) {
     if (!time_elapsed(last_log_time, LOG_INTERVAL)) return false;
 
     last_log_time = time();
-    update_errors(SENSOR_READ_DEBUG_TIMEOUT_US);
+    update_errors(SENSOR_READ_DEBUG_TIMEOUT_US, true);
 
     debug_print_new_line();
 

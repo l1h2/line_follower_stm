@@ -21,6 +21,8 @@ void restart_encoders(void);
 
 /**
  * @brief Updates the encoder data.
+ * @note Reading encoder data recalculates speeds based on the interval
+ * between reads.
  */
 void update_encoder_data(void);
 

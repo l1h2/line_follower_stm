@@ -2,8 +2,9 @@
 #define ERRORS_H
 
 #include <stdbool.h>
+#include <stdint.h>
 
-#include "pid_base.h"
+#include "../pid_base.h"
 
 /**
  * @brief Initializes the error struct.
@@ -21,16 +22,22 @@ const ErrorStruct* get_errors(void);
  * @brief Updates the error struct with the latest sensor data and error values.
  * @param timeout The maximum time to wait for sensor readings (in
  * microseconds).
+ * @param read_encoder Boolean flag to indicate if encoder data should be read.
+ * @note Reading encoder data recalculates speeds based on the interval between
+ * reads.
  */
-void update_errors(const uint16_t timeout);
+void update_errors(const uint16_t timeout, const bool read_encoder);
 
 /**
  * @brief Updates the error struct with the latest sensor data and error values.
+ * @param read_encoder Boolean flag to indicate if encoder data should be read.
  * @return true if the errors were updated, false otherwise.
  * @note This function is non-blocking and will return false if the sensors are
  * still being read.
+ * @note Reading encoder data recalculates speeds based on the interval between
+ * reads.
  */
-bool update_errors_async(void);
+bool update_errors_async(const bool read_encoder);
 
 /**
  * @brief Clears the error struct by resetting its values.

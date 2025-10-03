@@ -24,6 +24,13 @@ const PidStruct* get_pid(void);
 bool update_pid(void);
 
 /**
+ * @brief Updates the speed PID controller with the current speed error
+ * values.
+ * @return true if the speed PID controller was updated, false otherwise.
+ */
+bool update_speed_pid(void);
+
+/**
  * @brief Resets the current PWM used to the base PWM value.
  */
 void reset_pwm(void);

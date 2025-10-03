@@ -1,8 +1,9 @@
-#include "pid/errors.h"
+#include "pid/errors/errors.h"
 
-#include <stdint.h>
+#include <stdlib.h>
 
 #include "hal/ir_sensors.h"
+#include "pid/errors/speed_errors.h"
 #include "sensors/sensors.h"
 
 #define ERROR_WEIGHT 2
@@ -19,10 +20,10 @@ static ErrorStruct errors = {
     .delta_error = 0,
     .error_sum = 0,
     .feedforward = 0,
-    .error_weight = ERROR_WEIGHT,
     .max_error = MAX_ERROR,
     .min_error = MIN_ERROR,
-    .sensors = 0,
+    .speed_errors = NULL,
+    .sensors = NULL,
 };
 
 static bool is_updating_sensors = false;
@@ -66,14 +67,14 @@ static void update_feedforward(void) {
     errors.feedforward = 0;
 }
 
-static inline bool check_sensor_update(void) {
+static inline bool check_sensor_update(const bool read_encoder) {
     if (!is_updating_sensors) {
         start_async_sensors_read();
         is_updating_sensors = true;
         return false;
     }
 
-    if (!update_sensors_async()) return false;
+    if (!update_sensors_async(read_encoder)) return false;
 
     is_updating_sensors = false;
     stop_async_sensors_read();
@@ -81,11 +82,16 @@ static inline bool check_sensor_update(void) {
 }
 
 void init_errors(void) {
-    if (errors.sensors == 0) errors.sensors = get_sensors();
+    errors.sensors = get_sensors();
+
+    init_speed_errors(&errors);
+    errors.speed_errors = get_speed_errors();
 }
 
-void update_errors(const uint16_t timeout) {
-    update_sensors(timeout);
+const ErrorStruct* get_errors(void) { return &errors; }
+
+void update_errors(const uint16_t timeout, const bool read_encoder) {
+    update_sensors(timeout, read_encoder);
 
     update_error();
     update_error_sum();
@@ -94,8 +100,8 @@ void update_errors(const uint16_t timeout) {
     update_feedforward();
 }
 
-bool update_errors_async(void) {
-    if (!check_sensor_update()) return false;
+bool update_errors_async(const bool read_encoder) {
+    if (!check_sensor_update(read_encoder)) return false;
 
     update_error();
     update_error_sum();
@@ -113,5 +119,3 @@ void clear_errors(void) {
     errors.error_sum = 0;
     clear_sensors();
 }
-
-const ErrorStruct* get_errors(void) { return &errors; }

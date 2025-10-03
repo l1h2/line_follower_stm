@@ -18,10 +18,13 @@ const SensorState* get_sensors(void);
 /**
  * @brief Updates the sensor states struct by reading the hardware sensors.
  * @param timeout Timeout in microseconds for reading the sensors.
+ * @param read_encoder Boolean flag to indicate if encoder data should be read.
  * @note This function blocks until the reading is complete or the timeout is
  * reached.
+ * @note Reading encoder data recalculates speeds based on the interval between
+ * reads.
  */
-void update_sensors(const uint16_t timeout);
+void update_sensors(const uint16_t timeout, const bool read_encoder);
 
 /**
  * @brief Clears the sensor readings, resetting them to default values.
@@ -52,9 +55,12 @@ bool sensors_are_reading(void);
 /**
  * @brief Updates the sensor states struct by reading the hardware sensors
  * asynchronously.
+ * @param read_encoder Boolean flag to indicate if encoder data should be read.
  * @return true if the sensors were updated, false if they are still being read.
+ * @note Reading encoder data recalculates speeds based on the interval between
+ * reads.
  */
-bool update_sensors_async(void);
+bool update_sensors_async(const bool read_encoder);
 
 /**
  * @brief Restarts the sensors by clearing their data and reinitializing them.
