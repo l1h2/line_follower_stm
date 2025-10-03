@@ -43,11 +43,11 @@ set(USER_MODULES
     hal
     logger
     timer
+    serial
     led
     sensors
     motors
     pid
-    serial
     turbine
 )
 
