@@ -74,6 +74,20 @@ void send_message(const SerialMessages msg) {
             const uint16_t turbine_pwm = get_turbine_pwm();
             send_data(msg, (const uint8_t*)&turbine_pwm);
             break;
+        case SPEED_KP:
+            send_data(msg, (const uint8_t*)&pid->speed_pid->kp);
+            break;
+        case SPEED_KI:
+            send_data(msg, (const uint8_t*)&pid->speed_pid->ki);
+            break;
+        case SPEED_KD:
+            send_data(msg, (const uint8_t*)&pid->speed_pid->kd);
+            break;
+        case BASE_SPEED:
+            const uint16_t base_speed =
+                (uint16_t)(pid->speed_pid->base_speed * 100.0f);
+            send_data(msg, (const uint8_t*)&base_speed);
+            break;
         default:
             debug_print("Attempted to send unknown message");
             break;

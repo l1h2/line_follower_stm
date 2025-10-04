@@ -96,4 +96,28 @@ void set_pwm_kb(const uint8_t kb);
  */
 void set_pwm_kff(const uint8_t kff);
 
+/**
+ * @brief Set the proportional gain (Kp) value for the Speed PID controller.
+ * @param kp The new proportional gain value to be set.
+ */
+void set_speed_kp(const uint8_t kp);
+
+/**
+ * @brief Set the integral gain (Ki) value for the Speed PID controller.
+ * @param ki The new integral gain value to be set.
+ */
+void set_speed_ki(const uint8_t ki);
+
+/**
+ * @brief Set the derivative gain (Kd) value for the Speed PID controller.
+ * @param kd The new derivative gain value to be set.
+ */
+void set_speed_kd(const uint16_t kd);
+
+/**
+ * @brief Set the target speed for the Speed PID controller.
+ * @param speed The new target speed value to be set (in cm/s).
+ */
+void set_speed(const float speed);
+
 #endif  // PID_H

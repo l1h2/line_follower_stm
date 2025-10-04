@@ -4,11 +4,9 @@
 
 #include "sensors/encoder.h"
 
-#define BASE_SPEED 20.0f  // cm/s
-
 static SpeedErrors errors = {
-    .left_target_speed = BASE_SPEED,
-    .right_target_speed = BASE_SPEED,
+    .left_target_speed = 0.0f,
+    .right_target_speed = 0.0f,
     .left_error = 0.0f,
     .right_error = 0.0f,
     .left_last_error = 0.0f,
@@ -57,8 +55,8 @@ void update_speed_errors(void) {
 }
 
 void clear_speed_errors(void) {
-    errors.left_target_speed = BASE_SPEED;
-    errors.right_target_speed = BASE_SPEED;
+    errors.left_target_speed = 0.0f;
+    errors.right_target_speed = 0.0f;
     errors.left_error = 0.0f;
     errors.right_error = 0.0f;
     errors.left_last_error = 0.0f;
@@ -69,4 +67,9 @@ void clear_speed_errors(void) {
     errors.right_error_sum = 0.0f;
 
     clear_encoder_data();
+}
+
+void set_speed_targets(const float left_speed, const float right_speed) {
+    errors.left_target_speed = left_speed;
+    errors.right_target_speed = right_speed;
 }

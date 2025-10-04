@@ -51,4 +51,10 @@ void set_base_speed_ki(const uint8_t ki);
  */
 void set_base_speed_kd(const uint16_t kd);
 
+/**
+ * @brief Set the base speed for the speed PID controller.
+ * @param speed The new base speed in cm/s.
+ */
+void set_base_speed(const float speed);
+
 #endif  // SPEED_PID_H

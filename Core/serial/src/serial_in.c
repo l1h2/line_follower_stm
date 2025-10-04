@@ -39,6 +39,11 @@ static inline uint32_t parse_uint32(const uint8_t* const payload) {
                       (payload[1] << 8) | payload[0]);
 }
 
+static inline float parse_float(const uint8_t* const payload) {
+    const uint16_t raw = parse_uint16(payload);
+    return (float)raw / 100.0f;
+}
+
 static void handle_message(void) {
     if (current_msg.message == INVALID_MESSAGE) return;
 
@@ -90,6 +95,18 @@ static void handle_message(void) {
             break;
         case TURBINE_PWM:
             set_turbine_pwm(parse_uint16(current_msg.payload));
+            break;
+        case SPEED_KP:
+            set_speed_kp((uint8_t)current_msg.payload[0]);
+            break;
+        case SPEED_KI:
+            set_speed_ki((uint8_t)current_msg.payload[0]);
+            break;
+        case SPEED_KD:
+            set_speed_kd(parse_uint16(current_msg.payload));
+            break;
+        case BASE_SPEED:
+            set_speed(parse_float(current_msg.payload));
             break;
         default:
             debug_print("Received unknown message");

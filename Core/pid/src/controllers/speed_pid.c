@@ -6,16 +6,18 @@
 #include "timer/time.h"
 
 #define KP 50
-#define KI 0
-#define KD 0
+#define KI 10
+#define KD 30
 #define FRAME_INTERVAL 10  // ms
 
+#define BASE_SPEED 20.0f  // cm/s
 #define PWM_MAX_DELTA 100
 
 static BaseSpeedPid base_pid = {
     .kp = KP,
     .ki = KI,
     .kd = KD,
+    .base_speed = BASE_SPEED,
     .frame_interval = FRAME_INTERVAL,
     .last_pid_time = 0,
 };
@@ -107,3 +109,5 @@ void set_base_speed_kp(const uint8_t kp) { base_pid.kp = kp; }
 void set_base_speed_ki(const uint8_t ki) { base_pid.ki = ki; }
 
 void set_base_speed_kd(const uint16_t kd) { base_pid.kd = kd; }
+
+void set_base_speed(const float speed) { base_pid.base_speed = speed; }

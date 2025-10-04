@@ -71,6 +71,7 @@ typedef struct {
     uint8_t kp;               // Proportional gain
     uint8_t ki;               // Integral gain
     uint16_t kd;              // Derivative gain
+    float base_speed;         // Base speed in cm/s
     uint32_t frame_interval;  // PID frame interval in ms
     uint32_t last_pid_time;   // Last time the PID was updated
 } BaseSpeedPid;

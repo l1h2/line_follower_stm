@@ -110,6 +110,7 @@ bool update_pid(void) {
 bool update_speed_pid(void) {
     if (!update_pending_base_speed_pid()) return false;
 
+    set_speed_targets(pid.speed_pid->base_speed, pid.speed_pid->base_speed);
     update_speed_errors();
     update_base_speed_pid();
 
@@ -175,3 +176,11 @@ void set_pwm_kd(const uint16_t kd) { set_delta_pwm_kd(kd); }
 void set_pwm_kb(const uint8_t kb) { set_base_pwm_kp(kb); }
 
 void set_pwm_kff(const uint8_t kff) { set_base_pwm_kff(kff); }
+
+void set_speed_kp(const uint8_t kp) { set_base_speed_kp(kp); }
+
+void set_speed_ki(const uint8_t ki) { set_base_speed_ki(ki); }
+
+void set_speed_kd(const uint16_t kd) { set_base_speed_kd(kd); }
+
+void set_speed(const float speed) { set_base_speed(speed); }

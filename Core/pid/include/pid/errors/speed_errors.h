@@ -27,4 +27,11 @@ void update_speed_errors(void);
  */
 void clear_speed_errors(void);
 
+/**
+ * @brief Set the target speeds for the left and right motors.
+ * @param left_speed Target speed for the left motor in cm/s.
+ * @param right_speed Target speed for the right motor in cm/s.
+ */
+void set_speed_targets(const float left_speed, const float right_speed);
+
 #endif  // SPEED_ERRORS_H
