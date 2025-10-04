@@ -84,6 +84,19 @@ void set_pwm_ki(const uint8_t ki);
 void set_pwm_kd(const uint16_t kd);
 
 /**
+ * @brief Set the filter coefficient (alpha) for the Delta PWM PID controller.
+ * @param alpha The new filter coefficient value to be set.
+ */
+void set_pwm_alpha(const float alpha);
+
+/**
+ * @brief Set the integral windup clamp value for the Delta PWM PID
+ * controller.
+ * @param clamp The new integral windup clamp value to be set.
+ */
+void set_pwm_clamp(const uint16_t clamp);
+
+/**
  * @brief Set the base proportional gain (Kb) value for the Base PWM PID
  * controller.
  * @param kb The new base proportional gain value to be set.

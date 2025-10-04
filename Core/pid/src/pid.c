@@ -173,6 +173,10 @@ void set_pwm_ki(const uint8_t ki) { set_delta_pwm_ki(ki); }
 
 void set_pwm_kd(const uint16_t kd) { set_delta_pwm_kd(kd); }
 
+void set_pwm_alpha(const float alpha) { set_delta_pwm_alpha(alpha); }
+
+void set_pwm_clamp(const uint16_t clamp) { set_delta_pwm_clamp(clamp); }
+
 void set_pwm_kb(const uint8_t kb) { set_base_pwm_kp(kb); }
 
 void set_pwm_kff(const uint8_t kff) { set_base_pwm_kff(kff); }

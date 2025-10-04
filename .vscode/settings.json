@@ -88,6 +88,15 @@
     "base_pwm_pid.h": "c",
     "speed_pid.h": "c",
     "running_base.h": "c",
-    "speed_errors.h": "c"
+    "speed_errors.h": "c",
+    "optional": "c",
+    "ratio": "c",
+    "system_error": "c",
+    "array": "c",
+    "functional": "c",
+    "tuple": "c",
+    "type_traits": "c",
+    "utility": "c",
+    "cstddef": "c"
   }
 }

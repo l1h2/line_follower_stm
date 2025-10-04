@@ -1,10 +1,11 @@
 #include "logger/logger_base.h"
 
-#include <stdint.h>
-
 #include "hal/usart.h"
 
 static const char HEX_CHARS[] = "0123456789ABCDEF";
+static const uint32_t DIVS[10] = {1U,         10U,        100U,     1000U,
+                                  10000U,     100000U,    1000000U, 10000000U,
+                                  100000000U, 1000000000U};
 
 void print_char(const char c) { usart_transmit((uint8_t)c); }
 
@@ -55,16 +56,13 @@ void print_long(const uint32_t dword) {
         return;
     }
 
-    usart_transmit('0' + (dword / 1000000000));        // Billions
-    usart_transmit('0' + ((dword / 100000000) % 10));  // Hundred-millions
-    usart_transmit('0' + ((dword / 10000000) % 10));   // Ten-millions
-    usart_transmit('0' + ((dword / 1000000) % 10));    // Millions
-    usart_transmit('0' + ((dword / 100000) % 10));     // Hundred-thousands
-    usart_transmit('0' + ((dword / 10000) % 10));      // Ten-thousands
-    usart_transmit('0' + ((dword / 1000) % 10));       // Thousands
-    usart_transmit('0' + ((dword / 100) % 10));        // Hundreds
-    usart_transmit('0' + ((dword / 10) % 10));         // Tens
-    usart_transmit('0' + (dword % 10));
+    for (int8_t i = 9; i >= 0; i--) {
+        if (dword < DIVS[i]) continue;
+
+        for (int8_t j = i; j >= 0; j--) {
+            usart_transmit('0' + ((dword / DIVS[j]) % 10));
+        }
+    }
 }
 
 void print_signed_long(int32_t dword) {

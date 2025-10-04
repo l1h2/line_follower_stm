@@ -13,6 +13,10 @@ static const PidStruct* pid = NULL;
 
 static uint32_t last_log_time = 0;
 
+static inline uint16_t parse_float(const float value) {
+    return (uint16_t)(value * 100.0f);
+}
+
 void send_message(const SerialMessages msg) {
     if (msg >= SERIAL_MESSAGE_COUNT) return;
 
@@ -84,9 +88,16 @@ void send_message(const SerialMessages msg) {
             send_data(msg, (const uint8_t*)&pid->speed_pid->kd);
             break;
         case BASE_SPEED:
-            const uint16_t base_speed =
-                (uint16_t)(pid->speed_pid->base_speed * 100.0f);
+            const uint16_t base_speed = parse_float(pid->speed_pid->base_speed);
             send_data(msg, (const uint8_t*)&base_speed);
+            break;
+        case PID_ALPHA:
+            // Convert from [0.0, 1.0] range to percentage
+            const uint16_t alpha = parse_float(pid->delta_pid->alpha * 100.0f);
+            send_data(msg, (const uint8_t*)&alpha);
+            break;
+        case PID_CLAMP:
+            send_data(msg, (const uint8_t*)&pid->delta_pid->clamp);
             break;
         default:
             debug_print("Attempted to send unknown message");

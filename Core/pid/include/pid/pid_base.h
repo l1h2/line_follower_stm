@@ -46,6 +46,8 @@ typedef struct {
     uint8_t kp;               // Proportional gain
     uint8_t ki;               // Integral gain
     uint16_t kd;              // Derivative gain
+    float alpha;              // Filter coefficient
+    uint16_t clamp;           // Integral windup clamp
     uint32_t frame_interval;  // PID frame interval in ms
     uint32_t last_pid_time;   // Last time the PID was updated
 } DeltaPid;

@@ -108,6 +108,13 @@ static void handle_message(void) {
         case BASE_SPEED:
             set_speed(parse_float(current_msg.payload));
             break;
+        case PID_ALPHA:
+            // Convert from percentage to [0.0, 1.0] range
+            set_pwm_alpha(parse_float(current_msg.payload) / 100.0f);
+            break;
+        case PID_CLAMP:
+            set_pwm_clamp(parse_uint16(current_msg.payload));
+            break;
         default:
             debug_print("Received unknown message");
             return;
