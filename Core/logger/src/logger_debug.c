@@ -21,6 +21,9 @@ void debug_print_word(const uint16_t word) { print_word(word); }
 void debug_print_signed_word(int16_t word) { print_signed_word(word); }
 void debug_print_long(const uint32_t dword) { print_long(dword); }
 void debug_print_signed_long(int32_t dword) { print_signed_long(dword); }
+void debug_print_float(float value, uint8_t decimal_places) {
+    print_float(value, decimal_places);
+}
 void debug_print_binary(const uint8_t byte) { print_binary(byte); }
 void debug_print_bool(const bool value) { print_bool(value); }
 void debug_print_string(const char *str) { print_string(str); }
@@ -78,23 +81,23 @@ void debug_print_errors(void) {
 void debug_print_mpu_data(void) {
     const SensorState *sensors = get_sensors();
 
-    print_string("Accel [X Y Z]: ");
+    print_string("Accel [X Y Z]:  ");
     print_signed_word(sensors->mpu_data->accel_x);
-    print_string(", ");
+    print_string("  /  ");
     print_signed_word(sensors->mpu_data->accel_y);
-    print_string(", ");
+    print_string("  /  ");
     print_signed_word(sensors->mpu_data->accel_z);
     print_new_line();
 
-    print_string("Gyro  [X Y Z]: ");
+    print_string("Gyro  [X Y Z]:  ");
     print_signed_word(sensors->mpu_data->gyro_x);
-    print_string(", ");
+    print_string("  /  ");
     print_signed_word(sensors->mpu_data->gyro_y);
-    print_string(", ");
+    print_string("  /  ");
     print_signed_word(sensors->mpu_data->gyro_z);
     print_new_line();
 
-    print_string("Temp: ");
+    print_string("Temp:  ");
     print_signed_word(sensors->mpu_data->temp);
     print_new_line();
 }
@@ -102,14 +105,26 @@ void debug_print_mpu_data(void) {
 void debug_print_encoder_data(void) {
     const SensorState *sensors = get_sensors();
 
-    print_string("Pulses [L R]: ");
+    print_string("Pulses [L R]:  ");
     print_signed_long(sensors->encoders->left_encoder);
-    print_string(", ");
+    print_string("  /  ");
     print_signed_long(sensors->encoders->right_encoder);
     print_new_line();
 
-    print_string("Distance (mm): ");
-    print_signed_long((int32_t)sensors->encoders->distance);
+    print_string("Distance (cm) [L R T]:  ");
+    print_float(sensors->encoders->left_distance, 2);
+    print_string("  /  ");
+    print_float(sensors->encoders->right_distance, 2);
+    print_string("  /  ");
+    print_float(sensors->encoders->distance, 2);
+    print_new_line();
+
+    print_string("Speed (cm/s) [L R T]:  ");
+    print_float(sensors->encoders->left_speed, 2);
+    print_string("  /  ");
+    print_float(sensors->encoders->right_speed, 2);
+    print_string("  /  ");
+    print_float(sensors->encoders->speed, 2);
     print_new_line();
 }
 

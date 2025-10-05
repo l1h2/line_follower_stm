@@ -16,6 +16,7 @@
 #define debug_print_signed_word(word) ((void)0)
 #define debug_print_long(dword) ((void)0)
 #define debug_print_signed_long(dword) ((void)0)
+#define debug_print_float(value, decimal_places) ((void)0)
 #define debug_print_binary(byte) ((void)0)
 #define debug_print_bool(value) ((void)0)
 #define debug_print_string(str) ((void)0)

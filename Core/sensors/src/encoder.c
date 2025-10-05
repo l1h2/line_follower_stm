@@ -30,7 +30,7 @@ static inline void update_distances(void) {
     encoder_data.left_distance += left_current_distance;
     encoder_data.right_distance += right_current_distance;
     encoder_data.distance =
-        (left_current_distance + right_current_distance) / 2.0f;
+        (encoder_data.left_distance + encoder_data.right_distance) / 2.0f;
 }
 
 static inline void update_speeds(void) {

@@ -22,6 +22,7 @@ void print_bit(const uint8_t bit_position, const uint8_t byte);
 /**
  * @brief Prints a byte in decimal format to the USART.
  * @param byte The byte to print.
+ * @note This function always prints three digits, including leading zeros.
  */
 void print_byte(const uint8_t byte);
 
@@ -60,6 +61,13 @@ void print_long(const uint32_t dword);
  * @param value The long value to print.
  */
 void print_signed_long(int32_t dword);
+
+/**
+ * @brief Prints a floating-point number to the USART.
+ * @param value The float value to print.
+ * @param decimal_places The number of decimal places to display (0-4).
+ */
+void print_float(float value, uint8_t decimal_places);
 
 /**
  * @brief Prints a byte in binary format to the USART.

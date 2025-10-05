@@ -35,11 +35,19 @@ void print_signed_byte(int8_t byte) {
 }
 
 void print_word(const uint16_t word) {
-    usart_transmit('0' + (word / 10000));        // Ten-thousands
-    usart_transmit('0' + ((word / 1000) % 10));  // Thousands
-    usart_transmit('0' + ((word / 100) % 10));   // Hundreds
-    usart_transmit('0' + ((word / 10) % 10));    // Tens
-    usart_transmit('0' + (word % 10));           // Ones
+    if (word == 0) {
+        usart_transmit('0');
+        return;
+    }
+
+    for (int8_t i = 4; i >= 0; i--) {
+        if (word < DIVS[i]) continue;
+
+        for (int8_t j = i; j >= 0; j--) {
+            usart_transmit('0' + ((word / DIVS[j]) % 10));
+        }
+        return;
+    }
 }
 
 void print_signed_word(int16_t word) {
@@ -62,6 +70,7 @@ void print_long(const uint32_t dword) {
         for (int8_t j = i; j >= 0; j--) {
             usart_transmit('0' + ((dword / DIVS[j]) % 10));
         }
+        return;
     }
 }
 
@@ -71,6 +80,29 @@ void print_signed_long(int32_t dword) {
         dword = -dword;
     }
     print_long((uint32_t)dword);
+}
+
+void print_float(float value, uint8_t decimal_places) {
+    if (value < 0) {
+        usart_transmit('-');
+        value = -value;
+    }
+
+    const uint32_t int_part = (uint32_t)(value);
+    print_long(int_part);
+
+    if (decimal_places == 0) return;
+
+    decimal_places = (decimal_places > 4) ? 4 : decimal_places;
+    value = (value - (float)int_part) + (0.5f / (float)DIVS[decimal_places]);
+
+    usart_transmit('.');
+    for (int8_t i = decimal_places; i > 0; i--) {
+        value *= 10.0f;
+        const uint8_t digit = (uint8_t)(value);
+        usart_transmit('0' + digit);
+        value -= digit;
+    }
 }
 
 void print_binary(const uint8_t byte) {

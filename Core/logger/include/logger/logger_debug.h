@@ -80,6 +80,15 @@ void debug_print_long(const uint32_t dword);
 void debug_print_signed_long(int32_t dword);
 
 /**
+ * @brief Debug wrapper for the print_float function.
+ * @param value The float value to print.
+ * @param decimal_places Number of decimal places to print (0-4).
+ * @note This function can be used to add print statements that won't be
+ * compiled without the DEBUG_MODE directive.
+ */
+void debug_print_float(float value, uint8_t decimal_places);
+
+/**
  * @brief Debug wrapper for the print_binary function.
  * @param byte The byte to print in binary format.
  * @note This function can be used to add print statements that won't be
