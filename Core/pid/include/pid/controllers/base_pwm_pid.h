@@ -9,8 +9,9 @@
 /**
  * @brief Initialize the Base PWM PID controller with the given error structure.
  * @param error_struct Pointer to the ErrorStruct containing error information.
+ * @return Pointer to the initialized BasePwmPid structure.
  */
-void init_base_pwm_pid(const ErrorStruct* error_struct);
+const BasePwmPid* init_base_pwm_pid(const ErrorStruct* const error_struct);
 
 /**
  * @brief Get a pointer to the Base PID structure.

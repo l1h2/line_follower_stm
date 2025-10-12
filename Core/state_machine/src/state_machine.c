@@ -10,7 +10,7 @@
 
 void run_state_machine(void) {
     debug_print("Starting state machine...");
-    const StateMachine* sm = get_state_machine();
+    const StateMachine* const sm = get_state_machine();
 
     while (sm->current_state != STATE_ERROR) {
         send_message(STATE);

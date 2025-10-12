@@ -26,12 +26,12 @@ void debug_print_float(float value, uint8_t decimal_places) {
 }
 void debug_print_binary(const uint8_t byte) { print_binary(byte); }
 void debug_print_bool(const bool value) { print_bool(value); }
-void debug_print_string(const char *str) { print_string(str); }
+void debug_print_string(const char* str) { print_string(str); }
 void debug_print_new_line(void) { print_new_line(); }
-void debug_print(const char *str) { print(str); }
+void debug_print(const char* str) { print(str); }
 
 void debug_print_central_ir_sensors(void) {
-    const SensorState *sensors = get_sensors();
+    const SensorState* const sensors = get_sensors();
 
     for (int8_t i = sensors->ir_sensors->total_central_sensors - 1; i >= 0;
          i--) {
@@ -41,8 +41,9 @@ void debug_print_central_ir_sensors(void) {
     print_new_line();
 }
 
-static inline void debug_print_ir_sensor_times(const SensorState *sensors) {
-    const uint16_t *times = get_central_ir_sensor_times();
+static inline void debug_print_ir_sensor_times(
+    const SensorState* const sensors) {
+    const uint16_t* const times = get_central_ir_sensor_times();
     for (int8_t i = sensors->ir_sensors->total_central_sensors - 1; i >= 0;
          i--) {
         print_word(times[i]);
@@ -51,7 +52,7 @@ static inline void debug_print_ir_sensor_times(const SensorState *sensors) {
 }
 
 void debug_print_ir_sensors(void) {
-    const SensorState *sensors = get_sensors();
+    const SensorState* const sensors = get_sensors();
 
     print_bool(sensors->ir_sensors->left_sensor);
     print_string(" | ");
@@ -65,7 +66,7 @@ void debug_print_ir_sensors(void) {
 }
 
 void debug_print_errors(void) {
-    const ErrorStruct *errors = get_errors();
+    const ErrorStruct* const errors = get_errors();
 
     print_string("Error byte: ");
     print_binary(errors->sensors->ir_sensors->central_sensors_state);
@@ -79,7 +80,7 @@ void debug_print_errors(void) {
 }
 
 void debug_print_mpu_data(void) {
-    const SensorState *sensors = get_sensors();
+    const SensorState* const sensors = get_sensors();
 
     print_string("Accel [X Y Z]:  ");
     print_signed_word(sensors->mpu_data->accel_x);
@@ -103,7 +104,7 @@ void debug_print_mpu_data(void) {
 }
 
 void debug_print_encoder_data(void) {
-    const SensorState *sensors = get_sensors();
+    const SensorState* const sensors = get_sensors();
 
     print_string("Pulses [L R]:  ");
     print_signed_long(sensors->encoders->left_encoder);

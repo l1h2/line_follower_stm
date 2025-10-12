@@ -61,6 +61,6 @@ bool update_ir_sensors_async(void);
  * @note This function blocks until the reading is complete or the timeout is
  * reached.
  */
-uint16_t* get_central_ir_sensor_times(void);
+const uint16_t* get_central_ir_sensor_times(void);
 
 #endif  // VISION_H

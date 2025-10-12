@@ -95,7 +95,9 @@ uint8_t read_central_sensors(const uint16_t timeout) {
     return central_sensor_byte;
 }
 
-uint16_t* get_central_sensor_values(void) { return central_sensor_values; }
+const uint16_t* get_central_sensor_values(void) {
+    return central_sensor_values;
+}
 
 bool central_sensor_is_reading(const uint16_t timeout) {
     return (central_sensor_reading_started &&
@@ -113,7 +115,7 @@ uint8_t read_central_sensors_async(void) {
     return central_sensor_byte;
 }
 
-bool* get_side_sensor_values(void) {
+const bool* get_side_sensor_values(void) {
     static bool side_sensor_values[TOTAL_SIDE_SENSORS] = {0};
 
     for (uint8_t i = 0; i < TOTAL_SIDE_SENSORS; i++) {

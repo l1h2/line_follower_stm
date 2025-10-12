@@ -3,7 +3,7 @@
 #include "logger/logger.h"
 #include "serial/serial_in.h"
 
-void running_sensor_test(const StateMachine* sm) {
+void running_sensor_test(const StateMachine* const sm) {
     debug_print("RUNNING_SENSOR_TEST Mode: Handling running logic");
 
     while (sm->can_run) {

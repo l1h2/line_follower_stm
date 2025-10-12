@@ -9,11 +9,11 @@
 #include "state_machine/states/running.h"
 #include "state_machine/states/stopped.h"
 
-static bool validate_transition(const StateMachine* sm) {
+static bool validate_transition(const StateMachine* const sm) {
     return (sm->next_state != sm->current_state);
 }
 
-static bool handle_transition(const StateMachine* sm) {
+static bool handle_transition(const StateMachine* const sm) {
     switch (sm->current_state) {
         case STATE_INIT:
             return handle_init_transitions(sm->next_state);
@@ -30,13 +30,13 @@ static bool handle_transition(const StateMachine* sm) {
     }
 }
 
-static void update_state(StateMachine* sm) {
+static void update_state(StateMachine* const sm) {
     sm->previous_state = sm->current_state;
     sm->current_state = sm->next_state;
 }
 
 bool request_transition(void) {
-    StateMachine* sm = get_state_machine_ptr();
+    StateMachine* const sm = get_state_machine_ptr();
 
     if (!validate_transition(sm)) return false;
 

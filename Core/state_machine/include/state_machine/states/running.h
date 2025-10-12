@@ -10,7 +10,7 @@
  * @brief Handles the running state logic.
  * @param sm Pointer to the state machine structure.
  */
-void handle_running(const StateMachine* sm);
+void handle_running(const StateMachine* const sm);
 
 /**
  * @brief Handles the transitions within the running state.

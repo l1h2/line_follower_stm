@@ -7,7 +7,7 @@
  * @brief Handles the running PID mode logic.
  * @param sm Pointer to the state machine structure.
  */
-void running_pid(const StateMachine* sm);
+void running_pid(const StateMachine* const sm);
 
 /**
  * @brief Handles the transition from running PID mode to stopped state.

@@ -39,8 +39,9 @@ static inline void update_last_error(void) {
     errors.right_last_error = errors.right_error;
 }
 
-void init_speed_errors(const ErrorStruct* error_struct) {
+const SpeedErrors* init_speed_errors(const ErrorStruct* const error_struct) {
     encoders = error_struct->sensors->encoders;
+    return &errors;
 }
 
 const SpeedErrors* get_speed_errors(void) { return &errors; }

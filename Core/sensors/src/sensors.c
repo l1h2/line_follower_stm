@@ -1,18 +1,26 @@
 #include "sensors/sensors.h"
 
+#include <stdlib.h>
+
 #include "sensors/encoder.h"
 #include "sensors/mpu.h"
 #include "sensors/vision.h"
 
-static SensorState sensors = {0};
+static SensorState sensors = {
+    .ir_sensors = NULL,
+    .mpu_data = NULL,
+    .encoders = NULL,
+};
 
-void init_sensors(void) {
+const SensorState* init_sensors(void) {
     init_mpu();
     init_encoder();
 
-    if (sensors.ir_sensors == 0) sensors.ir_sensors = get_ir_sensors();
-    if (sensors.mpu_data == 0) sensors.mpu_data = get_mpu_data();
-    if (sensors.encoders == 0) sensors.encoders = get_encoder_data();
+    sensors.ir_sensors = get_ir_sensors();
+    sensors.mpu_data = get_mpu_data();
+    sensors.encoders = get_encoder_data();
+
+    return &sensors;
 }
 
 const SensorState* get_sensors(void) { return &sensors; }

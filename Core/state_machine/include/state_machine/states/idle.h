@@ -9,7 +9,7 @@
  * @brief Handles the idle state logic.
  * @param sm Pointer to the state machine structure.
  */
-void handle_idle(const StateMachine* sm);
+void handle_idle(const StateMachine* const sm);
 
 /**
  * @brief Handles the transitions within the idle state.

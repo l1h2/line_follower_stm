@@ -7,7 +7,7 @@
  * @brief Handles the running turbine test mode logic.
  * @param sm Pointer to the state machine structure.
  */
-void running_turbine_test(const StateMachine* sm);
+void running_turbine_test(const StateMachine* const sm);
 
 /**
  * @brief Handles the transition from running turbine test mode to stopped

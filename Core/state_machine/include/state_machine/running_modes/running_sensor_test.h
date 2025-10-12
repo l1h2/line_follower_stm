@@ -7,7 +7,7 @@
  * @brief Handles the running sensor test mode logic.
  * @param sm Pointer to the state machine structure.
  */
-void running_sensor_test(const StateMachine* sm);
+void running_sensor_test(const StateMachine* const sm);
 
 /**
  * @brief Handles the transition from running sensor test mode to stopped state.

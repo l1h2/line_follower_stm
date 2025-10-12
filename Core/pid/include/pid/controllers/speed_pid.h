@@ -6,8 +6,9 @@
 /**
  * @brief Initialize the speed PID controller with the given error structure.
  * @param error_struct Pointer to the ErrorStruct containing speed error values.
+ * @return Pointer to the initialized BaseSpeedPid structure.
  */
-void init_base_speed_pid(const ErrorStruct* error_struct);
+const BaseSpeedPid* init_base_speed_pid(const ErrorStruct* const error_struct);
 
 /**
  * @brief Get a pointer to the BaseSpeedPid structure.
@@ -20,7 +21,7 @@ const BaseSpeedPid* get_base_speed_pid_ptr(void);
  * @param left_pwm Pointer to store the calculated PWM for the left motor.
  * @param right_pwm Pointer to store the calculated PWM for the right motor.
  */
-void get_base_speed_pid(int16_t* left_pwm, int16_t* right_pwm);
+void get_base_speed_pid(int16_t* const left_pwm, int16_t* const right_pwm);
 
 /**
  * @brief Check if an update is pending for the speed PID controller.

@@ -6,7 +6,7 @@
 #include "serial/serial_in.h"
 #include "turbine/turbine.h"
 
-void running_turbine_test(const StateMachine* sm) {
+void running_turbine_test(const StateMachine* const sm) {
     debug_print("RUNNING_TURBINE_TEST Mode: Handling running logic");
 
     uint16_t turbine_pwm = get_turbine_pwm();

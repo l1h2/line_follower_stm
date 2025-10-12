@@ -8,8 +8,10 @@
 
 /**
  * @brief Initializes the error struct.
+ * @param sensors Pointer to the SensorState struct containing sensor data.
+ * @return Pointer to the initialized ErrorStruct.
  */
-void init_errors(void);
+const ErrorStruct* init_errors(const SensorState* const sensors);
 
 /**
  * @brief Returns a pointer to the error struct.

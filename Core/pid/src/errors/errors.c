@@ -81,11 +81,10 @@ static inline bool check_sensor_update(const bool read_encoder) {
     return true;
 }
 
-void init_errors(void) {
-    errors.sensors = get_sensors();
-
-    init_speed_errors(&errors);
-    errors.speed_errors = get_speed_errors();
+const ErrorStruct* init_errors(const SensorState* const sensors) {
+    errors.sensors = sensors;
+    errors.speed_errors = init_speed_errors(&errors);
+    return &errors;
 }
 
 const ErrorStruct* get_errors(void) { return &errors; }

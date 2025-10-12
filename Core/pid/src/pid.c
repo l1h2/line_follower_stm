@@ -69,21 +69,16 @@ static void update_motors(void) {
     set_motors(left_pwm, right_pwm);
 }
 
-void init_pid(void) {
+const PidStruct* init_pid(const SensorState* const sensors) {
     pid.max_pwm = get_max_pwm();
     pid.min_pwm = -pid.max_pwm;
 
-    init_errors();
-    pid.errors = get_errors();
+    pid.errors = init_errors(sensors);
+    pid.delta_pid = init_delta_pwm_pid(pid.errors);
+    pid.base_pwm_pid = init_base_pwm_pid(pid.errors);
+    pid.speed_pid = init_base_speed_pid(pid.errors);
 
-    init_delta_pwm_pid(pid.errors);
-    pid.delta_pid = get_delta_pwm_pid_ptr();
-
-    init_base_pwm_pid(pid.errors);
-    pid.base_pwm_pid = get_base_pwm_pid_ptr();
-
-    init_base_speed_pid(pid.errors);
-    pid.speed_pid = get_base_speed_pid_ptr();
+    return &pid;
 }
 
 const PidStruct* get_pid(void) { return &pid; }

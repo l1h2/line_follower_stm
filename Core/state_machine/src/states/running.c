@@ -12,7 +12,7 @@
 #include "state_machine/running_modes/running_sensor_test.h"
 #include "state_machine/running_modes/running_turbine_test.h"
 
-void handle_running(const StateMachine* sm) {
+void handle_running(const StateMachine* const sm) {
     debug_print("RUNNING State: Choosing running mode");
     restart_sensors();
 

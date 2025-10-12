@@ -5,7 +5,7 @@
 #include "serial/serial_out.h"
 #include "state_machine/handlers/state_handler.h"
 
-void handle_idle(const StateMachine* sm) {
+void handle_idle(const StateMachine* const sm) {
     debug_print("IDLE State: Waiting for bluetooth commands");
 
     while (!sm->can_run) {

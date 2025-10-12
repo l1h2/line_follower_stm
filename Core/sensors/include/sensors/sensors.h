@@ -6,8 +6,9 @@
 /**
  * @brief Initializes the sensors by setting up necessary configurations and
  * obtaining initial data.
+ * @return Pointer to the initialized SensorState struct.
  */
-void init_sensors(void);
+const SensorState* init_sensors(void);
 
 /**
  * @brief Returns a pointer to the sensor state structure.

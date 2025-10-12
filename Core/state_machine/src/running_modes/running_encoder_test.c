@@ -7,7 +7,7 @@
 
 #define ENCODER_TEST_DISTANCE_CM 100.0f
 
-void running_encoder_test(const StateMachine* sm) {
+void running_encoder_test(const StateMachine* const sm) {
     debug_print("RUNNING_ENCODER_TEST Mode: Handling running logic");
 
     const PidStruct* pid = get_pid();

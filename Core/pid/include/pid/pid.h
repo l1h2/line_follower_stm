@@ -8,8 +8,10 @@
 
 /**
  * @brief Initializes the PID controller and all related registers.
+ * @param sensors Pointer to the SensorState structure containing sensor data.
+ * @return Pointer to the initialized PidStruct structure.
  */
-void init_pid(void);
+const PidStruct* init_pid(const SensorState* const sensors);
 
 /**
  * @brief Returns a pointer to the PID struct.

@@ -7,8 +7,9 @@
  * @brief Initialize the speed errors structure with the given error structure.
  * @param error_struct Pointer to an initialized ErrorStruct containing sensor
  * data.
+ * @return Pointer to the initialized SpeedErrors structure.
  */
-void init_speed_errors(const ErrorStruct* error_struct);
+const SpeedErrors* init_speed_errors(const ErrorStruct* const error_struct);
 
 /**
  * @brief Get a pointer to the current SpeedErrors structure.

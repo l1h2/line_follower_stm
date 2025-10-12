@@ -10,8 +10,9 @@
  * @brief Initialize the Delta PWM PID controller with the given error
  * structure.
  * @param error_struct Pointer to the ErrorStruct containing error information.
+ * @return Pointer to the initialized DeltaPid structure.
  */
-void init_delta_pwm_pid(const ErrorStruct* error_struct);
+const DeltaPid* init_delta_pwm_pid(const ErrorStruct* const error_struct);
 
 /**
  * @brief Get a pointer to the Delta PID structure.

@@ -6,7 +6,7 @@
 #include "state_machine/handlers/config_handler.h"
 #include "state_machine/running_modes/running_base.h"
 
-void running_pid(const StateMachine* sm) {
+void running_pid(const StateMachine* const sm) {
     debug_print("RUNNING_PID Mode: Handling running logic");
 
     restart_pwm();

@@ -45,8 +45,9 @@ static inline int16_t get_ff(void) {
     return base_pwm_pid.kff * errors->feedforward;
 }
 
-void init_base_pwm_pid(const ErrorStruct* error_struct) {
+const BasePwmPid* init_base_pwm_pid(const ErrorStruct* const error_struct) {
     errors = error_struct;
+    return &base_pwm_pid;
 }
 
 const BasePwmPid* get_base_pwm_pid_ptr(void) { return &base_pwm_pid; }

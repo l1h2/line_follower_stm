@@ -36,7 +36,7 @@ uint8_t read_central_sensors(const uint16_t timeout);
  * @note This function blocks until the reading is complete or the timeout is
  * reached.
  */
-uint16_t* get_central_sensor_values(void);
+const uint16_t* get_central_sensor_values(void);
 
 /**
  * @brief Checks if the central sensors are currently being read.
@@ -65,6 +65,6 @@ uint8_t read_central_sensors_async(void);
  * @return bool* Pointer to an array of boolean values representing the state
  * of the side sensors.
  */
-bool* get_side_sensor_values(void);
+const bool* get_side_sensor_values(void);
 
 #endif  // IR_SENSORS_H

@@ -7,7 +7,7 @@
  * @brief Handles the running encoder test mode logic.
  * @param sm Pointer to the state machine structure.
  */
-void running_encoder_test(const StateMachine* sm);
+void running_encoder_test(const StateMachine* const sm);
 
 /**
  * @brief Handles the transition from running encoder test mode to stopped

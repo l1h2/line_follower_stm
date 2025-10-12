@@ -82,13 +82,14 @@ static inline void update_pwm(void) {
     pid_struct.last_right_pwm = pid_struct.right_pwm;
 }
 
-void init_base_speed_pid(const ErrorStruct* error_struct) {
+const BaseSpeedPid* init_base_speed_pid(const ErrorStruct* const error_struct) {
     speed_errors = error_struct->speed_errors;
+    return &base_pid;
 }
 
 const BaseSpeedPid* get_base_speed_pid_ptr(void) { return &base_pid; }
 
-void get_base_speed_pid(int16_t* left_pwm, int16_t* right_pwm) {
+void get_base_speed_pid(int16_t* const left_pwm, int16_t* const right_pwm) {
     update_p();
     update_i();
     update_d();

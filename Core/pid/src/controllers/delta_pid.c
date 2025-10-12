@@ -54,8 +54,9 @@ static inline int16_t get_d(void) {
     return delta_pid.kd * filtered_delta_error / delta_pid.frame_interval;
 }
 
-void init_delta_pwm_pid(const ErrorStruct* error_struct) {
+const DeltaPid* init_delta_pwm_pid(const ErrorStruct* const error_struct) {
     errors = error_struct;
+    return &delta_pid;
 }
 
 const DeltaPid* get_delta_pwm_pid_ptr(void) { return &delta_pid; }

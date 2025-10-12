@@ -34,8 +34,8 @@ typedef struct {
     int8_t feedforward;               // Feedforward value.
     int8_t max_error;                 // Maximum error value.
     int8_t min_error;                 // Minimum error value.
-    const SpeedErrors* speed_errors;  // Speed error values for PID control.
-    const SensorState* sensors;       // Pointer to sensor state information.
+    const SpeedErrors* speed_errors;  // Speed error values.
+    const SensorState* sensors;       // Sensor state information.
 } ErrorStruct;
 
 /**

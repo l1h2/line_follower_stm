@@ -13,9 +13,10 @@ void handle_init(void) {
 
     init_serial();
     init_timer();
-    init_sensors();
     init_motors();
-    init_pid();
+
+    const SensorState* const sensors = init_sensors();
+    init_pid(sensors);
 
     request_next_state(STATE_IDLE);
 }

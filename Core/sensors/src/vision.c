@@ -40,6 +40,6 @@ bool update_ir_sensors_async(void) {
     return true;
 }
 
-uint16_t* get_central_ir_sensor_times(void) {
+const uint16_t* get_central_ir_sensor_times(void) {
     return get_central_sensor_values();
 }
