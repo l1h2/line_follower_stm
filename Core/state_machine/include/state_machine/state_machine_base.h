@@ -9,12 +9,12 @@
  * @brief Enumeration of running modes for the robot.
  */
 typedef enum {
-    RUNNING_INIT,
-    RUNNING_SENSOR_TEST,
-    RUNNING_TURBINE_TEST,
-    RUNNING_ENCODER_TEST,
-    RUNNING_PID,
-    RUNNING_PURE_PURSUIT
+    RUNNING_INIT,          // Initial running mode
+    RUNNING_SENSOR_TEST,   // Sensor testing mode
+    RUNNING_TURBINE_TEST,  // Turbine testing mode
+    RUNNING_ENCODER_TEST,  // Encoder testing mode
+    RUNNING_PID,           // PID control mode
+    RUNNING_PURE_PURSUIT   // Pure pursuit mode
 } RunningModes;
 
 /**
@@ -22,9 +22,10 @@ typedef enum {
  * @brief Enumeration of stopping modes for the robot.
  */
 typedef enum {
-    STOP_MODE_NONE,
-    STOP_MODE_TIME,
-    STOP_MODE_LAPS,
+    STOP_MODE_NONE,      // No stopping mode
+    STOP_MODE_TIME,      // Stop after a certain time
+    STOP_MODE_LAPS,      // Stop after completing a number of laps
+    STOP_MODE_DISTANCE,  // Stop after covering a certain distance
 } StopModes;
 
 /**
@@ -54,6 +55,7 @@ typedef struct {
     uint8_t laps;                // Number of laps to run
     uint32_t start_time;         // Time robot started running
     uint32_t stop_time;          // Time in milliseconds for the robot to stop
+    float stop_distance;         // Distance in cm for the robot to stop
     bool log_data;               // Flag indicating if data should be logged
 } StateMachine;
 

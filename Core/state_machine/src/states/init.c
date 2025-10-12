@@ -5,10 +5,13 @@
 #include "pid/pid.h"
 #include "sensors/sensors.h"
 #include "serial/serial_base.h"
+#include "serial/serial_out.h"
 #include "state_machine/handlers/state_handler.h"
+#include "state_machine/running_modes/running_base.h"
 #include "timer/time.h"
+#include "track/track.h"
 
-void handle_init(void) {
+void handle_init(const StateMachine* const sm) {
     debug_print("INIT State: Initializing state machine");
 
     init_serial();
@@ -16,7 +19,11 @@ void handle_init(void) {
     init_motors();
 
     const SensorState* const sensors = init_sensors();
-    init_pid(sensors);
+    const PidStruct* const pid = init_pid(sensors);
+    const TrackCounters* const track_counters = init_track(pid->errors);
+
+    init_running_modes(track_counters);
+    init_serial_out(sm, pid, track_counters);
 
     request_next_state(STATE_IDLE);
 }

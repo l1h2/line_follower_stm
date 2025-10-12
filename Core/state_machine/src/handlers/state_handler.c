@@ -17,7 +17,7 @@ static bool validate_next_state(const StateMachine* const sm) {
 void handle_state(const StateMachine* const sm) {
     switch (sm->current_state) {
         case STATE_INIT:
-            handle_init();
+            handle_init(sm);
             break;
         case STATE_IDLE:
             handle_idle(sm);

@@ -97,6 +97,9 @@
     "tuple": "c",
     "type_traits": "c",
     "utility": "c",
-    "cstddef": "c"
+    "cstddef": "c",
+    "string.h": "c",
+    "running.h": "c",
+    "track_base.h": "c"
   }
 }

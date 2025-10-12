@@ -1,6 +1,9 @@
 #ifndef ENCODER_H
 #define ENCODER_H
 
+#include <stdbool.h>
+#include <stdint.h>
+
 #include "sensors/sensors_base.h"
 
 /**
@@ -25,6 +28,14 @@ void restart_encoders(void);
  * between reads.
  */
 void update_encoder_data(void);
+
+/**
+ * @brief Asynchronously updates the encoder data if the specified interval
+ * has elapsed since the last update.
+ * @param interval_ms The minimum interval in milliseconds between updates.
+ * @return true if the encoder data was updated, false otherwise.
+ */
+bool update_encoder_data_async(const uint32_t interval_ms);
 
 /**
  * @brief Clears the encoder data.

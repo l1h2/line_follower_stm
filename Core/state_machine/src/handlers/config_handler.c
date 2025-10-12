@@ -13,6 +13,7 @@ static StateMachine sm = {
     .laps = 0,
     .start_time = 0,
     .stop_time = 0,
+    .stop_distance = 0.0f,
     .log_data = false,
 };
 
@@ -27,6 +28,7 @@ void reset_state_machine(void) {
     sm.laps = 0;
     sm.start_time = 0;
     sm.stop_time = 0;
+    sm.stop_distance = 0.0f;
     sm.log_data = false;
 }
 
@@ -56,6 +58,10 @@ void set_start_time(void) { sm.start_time = time(); }
 
 void set_stop_time(const uint8_t stop_time) {
     sm.stop_time = stop_time * 1000UL;
+}
+
+void set_stop_distance(const float stop_distance) {
+    sm.stop_distance = stop_distance;
 }
 
 void set_log_data(const bool log_data) { sm.log_data = log_data; }

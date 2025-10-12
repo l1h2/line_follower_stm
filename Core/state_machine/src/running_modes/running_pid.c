@@ -1,13 +1,21 @@
 #include "state_machine/running_modes/running_pid.h"
 
+#include <stdbool.h>
+#include <stdint.h>
+
 #include "logger/logger.h"
 #include "pid/pid.h"
+#include "sensors/encoder.h"
 #include "serial/serial_in.h"
+#include "serial/serial_out.h"
 #include "state_machine/handlers/config_handler.h"
 #include "state_machine/running_modes/running_base.h"
+#include "track/track.h"
 
 void running_pid(const StateMachine* const sm) {
     debug_print("RUNNING_PID Mode: Handling running logic");
+
+    const PidStruct* pid = get_pid();
 
     restart_pwm();
     start_turbine_if_needed();
@@ -16,6 +24,10 @@ void running_pid(const StateMachine* const sm) {
 
     while (sm->can_run) {
         if (!update_pid()) continue;
+
+        check_stop(update_track(
+            update_encoder_data_async(pid->speed_pid->frame_interval)));
+        if (sm->log_data) send_message(OPERATION_DATA);
 
         process_serial_messages();
     }

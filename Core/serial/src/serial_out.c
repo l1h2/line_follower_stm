@@ -3,25 +3,50 @@
 #include <stddef.h>
 
 #include "logger/logger.h"
-#include "pid/pid.h"
-#include "state_machine/handlers/config_handler.h"
 #include "timer/time.h"
 #include "turbine/turbine.h"
 
 static const StateMachine* sm = NULL;
 static const PidStruct* pid = NULL;
+static const TrackCounters* track = NULL;
 
 static uint32_t last_log_time = 0;
 
+static uint8_t operation_data[OPERATION_DATA_SIZE] = {0};
+
 static inline uint16_t parse_float(const float value) {
-    return (uint16_t)(value * 100.0f);
+    return (uint16_t)(value * 100.0f + 0.5f);
+}
+
+static inline void update_operation_data(void) {
+    operation_data[0] = pid->errors->sensors->ir_sensors->central_sensors_state;
+    operation_data[1] = pid->errors->sensors->ir_sensors->left_sensor;
+    operation_data[1] |= pid->errors->sensors->ir_sensors->right_sensor << 1;
+
+    // Convert from cm to mm for higher precision
+    const uint16_t x = parse_float(track->x * 10.0f);
+    const uint16_t y = parse_float(track->y * 10.0f);
+    operation_data[2] = x & 0xFF;
+    operation_data[3] = (x >> 8);
+    operation_data[4] = y & 0xFF;
+    operation_data[5] = (y >> 8);
+
+    const uint16_t heading =
+        parse_float(pid->errors->sensors->encoders->heading);
+    operation_data[6] = heading & 0xFF;
+    operation_data[7] = (heading >> 8);
+}
+
+void init_serial_out(const StateMachine* const state_machine,
+                     const PidStruct* const pid_struct,
+                     const TrackCounters* const track_counters) {
+    sm = state_machine;
+    pid = pid_struct;
+    track = track_counters;
 }
 
 void send_message(const SerialMessages msg) {
     if (msg >= SERIAL_MESSAGE_COUNT) return;
-
-    if (!sm) sm = get_state_machine();
-    if (!pid) pid = get_pid();
 
     switch (msg) {
         case START:
@@ -99,6 +124,16 @@ void send_message(const SerialMessages msg) {
         case PID_CLAMP:
             send_data(msg, (const uint8_t*)&pid->delta_pid->clamp);
             break;
+        case STOP_DISTANCE:
+            // Convert from cm to mm for higher precision
+            const uint16_t stop_distance =
+                parse_float(sm->stop_distance * 10.0f);
+            send_data(msg, (const uint8_t*)&stop_distance);
+            break;
+        case OPERATION_DATA:
+            update_operation_data();
+            send_data(msg, operation_data);
+            break;
         default:
             debug_print("Attempted to send unknown message");
             break;
@@ -113,6 +148,7 @@ void send_messages(const SerialMessages* msgs, const uint8_t count) {
 void send_all_messages(void) {
     // Skip command signals
     for (uint8_t i = STOP + 1; i < SERIAL_MESSAGE_COUNT; i++) {
+        if (i == OPERATION_DATA) continue;
         send_message((SerialMessages)i);
     }
 }

@@ -3,39 +3,44 @@
 
 #include <stdint.h>
 
+#define OPERATION_DATA_SIZE 8  // Size of the operation data message
+
 /**
  * @brief Macro to define serial messages and their sizes.
  * @param X A macro that takes two parameters: the message name and its size in
  * bytes.
  */
-#define SERIAL_MESSAGES_TABLE(X) \
-    X(INVALID_MESSAGE, 0)        \
-    X(START, 0)                  \
-    X(STOP, 0)                   \
-    X(STATE, 1)                  \
-    X(RUNNING_MODE, 1)           \
-    X(STOP_MODE, 1)              \
-    X(LAPS, 1)                   \
-    X(STOP_TIME, 1)              \
-    X(LOG_DATA, 1)               \
-    X(PID_KP, 1)                 \
-    X(PID_KI, 1)                 \
-    X(PID_KD, 2)                 \
-    X(PID_KB, 1)                 \
-    X(PID_KFF, 1)                \
-    X(PID_ACCEL, 2)              \
-    X(PID_BASE_PWM, 2)           \
-    X(PID_MAX_PWM, 2)            \
-    X(TURBINE_PWM, 2)            \
-    X(SPEED_KP, 1)               \
-    X(SPEED_KI, 1)               \
-    X(SPEED_KD, 2)               \
-    X(BASE_SPEED, 2)             \
-    X(PID_ALPHA, 2)              \
-    X(PID_CLAMP, 2)
+#define SERIAL_MESSAGES_TABLE(X)           \
+    X(INVALID_MESSAGE, 0)                  \
+    X(START, 0)                            \
+    X(STOP, 0)                             \
+    X(STATE, 1)                            \
+    X(RUNNING_MODE, 1)                     \
+    X(STOP_MODE, 1)                        \
+    X(LAPS, 1)                             \
+    X(STOP_TIME, 1)                        \
+    X(LOG_DATA, 1)                         \
+    X(PID_KP, 1)                           \
+    X(PID_KI, 1)                           \
+    X(PID_KD, 2)                           \
+    X(PID_KB, 1)                           \
+    X(PID_KFF, 1)                          \
+    X(PID_ACCEL, 2)                        \
+    X(PID_BASE_PWM, 2)                     \
+    X(PID_MAX_PWM, 2)                      \
+    X(TURBINE_PWM, 2)                      \
+    X(SPEED_KP, 1)                         \
+    X(SPEED_KI, 1)                         \
+    X(SPEED_KD, 2)                         \
+    X(BASE_SPEED, 2)                       \
+    X(PID_ALPHA, 2)                        \
+    X(PID_CLAMP, 2)                        \
+    X(STOP_DISTANCE, 2)                    \
+    X(OPERATION_DATA, OPERATION_DATA_SIZE) \
+    X(LOOKAHEAD, 1)
 
 // Maximum payload size among all messages
-#define SERIAL_MESSAGE_MAX_PAYLOAD 4
+#define SERIAL_MESSAGE_MAX_PAYLOAD 8
 
 #define SERIAL_FRAME_START 0xAA  // Start byte for framing
 

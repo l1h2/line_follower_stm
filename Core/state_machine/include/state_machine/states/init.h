@@ -7,8 +7,9 @@
 
 /**
  * @brief Handles the initialization state logic.
+ * @param sm Pointer to the StateMachine struct.
  */
-void handle_init(void);
+void handle_init(const StateMachine* const sm);
 
 /**
  * @brief Handles the transitions within the initialization state.

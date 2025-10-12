@@ -3,7 +3,21 @@
 
 #include <stdint.h>
 
+#include "pid/pid_base.h"
 #include "serial/serial_base.h"
+#include "state_machine/state_machine_base.h"
+#include "track/track_base.h"
+
+/**
+ * @brief Initializes the serial output module with references to the state
+ * machine, PID controller, and track counters.
+ * @param state_machine Pointer to the StateMachine struct.
+ * @param pid_struct Pointer to the PidStruct struct.
+ * @param track_counters Pointer to the TrackCounters struct.
+ */
+void init_serial_out(const StateMachine* const state_machine,
+                     const PidStruct* const pid_struct,
+                     const TrackCounters* const track_counters);
 
 /**
  * @brief Sends a message over the serial interface.

@@ -34,15 +34,21 @@ typedef struct {
  * @brief Structure to hold the encoder values.
  */
 typedef struct {
-    int32_t left_encoder;       // Left encoder count
-    int32_t right_encoder;      // Right encoder count
-    float left_distance;        // Distance calculated from left encoder in cm
-    float right_distance;       // Distance calculated from right encoder in cm
-    float distance;             // Distance calculated from encoder values in cm
-    float left_speed;           // Speed of the left wheel in cm/s
-    float right_speed;          // Speed of the right wheel in cm/s
-    float speed;                // Average speed of the robot in cm/s
-    uint32_t last_update_time;  // Timestamp of the last update in ms
+    int32_t left_encoder;          // Left encoder count
+    int32_t right_encoder;         // Right encoder count
+    float current_left_distance;   // Left distance since last update in cm
+    float current_right_distance;  // Right distance since last update in cm
+    float current_distance;        // Distance since last update in cm
+    float left_distance;           // Left distance in cm
+    float right_distance;          // Right distance in cm
+    float distance;                // Distance in cm
+    float current_angle;           // Current angle in radians
+    float heading;                 // Estimated heading in radians
+    float left_speed;              // Speed of the left wheel in cm/s
+    float right_speed;             // Speed of the right wheel in cm/s
+    float speed;                   // Average speed of the robot in cm/s
+    float current_interval;        // Time interval since last update in seconds
+    uint32_t last_update_time;     // Timestamp of the last update in ms
 } EncoderData;
 
 /**

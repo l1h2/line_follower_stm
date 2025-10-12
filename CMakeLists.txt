@@ -49,6 +49,8 @@ set(USER_MODULES
     motors
     pid
     turbine
+    track
+    pure_pursuit
 )
 
 # Link directories setup
