@@ -116,8 +116,7 @@ static void handle_message(void) {
             set_pwm_clamp(parse_uint16(current_msg.payload));
             break;
         case STOP_DISTANCE:
-            // Convert from mm to cm for internal representation
-            set_stop_distance(parse_float(current_msg.payload) / 10.0f);
+            set_stop_distance(parse_uint16(current_msg.payload));
             break;
         default:
             debug_print("Received unknown message");

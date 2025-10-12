@@ -125,10 +125,7 @@ void send_message(const SerialMessages msg) {
             send_data(msg, (const uint8_t*)&pid->delta_pid->clamp);
             break;
         case STOP_DISTANCE:
-            // Convert from cm to mm for higher precision
-            const uint16_t stop_distance =
-                parse_float(sm->stop_distance * 10.0f);
-            send_data(msg, (const uint8_t*)&stop_distance);
+            send_data(msg, (const uint8_t*)&sm->stop_distance);
             break;
         case OPERATION_DATA:
             update_operation_data();

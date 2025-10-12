@@ -81,7 +81,7 @@ void set_stop_time(const uint8_t stop_time);
  * @brief Sets the stop distance for the state machine.
  * @param stop_distance The stop distance to set in centimeters.
  */
-void set_stop_distance(const float stop_distance);
+void set_stop_distance(const uint16_t stop_distance);
 
 /**
  * @brief Sets the log_data flag for the state machine.

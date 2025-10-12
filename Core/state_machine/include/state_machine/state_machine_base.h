@@ -55,7 +55,7 @@ typedef struct {
     uint8_t laps;                // Number of laps to run
     uint32_t start_time;         // Time robot started running
     uint32_t stop_time;          // Time in milliseconds for the robot to stop
-    float stop_distance;         // Distance in cm for the robot to stop
+    uint16_t stop_distance;      // Distance in cm for the robot to stop
     bool log_data;               // Flag indicating if data should be logged
 } StateMachine;
 
