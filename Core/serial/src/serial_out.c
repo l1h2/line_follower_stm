@@ -7,8 +7,10 @@
 #include "turbine/turbine.h"
 
 static const StateMachine* sm = NULL;
+static const SensorState* sensors = NULL;
 static const PidStruct* pid = NULL;
 static const TrackCounters* track = NULL;
+static const PurePursuit* pure_pursuit = NULL;
 
 static uint32_t last_log_time = 0;
 
@@ -23,9 +25,9 @@ static inline int16_t parse_signed_float(const float value) {
 }
 
 static inline void update_operation_data(void) {
-    operation_data[0] = pid->errors->sensors->ir_sensors->central_sensors_state;
-    operation_data[1] = pid->errors->sensors->ir_sensors->left_sensor;
-    operation_data[1] |= pid->errors->sensors->ir_sensors->right_sensor << 1;
+    operation_data[0] = sensors->ir_sensors->central_sensors_state;
+    operation_data[1] = sensors->ir_sensors->left_sensor;
+    operation_data[1] |= sensors->ir_sensors->right_sensor << 1;
 
     // Convert from cm to mm for higher precision
     const int16_t x = parse_signed_float(track->x * 10.0f);
@@ -35,18 +37,21 @@ static inline void update_operation_data(void) {
     operation_data[4] = y & 0xFF;
     operation_data[5] = (y >> 8);
 
-    const int16_t heading =
-        parse_signed_float(pid->errors->sensors->encoders->heading);
+    const int16_t heading = parse_signed_float(sensors->encoders->heading);
     operation_data[6] = heading & 0xFF;
     operation_data[7] = (heading >> 8);
 }
 
 void init_serial_out(const StateMachine* const state_machine,
+                     const SensorState* const sensor_state,
                      const PidStruct* const pid_struct,
-                     const TrackCounters* const track_counters) {
+                     const TrackCounters* const track_counters,
+                     const PurePursuit* const pure_pursuit_struct) {
     sm = state_machine;
+    sensors = sensor_state;
     pid = pid_struct;
     track = track_counters;
+    pure_pursuit = pure_pursuit_struct;
 }
 
 void send_message(const SerialMessages msg) {
@@ -134,6 +139,9 @@ void send_message(const SerialMessages msg) {
         case OPERATION_DATA:
             update_operation_data();
             send_data(msg, operation_data);
+            break;
+        case LOOKAHEAD:
+            send_data(msg, (const uint8_t*)&pure_pursuit->lookahead);
             break;
         default:
             debug_print("Attempted to send unknown message");

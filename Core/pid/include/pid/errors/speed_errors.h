@@ -19,7 +19,7 @@ const SpeedErrors* get_speed_errors(void);
 
 /**
  * @brief Update the speed errors based on the latest encoder data.
- * @note This function always reads encoder data, updating the speed intervals.
+ * @note This function needs encoder values to be updated before calling.
  */
 void update_speed_errors(void);
 

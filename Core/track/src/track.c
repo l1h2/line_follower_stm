@@ -196,3 +196,8 @@ bool update_track(const bool encoder_updated) {
     update_line();
     return update_track_counters();
 }
+
+void update_positions(void) {
+    update_distance();
+    update_position();
+}

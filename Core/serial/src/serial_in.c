@@ -3,6 +3,7 @@
 #include "hal/usart.h"
 #include "logger/logger.h"
 #include "pid/pid.h"
+#include "pure_pursuit/pure_pursuit.h"
 #include "serial/serial_base.h"
 #include "serial/serial_out.h"
 #include "state_machine/handlers/config_handler.h"
@@ -117,6 +118,9 @@ static void handle_message(void) {
             break;
         case STOP_DISTANCE:
             set_stop_distance(parse_uint16(current_msg.payload));
+            break;
+        case LOOKAHEAD:
+            set_lookahead((uint8_t)current_msg.payload[0]);
             break;
         default:
             debug_print("Received unknown message");

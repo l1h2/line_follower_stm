@@ -3,6 +3,7 @@
 #include "logger/logger.h"
 #include "motors/motors.h"
 #include "pid/pid.h"
+#include "pure_pursuit/pure_pursuit.h"
 #include "sensors/sensors.h"
 #include "serial/serial_base.h"
 #include "serial/serial_out.h"
@@ -21,9 +22,10 @@ void handle_init(const StateMachine* const sm) {
     const SensorState* const sensors = init_sensors();
     const PidStruct* const pid = init_pid(sensors);
     const TrackCounters* const track_counters = init_track(pid->errors);
+    const PurePursuit* const pp = init_pure_pursuit(track_counters, pid);
 
     init_running_modes(track_counters);
-    init_serial_out(sm, pid, track_counters);
+    init_serial_out(sm, sensors, pid, track_counters, pp);
 
     request_next_state(STATE_IDLE);
 }

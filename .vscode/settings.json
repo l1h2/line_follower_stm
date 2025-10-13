@@ -100,6 +100,10 @@
     "cstddef": "c",
     "string.h": "c",
     "running.h": "c",
-    "track_base.h": "c"
+    "track_base.h": "c",
+    "pure_pursuit_base.h": "c",
+    "pure_pursuit.h": "c",
+    "track.h": "c",
+    "running_pure_pursuit.h": "c"
   }
 }

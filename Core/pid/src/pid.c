@@ -9,6 +9,7 @@
 #include "pid/errors/errors.h"
 #include "pid/errors/speed_errors.h"
 #include "pid/pid_base.h"
+#include "sensors/encoder.h"
 #include "timer/time.h"
 
 #define BASE_PWM 300
@@ -25,8 +26,6 @@ static PidStruct pid = {
     .base_pwm_pid = NULL,
     .speed_pid = NULL,
 };
-
-static bool is_updating_errors = false;
 
 static inline bool updates_pending(void) {
     return update_pending_delta_pwm_pid() || update_pending_base_pwm_pid();
@@ -85,18 +84,9 @@ const PidStruct* get_pid(void) { return &pid; }
 
 bool update_pid(void) {
     if (!updates_pending()) return false;
-
-    if (!is_updating_errors) {
-        update_errors_async(false);
-        is_updating_errors = true;
-        return false;
-    }
-
     if (!update_errors_async(false)) return false;
 
     update_pid_times();
-    is_updating_errors = false;
-
     update_motors();
 
     return true;
@@ -105,6 +95,7 @@ bool update_pid(void) {
 bool update_speed_pid(void) {
     if (!update_pending_base_speed_pid()) return false;
 
+    update_encoder_data();
     set_speed_targets(pid.speed_pid->base_speed, pid.speed_pid->base_speed);
     update_speed_errors();
     update_base_speed_pid();
@@ -117,9 +108,11 @@ bool update_speed_pid(void) {
     return true;
 }
 
-void reset_pwm(void) { pid.current_pwm = pid.base_pwm; }
-
-void restart_pwm(void) { pid.current_pwm = pid.base_pwm; }
+void restart_pid(void) {
+    pid.current_pwm = pid.base_pwm;
+    clear_errors();
+    clear_speed_errors();
+}
 
 void set_base_pwm(const uint16_t pwm) {
     const uint16_t min_pwm = get_min_pwm();
@@ -132,7 +125,7 @@ void set_base_pwm(const uint16_t pwm) {
         pid.base_pwm = pwm;
     }
 
-    reset_pwm();
+    pid.current_pwm = pid.base_pwm;
 }
 
 void set_current_pwm(const int16_t pwm) {

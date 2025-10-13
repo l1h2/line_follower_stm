@@ -3,8 +3,6 @@
 #include "hal/encoders.h"
 #include "timer/time.h"
 
-#define WHEEL_BASE_MM 143.0f
-#define WHEEL_BASE_CM (WHEEL_BASE_MM / 10.0f)
 #define WHEEL_CIRCUMFERENCE_MM (WHEEL_DIAMETER_MM * 3.14159f)
 #define MM_PER_PULSE (WHEEL_CIRCUMFERENCE_MM / ENCODER_PULSES_PER_REV)
 #define CM_PER_PULSE (MM_PER_PULSE / 10.0f)

@@ -47,8 +47,6 @@ const SpeedErrors* init_speed_errors(const ErrorStruct* const error_struct) {
 const SpeedErrors* get_speed_errors(void) { return &errors; }
 
 void update_speed_errors(void) {
-    update_encoder_data();
-
     update_error();
     update_error_sum();
     update_delta_error();

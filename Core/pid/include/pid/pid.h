@@ -33,14 +33,9 @@ bool update_pid(void);
 bool update_speed_pid(void);
 
 /**
- * @brief Resets the current PWM used to the base PWM value.
+ * @brief Restarts the current PID used to the initial PID values.
  */
-void reset_pwm(void);
-
-/**
- * @brief Restarts the current PWM used to the initial PWM value.
- */
-void restart_pwm(void);
+void restart_pid(void);
 
 /**
  * @brief Sets the base PWM value for the motors.

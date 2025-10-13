@@ -6,6 +6,12 @@
 
 #include "sensors/sensors_base.h"
 
+// Distance between the wheels in mm
+#define WHEEL_BASE_MM 143.0f
+
+// Distance between the wheels in cm
+#define WHEEL_BASE_CM (WHEEL_BASE_MM / 10.0f)
+
 /**
  * @brief Initializes the encoder peripherals.
  */

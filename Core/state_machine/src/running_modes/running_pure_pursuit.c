@@ -1,39 +1,31 @@
-#include "state_machine/running_modes/running_pid.h"
-
-#include <stdbool.h>
-#include <stdint.h>
+#include "state_machine/running_modes/running_pure_pursuit.h"
 
 #include "logger/logger.h"
 #include "pid/pid.h"
-#include "sensors/encoder.h"
+#include "pure_pursuit/pure_pursuit.h"
 #include "serial/serial_in.h"
-#include "serial/serial_out.h"
 #include "state_machine/handlers/config_handler.h"
 #include "state_machine/running_modes/running_base.h"
 #include "track/track.h"
 
-void running_pid(const StateMachine* const sm) {
-    debug_print("RUNNING_PID Mode: Handling running logic");
-
-    const PidStruct* pid = get_pid();
+void running_pure_pursuit(const StateMachine* const sm) {
+    debug_print("RUNNING_PURE_PURSUIT Mode: Handling running logic");
 
     start_turbine_if_needed();
     set_start_time();
 
     while (sm->can_run) {
-        if (!update_pid()) continue;
+        if (!update_peripheral_sensors()) continue;
 
-        check_stop(update_track(
-            update_encoder_data_async(pid->speed_pid->frame_interval)));
-        if (sm->log_data) send_message(OPERATION_DATA);
-
+        update_pure_pursuit();
+        check_stop(update_track(false));
         process_serial_messages();
     }
 
-    debug_print("Finalizing RUNNING_PID mode");
+    debug_print("Finalizing RUNNING_PURE_PURSUIT mode");
 }
 
-void running_pid_to_stopped(void) {
+void running_pure_pursuit_to_stopped(void) {
     const PidStruct* pid = get_pid();
 
     const uint8_t max_pwm_save = pid->max_pwm;

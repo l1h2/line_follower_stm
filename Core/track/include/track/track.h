@@ -33,4 +33,9 @@ void reset_track(void);
  */
 bool update_track(const bool encoder_updated);
 
+/**
+ * @brief Updates the robot's position and distance traveled.
+ */
+void update_positions(void);
+
 #endif  // TRACK_H
