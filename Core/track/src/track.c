@@ -38,6 +38,10 @@ static inline void complete_lap(void) {
     track.track_markers = 0;
     track.section = 0;
 
+    // TODO: Get exact distance for track markers
+    track.x = -60;
+    track.y = 0;
+
     reset_memory();
 }
 
