@@ -18,21 +18,25 @@ static inline uint16_t parse_float(const float value) {
     return (uint16_t)(value * 100.0f + 0.5f);
 }
 
+static inline int16_t parse_signed_float(const float value) {
+    return (int16_t)(value * 100.0f + (value >= 0.0f ? 0.5f : -0.5f));
+}
+
 static inline void update_operation_data(void) {
     operation_data[0] = pid->errors->sensors->ir_sensors->central_sensors_state;
     operation_data[1] = pid->errors->sensors->ir_sensors->left_sensor;
     operation_data[1] |= pid->errors->sensors->ir_sensors->right_sensor << 1;
 
     // Convert from cm to mm for higher precision
-    const uint16_t x = parse_float(track->x * 10.0f);
-    const uint16_t y = parse_float(track->y * 10.0f);
+    const int16_t x = parse_signed_float(track->x * 10.0f);
+    const int16_t y = parse_signed_float(track->y * 10.0f);
     operation_data[2] = x & 0xFF;
     operation_data[3] = (x >> 8);
     operation_data[4] = y & 0xFF;
     operation_data[5] = (y >> 8);
 
-    const uint16_t heading =
-        parse_float(pid->errors->sensors->encoders->heading);
+    const int16_t heading =
+        parse_signed_float(pid->errors->sensors->encoders->heading);
     operation_data[6] = heading & 0xFF;
     operation_data[7] = (heading >> 8);
 }
