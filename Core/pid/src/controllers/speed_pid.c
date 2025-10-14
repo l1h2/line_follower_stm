@@ -5,9 +5,10 @@
 #include "sensors/sensors_base.h"
 #include "timer/time.h"
 
-#define KP 50
+#define KP 10
 #define KI 10
-#define KD 30
+#define KD 0
+#define KFF 0
 #define FRAME_INTERVAL 10  // ms
 
 #define BASE_SPEED 20.0f  // cm/s
@@ -17,6 +18,7 @@ static BaseSpeedPid base_pid = {
     .kp = KP,
     .ki = KI,
     .kd = KD,
+    .kff = KFF,
     .base_speed = BASE_SPEED,
     .frame_interval = FRAME_INTERVAL,
     .last_pid_time = 0,
@@ -25,12 +27,14 @@ static BaseSpeedPid base_pid = {
 static const SpeedErrors* speed_errors = NULL;
 
 static struct {
-    int16_t left_p;
-    int16_t right_p;
-    int16_t left_i;
-    int16_t right_i;
-    int16_t left_d;
-    int16_t right_d;
+    float left_p;
+    float right_p;
+    float left_i;
+    float right_i;
+    float left_d;
+    float right_d;
+    float left_ff;
+    float right_ff;
     int16_t last_left_pwm;
     int16_t last_right_pwm;
     int16_t left_pwm;
@@ -47,10 +51,12 @@ static inline void update_p(void) {
 static inline void update_i(void) {
     if (base_pid.ki == 0) return;
 
+    const float new_ki = base_pid.ki / 100.0f;
+
     pid_struct.left_i =
-        base_pid.ki * speed_errors->left_error_sum * base_pid.frame_interval;
+        new_ki * speed_errors->left_error_sum * base_pid.frame_interval;
     pid_struct.right_i =
-        base_pid.ki * speed_errors->right_error_sum * base_pid.frame_interval;
+        new_ki * speed_errors->right_error_sum * base_pid.frame_interval;
 }
 
 static inline void update_d(void) {
@@ -62,21 +68,45 @@ static inline void update_d(void) {
         base_pid.kd * speed_errors->right_delta_error / base_pid.frame_interval;
 }
 
+static inline void update_ff(void) {
+    if (base_pid.kff == 0) return;
+
+    pid_struct.left_ff = base_pid.kff * speed_errors->left_target_speed;
+    pid_struct.right_ff = base_pid.kff * speed_errors->right_target_speed;
+}
+
 static inline void update_pwm(void) {
-    const int16_t left_out =
-        pid_struct.left_p + pid_struct.left_i + pid_struct.left_d;
-    const int16_t right_out =
+    float left_out = pid_struct.left_p + pid_struct.left_i + pid_struct.left_d;
+    float right_out =
         pid_struct.right_p + pid_struct.right_i + pid_struct.right_d;
 
-    const int16_t left_delta = left_out - pid_struct.last_left_pwm;
-    const int16_t right_delta = right_out - pid_struct.last_right_pwm;
+    if (left_out > 1000.0f) {
+        left_out = 1000.0f;
+    } else if (right_out < -1000.0f) {
+        right_out = -1000.0f;
+    }
 
-    pid_struct.left_pwm = left_delta > PWM_MAX_DELTA
-                              ? pid_struct.last_left_pwm + PWM_MAX_DELTA
-                              : left_out;
-    pid_struct.right_pwm = right_delta > PWM_MAX_DELTA
-                               ? pid_struct.last_right_pwm + PWM_MAX_DELTA
-                               : right_out;
+    if (right_out > 1000.0f) {
+        right_out = 1000.0f;
+    } else if (right_out < -1000.0f) {
+        right_out = -1000.0f;
+    }
+
+    // pid_struct.left_pwm = left_out + pid_struct.left_ff;
+    // pid_struct.right_pwm = right_out + pid_struct.right_ff;
+
+    // const int16_t left_delta = left_out - pid_struct.last_left_pwm;
+    // const int16_t right_delta = right_out - pid_struct.last_right_pwm;
+
+    // pid_struct.left_pwm = left_delta > PWM_MAX_DELTA
+    //                           ? pid_struct.last_left_pwm + PWM_MAX_DELTA
+    //                           : left_out;
+    // pid_struct.right_pwm = right_delta > PWM_MAX_DELTA
+    //                            ? pid_struct.last_right_pwm + PWM_MAX_DELTA
+    //                            : right_out;
+
+    pid_struct.left_pwm = (int16_t)left_out;
+    pid_struct.right_pwm = (int16_t)right_out;
 
     pid_struct.last_left_pwm = pid_struct.left_pwm;
     pid_struct.last_right_pwm = pid_struct.right_pwm;
@@ -93,6 +123,7 @@ void get_base_speed_pid(int16_t* const left_pwm, int16_t* const right_pwm) {
     update_p();
     update_i();
     update_d();
+    update_ff();
     update_pwm();
 
     if (left_pwm != NULL) *left_pwm = pid_struct.left_pwm;
@@ -105,10 +136,12 @@ bool update_pending_base_speed_pid(void) {
 
 void update_base_speed_pid(void) { base_pid.last_pid_time = time(); }
 
-void set_base_speed_kp(const uint8_t kp) { base_pid.kp = kp; }
+void set_base_speed_kp(const uint16_t kp) { base_pid.kp = kp; }
 
-void set_base_speed_ki(const uint8_t ki) { base_pid.ki = ki; }
+void set_base_speed_ki(const uint16_t ki) { base_pid.ki = ki; }
 
 void set_base_speed_kd(const uint16_t kd) { base_pid.kd = kd; }
+
+void set_base_speed_kff(const uint16_t kff) { base_pid.kff = kff; }
 
 void set_base_speed(const float speed) { base_pid.base_speed = speed; }

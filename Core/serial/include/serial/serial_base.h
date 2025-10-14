@@ -29,15 +29,16 @@
     X(PID_BASE_PWM, 2)                     \
     X(PID_MAX_PWM, 2)                      \
     X(TURBINE_PWM, 2)                      \
-    X(SPEED_KP, 1)                         \
-    X(SPEED_KI, 1)                         \
+    X(SPEED_KP, 2)                         \
+    X(SPEED_KI, 2)                         \
     X(SPEED_KD, 2)                         \
     X(BASE_SPEED, 2)                       \
     X(PID_ALPHA, 2)                        \
     X(PID_CLAMP, 2)                        \
     X(STOP_DISTANCE, 2)                    \
     X(OPERATION_DATA, OPERATION_DATA_SIZE) \
-    X(LOOKAHEAD, 1)
+    X(LOOKAHEAD, 1)                        \
+    X(SPEED_KFF, 2)
 
 // Maximum payload size among all messages
 #define SERIAL_MESSAGE_MAX_PAYLOAD 8

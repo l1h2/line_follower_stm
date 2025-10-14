@@ -98,10 +98,10 @@ static void handle_message(void) {
             set_turbine_pwm(parse_uint16(current_msg.payload));
             break;
         case SPEED_KP:
-            set_speed_kp((uint8_t)current_msg.payload[0]);
+            set_speed_kp(parse_uint16(current_msg.payload));
             break;
         case SPEED_KI:
-            set_speed_ki((uint8_t)current_msg.payload[0]);
+            set_speed_ki(parse_uint16(current_msg.payload));
             break;
         case SPEED_KD:
             set_speed_kd(parse_uint16(current_msg.payload));
@@ -121,6 +121,9 @@ static void handle_message(void) {
             break;
         case LOOKAHEAD:
             set_lookahead((uint8_t)current_msg.payload[0]);
+            break;
+        case SPEED_KFF:
+            set_speed_kff(parse_uint16(current_msg.payload));
             break;
         default:
             debug_print("Received unknown message");

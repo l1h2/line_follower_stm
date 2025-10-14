@@ -1,6 +1,7 @@
 #include "state_machine/running_modes/running_encoder_test.h"
 
 #include "logger/logger.h"
+#include "motors/motors.h"
 #include "pid/pid.h"
 #include "serial/serial_in.h"
 #include "state_machine/running_modes/running_base.h"
@@ -29,4 +30,7 @@ void running_encoder_test(const StateMachine* const sm) {
     debug_print("Finalizing RUNNING_ENCODER_TEST mode");
 }
 
-void running_encoder_test_to_stopped(void) { stop_turbine_if_needed(); }
+void running_encoder_test_to_stopped(void) {
+    set_motors(0, 0);
+    stop_turbine_if_needed();
+}

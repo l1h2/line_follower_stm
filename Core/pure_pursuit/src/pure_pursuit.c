@@ -11,7 +11,7 @@
 #include "timer/time.h"
 #include "track/track.h"
 
-#define LOOKAHEAD_CM 5.0f
+#define LOOKAHEAD_CM 5
 #define FRAME_INTERVAL_MS 10         // ms
 #define SENSORS_UPDATE_INTERVAL 1UL  // ms
 

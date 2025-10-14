@@ -143,6 +143,9 @@ void send_message(const SerialMessages msg) {
         case LOOKAHEAD:
             send_data(msg, (const uint8_t*)&pure_pursuit->lookahead);
             break;
+        case SPEED_KFF:
+            send_data(msg, (const uint8_t*)&pid->speed_pid->kff);
+            break;
         default:
             debug_print("Attempted to send unknown message");
             break;

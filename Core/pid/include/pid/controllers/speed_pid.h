@@ -38,19 +38,25 @@ void update_base_speed_pid(void);
  * @brief Set the proportional gain (Kp) for the speed PID controller.
  * @param kp The new proportional gain value.
  */
-void set_base_speed_kp(const uint8_t kp);
+void set_base_speed_kp(const uint16_t kp);
 
 /**
  * @brief Set the integral gain (Ki) for the speed PID controller.
  * @param ki The new integral gain value.
  */
-void set_base_speed_ki(const uint8_t ki);
+void set_base_speed_ki(const uint16_t ki);
 
 /**
  * @brief Set the derivative gain (Kd) for the speed PID controller.
  * @param kd The new derivative gain value.
  */
 void set_base_speed_kd(const uint16_t kd);
+
+/**
+ * @brief Set the feedforward gain (Kff) for the speed PID controller.
+ * @param kff The new feedforward gain value.
+ */
+void set_base_speed_kff(const uint16_t kff);
 
 /**
  * @brief Set the base speed for the speed PID controller.
