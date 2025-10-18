@@ -4,10 +4,11 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#include "math/math.h"
 #include "timer/time.h"
 #include "track/observer.h"
 
-#define MIN_ARC_ANGLE_RAD 1e-6f
+#define MIN_ARC_ANGLE_RAD 0.3f
 #define DETECTION_DEBOUNCE_TIME_MS 30
 #define MARKER_COUNTER_THRESHOLD 6
 #define CROSSING_COUNTER_THRESHOLD 1
@@ -16,6 +17,7 @@ static TrackCounters track = {0};
 
 static const ErrorStruct* errors = NULL;
 static uint32_t last_true_check_time = 0;
+static bool heading_vec_initialized = false;
 
 typedef enum { LINE, CROSSING, CURVE, MARKER } MemoryCounters;
 
@@ -27,6 +29,12 @@ static struct {
 static inline void reset_memory(void) {
     memory.counter = 0;
     memory.last = LINE;
+}
+
+static inline void reset_headings(void) {
+    track.sin_heading = 0.0f;
+    track.cos_heading = 1.0f;
+    heading_vec_initialized = false;
 }
 
 static inline void complete_lap(void) {
@@ -42,6 +50,7 @@ static inline void complete_lap(void) {
     track.x = -60;
     track.y = 0;
 
+    reset_headings();
     reset_memory();
 }
 
@@ -56,7 +65,14 @@ static inline void start_lap(void) {
     track.x = 0;
     track.y = 0;
 
+    reset_headings();
     reset_memory();
+}
+
+static inline void anchor_heading_vector(const float heading) {
+    track.cos_heading = cosf(heading);
+    track.sin_heading = sinf(heading);
+    heading_vec_initialized = true;
 }
 
 // TODO: Add distance resets based on markers
@@ -69,24 +85,35 @@ static inline void update_distance(void) {
 static inline void update_position(void) {
     const float dist = errors->sensors->encoders->current_distance;
     const float angle = errors->sensors->encoders->current_angle;
-    const float heading = errors->sensors->encoders->heading;
+    const float half_step = 0.5f * angle;
 
-    if (fabsf(angle) <= MIN_ARC_ANGLE_RAD) {
-        const float mid_heading = heading - (angle / 2.0f);
-        track.x += dist * cosf(mid_heading);
-        track.y += dist * sinf(mid_heading);
-        return;
+    if (!heading_vec_initialized) {
+        anchor_heading_vector(errors->sensors->encoders->heading - angle);
     }
 
-    const float radius = dist / angle;
-    const float dx_body = radius * sinf(angle);
-    const float dy_body = radius * (1.0f - cosf(angle));
+    float s_half, c_half;
+    if (fabsf(half_step) <= MIN_ARC_ANGLE_RAD) {
+        sincos_poly_truncation(half_step, &s_half, &c_half);
+    } else {
+        s_half = sinf(half_step);
+        c_half = cosf(half_step);
+    }
 
-    const float prev_heading = heading - angle;
-    const float cos_heading = cosf(prev_heading);
-    const float sin_heading = sinf(prev_heading);
-    track.x += dx_body * cos_heading - dy_body * sin_heading;
-    track.y += dx_body * sin_heading + dy_body * cos_heading;
+    const float sin_h = track.sin_heading;
+    float cos_h = track.cos_heading;
+
+    const float cos_mid = cos_h * c_half - sin_h * s_half;
+    const float sin_mid = sin_h * c_half + cos_h * s_half;
+
+    track.x += dist * cos_mid;
+    track.y += dist * sin_mid;
+
+    const float s_full = 2.0f * s_half * c_half;
+    const float c_full = c_half * c_half - s_half * s_half;
+
+    track.cos_heading = cos_h * c_full - sin_h * s_full;
+    track.sin_heading = sin_h * c_full + cos_h * s_full;
+    normalize_unit_vector(&track.cos_heading, &track.sin_heading);
 }
 
 static inline void update_line(void) {
@@ -188,6 +215,7 @@ const TrackCounters* get_track(void) { return &track; }
 
 void reset_track(void) {
     track = (TrackCounters){0};
+    heading_vec_initialized = false;
     reset_memory();
 }
 

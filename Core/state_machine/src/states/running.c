@@ -11,6 +11,7 @@
 // Running modes
 #include "state_machine/running_modes/running_encoder_test.h"
 #include "state_machine/running_modes/running_pid.h"
+#include "state_machine/running_modes/running_pure_pursuit.h"
 #include "state_machine/running_modes/running_sensor_test.h"
 #include "state_machine/running_modes/running_turbine_test.h"
 
@@ -46,6 +47,10 @@ void handle_running(const StateMachine* const sm) {
             debug_print("Running mode set to RUNNING_PID");
             running_pid(sm);
             break;
+        case RUNNING_PURE_PURSUIT:
+            debug_print("Running mode set to RUNNING_PURE_PURSUIT");
+            running_pure_pursuit(sm);
+            break;
         default:
             debug_print("Unknown running mode set, going back to IDLE state");
             request_next_state(STATE_IDLE);
@@ -66,9 +71,6 @@ static bool handle_running_to_stopped(const RunningModes running_mode) {
     debug_print("Transitioning from RUNNING to STOPPED");
 
     switch (running_mode) {
-        case RUNNING_PID:
-            running_pid_to_stopped();
-            break;
         case RUNNING_SENSOR_TEST:
             running_sensor_test_to_stopped();
             break;
@@ -77,6 +79,12 @@ static bool handle_running_to_stopped(const RunningModes running_mode) {
             break;
         case RUNNING_ENCODER_TEST:
             running_encoder_test_to_stopped();
+            break;
+        case RUNNING_PID:
+            running_pid_to_stopped();
+            break;
+        case RUNNING_PURE_PURSUIT:
+            running_pure_pursuit_to_stopped();
             break;
         default:
             debug_print("Unknown running mode, going to error state");

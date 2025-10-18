@@ -24,6 +24,8 @@ typedef struct {
     float x;                     // X position in cm
     float y;                     // Y position in cm
     float distance;              // Distance traveled in cm
+    float sin_heading;           // Sine of the heading angle
+    float cos_heading;           // Cosine of the heading angle
     uint8_t section;             // Current section of the track
     uint8_t laps;                // Current lap count
 } TrackCounters;

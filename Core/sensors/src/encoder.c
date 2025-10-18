@@ -1,9 +1,10 @@
 #include "sensors/encoder.h"
 
 #include "hal/encoders.h"
+#include "math/math.h"
 #include "timer/time.h"
 
-#define WHEEL_CIRCUMFERENCE_MM (WHEEL_DIAMETER_MM * 3.14159f)
+#define WHEEL_CIRCUMFERENCE_MM (WHEEL_DIAMETER_MM * MATH_PI)
 #define MM_PER_PULSE (WHEEL_CIRCUMFERENCE_MM / ENCODER_PULSES_PER_REV)
 #define CM_PER_PULSE (MM_PER_PULSE / 10.0f)
 
@@ -37,6 +38,7 @@ static inline void update_angle(void) {
 
     encoder_data.current_angle = delta_distance / WHEEL_BASE_CM;
     encoder_data.heading += encoder_data.current_angle;
+    normalize_angle(&encoder_data.heading);
 }
 
 static inline void update_speeds(void) {

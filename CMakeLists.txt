@@ -51,6 +51,7 @@ set(USER_MODULES
     turbine
     track
     pure_pursuit
+    math
 )
 
 # Link directories setup

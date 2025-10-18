@@ -25,7 +25,7 @@ static inline uint16_t parse_float_extended(const float value) {
 }
 
 static inline int16_t parse_signed_float(const float value) {
-    return (int16_t)(value * 100.0f + (value >= 0.0f ? 0.5f : -0.5f));
+    return (int16_t)(value + (value >= 0.0f ? 0.5f : -0.5f));
 }
 
 static inline void update_operation_data(void) {
@@ -41,7 +41,8 @@ static inline void update_operation_data(void) {
     operation_data[4] = y & 0xFF;
     operation_data[5] = (y >> 8);
 
-    const int16_t heading = parse_signed_float(sensors->encoders->heading);
+    const int16_t heading =
+        parse_signed_float(sensors->encoders->heading * 10000.0f);
     operation_data[6] = heading & 0xFF;
     operation_data[7] = (heading >> 8);
 }

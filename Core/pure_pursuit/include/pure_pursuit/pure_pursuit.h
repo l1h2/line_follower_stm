@@ -39,6 +39,11 @@ bool update_peripheral_sensors(void);
 bool update_pure_pursuit(void);
 
 /**
+ * @brief Restarts the Pure Pursuit controller, resetting its internal state.
+ */
+void restart_pure_pursuit(void);
+
+/**
  * @brief Sets the lookahead distance for the Pure Pursuit controller.
  *
  * @param distance Lookahead distance in centimeters. Must be greater than

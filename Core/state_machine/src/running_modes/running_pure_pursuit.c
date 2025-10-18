@@ -4,6 +4,7 @@
 #include "pid/pid.h"
 #include "pure_pursuit/pure_pursuit.h"
 #include "serial/serial_in.h"
+#include "serial/serial_out.h"
 #include "state_machine/handlers/config_handler.h"
 #include "state_machine/running_modes/running_base.h"
 #include "track/track.h"
@@ -17,9 +18,12 @@ void running_pure_pursuit(const StateMachine* const sm) {
     while (sm->can_run) {
         if (!update_peripheral_sensors()) continue;
 
-        update_pure_pursuit();
-        check_stop(update_track(false));
+        // check_stop(update_track(false));
         process_serial_messages();
+
+        if (!update_pure_pursuit()) continue;
+        // debug_print_encoder_distances();
+        if (sm->log_data) send_message(OPERATION_DATA);
     }
 
     debug_print("Finalizing RUNNING_PURE_PURSUIT mode");
