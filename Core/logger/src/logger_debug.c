@@ -103,7 +103,7 @@ void debug_print_mpu_data(void) {
     print_new_line();
 }
 
-void debug_print_encoder_data(void) {
+void debug_print_encoder_pulses(void) {
     const SensorState* const sensors = get_sensors();
 
     print_string("Pulses [L R]:  ");
@@ -111,6 +111,10 @@ void debug_print_encoder_data(void) {
     print_string("  /  ");
     print_signed_long(sensors->encoders->right_encoder);
     print_new_line();
+}
+
+void debug_print_encoder_distances(void) {
+    const SensorState* const sensors = get_sensors();
 
     print_string("Distance (cm) [L R T]:  ");
     print_float(sensors->encoders->left_distance, 2);
@@ -119,6 +123,10 @@ void debug_print_encoder_data(void) {
     print_string("  /  ");
     print_float(sensors->encoders->distance, 2);
     print_new_line();
+}
+
+void debug_print_encoder_speeds(void) {
+    const SensorState* const sensors = get_sensors();
 
     print_string("Speed (cm/s) [L R T]:  ");
     print_float(sensors->encoders->left_speed, 2);
@@ -127,6 +135,12 @@ void debug_print_encoder_data(void) {
     print_string("  /  ");
     print_float(sensors->encoders->speed, 2);
     print_new_line();
+}
+
+void debug_print_encoder_data(void) {
+    debug_print_encoder_pulses();
+    debug_print_encoder_distances();
+    debug_print_encoder_speeds();
 }
 
 bool debug_print_diagnostics(void) {

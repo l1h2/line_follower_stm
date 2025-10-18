@@ -2,11 +2,12 @@
 
 #include <stdlib.h>
 
+#include "motors/motors.h"
 #include "sensors/sensors_base.h"
 #include "timer/time.h"
 
 #define KP 10
-#define KI 10
+#define KI 0.1f
 #define KD 0
 #define KFF 0
 #define FRAME_INTERVAL 10  // ms
@@ -39,6 +40,8 @@ static struct {
     int16_t last_right_pwm;
     int16_t left_pwm;
     int16_t right_pwm;
+    uint16_t max_pwm;
+    int16_t min_pwm;
 } pid_struct = {0};
 
 static inline void update_p(void) {
@@ -51,12 +54,10 @@ static inline void update_p(void) {
 static inline void update_i(void) {
     if (base_pid.ki == 0) return;
 
-    const float new_ki = base_pid.ki / 100.0f;
-
     pid_struct.left_i =
-        new_ki * speed_errors->left_error_sum * base_pid.frame_interval;
+        base_pid.ki * speed_errors->left_error_sum * base_pid.frame_interval;
     pid_struct.right_i =
-        new_ki * speed_errors->right_error_sum * base_pid.frame_interval;
+        base_pid.ki * speed_errors->right_error_sum * base_pid.frame_interval;
 }
 
 static inline void update_d(void) {
@@ -80,30 +81,17 @@ static inline void update_pwm(void) {
     float right_out =
         pid_struct.right_p + pid_struct.right_i + pid_struct.right_d;
 
-    if (left_out > 1000.0f) {
-        left_out = 1000.0f;
-    } else if (right_out < -1000.0f) {
-        right_out = -1000.0f;
+    if (left_out > pid_struct.max_pwm) {
+        left_out = pid_struct.max_pwm;
+    } else if (left_out < pid_struct.min_pwm) {
+        left_out = pid_struct.min_pwm;
     }
 
-    if (right_out > 1000.0f) {
-        right_out = 1000.0f;
-    } else if (right_out < -1000.0f) {
-        right_out = -1000.0f;
+    if (right_out > pid_struct.max_pwm) {
+        right_out = pid_struct.max_pwm;
+    } else if (right_out < pid_struct.min_pwm) {
+        right_out = pid_struct.min_pwm;
     }
-
-    // pid_struct.left_pwm = left_out + pid_struct.left_ff;
-    // pid_struct.right_pwm = right_out + pid_struct.right_ff;
-
-    // const int16_t left_delta = left_out - pid_struct.last_left_pwm;
-    // const int16_t right_delta = right_out - pid_struct.last_right_pwm;
-
-    // pid_struct.left_pwm = left_delta > PWM_MAX_DELTA
-    //                           ? pid_struct.last_left_pwm + PWM_MAX_DELTA
-    //                           : left_out;
-    // pid_struct.right_pwm = right_delta > PWM_MAX_DELTA
-    //                            ? pid_struct.last_right_pwm + PWM_MAX_DELTA
-    //                            : right_out;
 
     pid_struct.left_pwm = (int16_t)left_out;
     pid_struct.right_pwm = (int16_t)right_out;
@@ -113,6 +101,9 @@ static inline void update_pwm(void) {
 }
 
 const BaseSpeedPid* init_base_speed_pid(const ErrorStruct* const error_struct) {
+    pid_struct.max_pwm = get_max_pwm();
+    pid_struct.min_pwm = -pid_struct.max_pwm;
+
     speed_errors = error_struct->speed_errors;
     return &base_pid;
 }
@@ -138,7 +129,7 @@ void update_base_speed_pid(void) { base_pid.last_pid_time = time(); }
 
 void set_base_speed_kp(const uint16_t kp) { base_pid.kp = kp; }
 
-void set_base_speed_ki(const uint16_t ki) { base_pid.ki = ki; }
+void set_base_speed_ki(const float ki) { base_pid.ki = ki; }
 
 void set_base_speed_kd(const uint16_t kd) { base_pid.kd = kd; }
 

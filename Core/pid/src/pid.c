@@ -171,7 +171,7 @@ void set_pwm_kff(const uint8_t kff) { set_base_pwm_kff(kff); }
 
 void set_speed_kp(const uint16_t kp) { set_base_speed_kp(kp); }
 
-void set_speed_ki(const uint16_t ki) { set_base_speed_ki(ki); }
+void set_speed_ki(const float ki) { set_base_speed_ki(ki); }
 
 void set_speed_kd(const uint16_t kd) { set_base_speed_kd(kd); }
 

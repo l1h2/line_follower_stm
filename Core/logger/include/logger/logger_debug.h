@@ -110,7 +110,7 @@ void debug_print_bool(const bool value);
  * @note This function can be used to add print statements that won't be
  * compiled without the DEBUG_MODE directive.
  */
-void debug_print_string(const char *str);
+void debug_print_string(const char* str);
 
 /**
  * @brief Debug wrapper for the print_new_line function.
@@ -125,7 +125,7 @@ void debug_print_new_line(void);
  * @note This function can be used to add print statements that won't be
  * compiled without the DEBUG_MODE directive.
  */
-void debug_print(const char *str);
+void debug_print(const char* str);
 
 /**
  * @brief Prints the current state of the central IR sensors in a human-readable
@@ -150,6 +150,21 @@ void debug_print_errors(void);
  * and temperature readings.
  */
 void debug_print_mpu_data(void);
+
+/**
+ * @brief Prints the encoder pulse counts for the left, right, and totals.
+ */
+void debug_print_encoder_pulses(void);
+
+/**
+ * @brief Prints the encoder distances for the left, right, and totals.
+ */
+void debug_print_encoder_distances(void);
+
+/**
+ * @brief Prints the encoder speeds for the left, right, and average.
+ */
+void debug_print_encoder_speeds(void);
 
 /**
  * @brief Prints the encoder data, including left and right encoder values.

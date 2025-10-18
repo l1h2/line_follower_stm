@@ -44,7 +44,7 @@ void set_base_speed_kp(const uint16_t kp);
  * @brief Set the integral gain (Ki) for the speed PID controller.
  * @param ki The new integral gain value.
  */
-void set_base_speed_ki(const uint16_t ki);
+void set_base_speed_ki(const float ki);
 
 /**
  * @brief Set the derivative gain (Kd) for the speed PID controller.

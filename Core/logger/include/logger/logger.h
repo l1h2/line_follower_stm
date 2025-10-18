@@ -26,6 +26,9 @@
 #define debug_print_ir_sensors() ((void)0)
 #define debug_print_errors() ((void)0)
 #define debug_print_mpu_data() ((void)0)
+#define debug_print_encoder_pulses() ((void)0)
+#define debug_print_encoder_distances() ((void)0)
+#define debug_print_encoder_speeds() ((void)0)
 #define debug_print_encoder_data() ((void)0)
 #define debug_print_diagnostics() ((void)0)
 #endif  // DEBUG_MODE

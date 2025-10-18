@@ -18,6 +18,8 @@ void running_encoder_test(const StateMachine* const sm) {
     while (sm->can_run) {
         if (!update_speed_pid()) continue;
 
+        debug_print_encoder_speeds();
+
         if (pid->errors->sensors->encoders->distance >=
             ENCODER_TEST_DISTANCE_CM) {
             debug_print("Reached target distance for encoder test");

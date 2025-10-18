@@ -20,6 +20,10 @@ static inline uint16_t parse_float(const float value) {
     return (uint16_t)(value * 100.0f + 0.5f);
 }
 
+static inline uint16_t parse_float_extended(const float value) {
+    return (uint16_t)(value * 10000.0f + 0.5f);
+}
+
 static inline int16_t parse_signed_float(const float value) {
     return (int16_t)(value * 100.0f + (value >= 0.0f ? 0.5f : -0.5f));
 }
@@ -58,6 +62,9 @@ void send_message(const SerialMessages msg) {
     if (msg >= SERIAL_MESSAGE_COUNT) return;
 
     switch (msg) {
+        case PING:
+            send_data(msg, NULL);
+            break;
         case START:
             send_data(msg, NULL);
             break;
@@ -116,7 +123,8 @@ void send_message(const SerialMessages msg) {
             send_data(msg, (const uint8_t*)&pid->speed_pid->kp);
             break;
         case SPEED_KI:
-            send_data(msg, (const uint8_t*)&pid->speed_pid->ki);
+            const uint16_t speed_ki = parse_float_extended(pid->speed_pid->ki);
+            send_data(msg, (const uint8_t*)&speed_ki);
             break;
         case SPEED_KD:
             send_data(msg, (const uint8_t*)&pid->speed_pid->kd);
@@ -127,7 +135,7 @@ void send_message(const SerialMessages msg) {
             break;
         case PID_ALPHA:
             // Convert from [0.0, 1.0] range to percentage
-            const uint16_t alpha = parse_float(pid->delta_pid->alpha * 100.0f);
+            const uint16_t alpha = parse_float_extended(pid->delta_pid->alpha);
             send_data(msg, (const uint8_t*)&alpha);
             break;
         case PID_CLAMP:
@@ -158,7 +166,7 @@ void send_messages(const SerialMessages* msgs, const uint8_t count) {
 }
 
 void send_all_messages(void) {
-    // Skip command signals
+    // Skip command signals and operation data
     for (uint8_t i = STOP + 1; i < SERIAL_MESSAGE_COUNT; i++) {
         if (i == OPERATION_DATA) continue;
         send_message((SerialMessages)i);

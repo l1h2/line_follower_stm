@@ -71,7 +71,7 @@ typedef struct {
  */
 typedef struct {
     uint16_t kp;              // Proportional gain
-    uint16_t ki;              // Integral gain
+    float ki;                 // Integral gain
     uint16_t kd;              // Derivative gain
     uint16_t kff;             // Feedforward gain
     float base_speed;         // Base speed in cm/s

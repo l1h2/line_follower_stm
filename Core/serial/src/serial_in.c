@@ -45,10 +45,18 @@ static inline float parse_float(const uint8_t* const payload) {
     return (float)raw / 100.0f;
 }
 
+static inline float parse_float_extended(const uint8_t* const payload) {
+    const uint16_t raw = parse_uint16(payload);
+    return (float)raw / 10000.0f;
+}
+
 static void handle_message(void) {
     if (current_msg.message == INVALID_MESSAGE) return;
 
     switch (current_msg.message) {
+        case PING:
+            // No action needed for ping
+            break;
         case START:
             set_can_run(true);
             break;
@@ -101,7 +109,7 @@ static void handle_message(void) {
             set_speed_kp(parse_uint16(current_msg.payload));
             break;
         case SPEED_KI:
-            set_speed_ki(parse_uint16(current_msg.payload));
+            set_speed_ki(parse_float_extended(current_msg.payload));
             break;
         case SPEED_KD:
             set_speed_kd(parse_uint16(current_msg.payload));
@@ -111,7 +119,7 @@ static void handle_message(void) {
             break;
         case PID_ALPHA:
             // Convert from percentage to [0.0, 1.0] range
-            set_pwm_alpha(parse_float(current_msg.payload) / 100.0f);
+            set_pwm_alpha(parse_float_extended(current_msg.payload));
             break;
         case PID_CLAMP:
             set_pwm_clamp(parse_uint16(current_msg.payload));
