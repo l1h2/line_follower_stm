@@ -116,5 +116,4 @@ void clear_errors(void) {
     errors.last_error = 0;
     errors.delta_error = 0;
     errors.error_sum = 0;
-    clear_sensors();
 }

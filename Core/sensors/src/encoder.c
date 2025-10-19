@@ -36,7 +36,7 @@ static inline void update_angle(void) {
     const float delta_distance = encoder_data.current_right_distance -
                                  encoder_data.current_left_distance;
 
-    encoder_data.current_angle = delta_distance / WHEEL_BASE_CM;
+    encoder_data.current_angle = delta_distance / EFFECTIVE_WHEEL_BASE_CM;
     encoder_data.heading += encoder_data.current_angle;
     normalize_angle(&encoder_data.heading);
 }

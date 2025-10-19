@@ -215,7 +215,7 @@ const TrackCounters* get_track(void) { return &track; }
 
 void reset_track(void) {
     track = (TrackCounters){0};
-    heading_vec_initialized = false;
+    reset_headings();
     reset_memory();
 }
 

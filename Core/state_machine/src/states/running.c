@@ -2,6 +2,7 @@
 
 #include "logger/logger.h"
 #include "pid/pid.h"
+#include "pure_pursuit/pure_pursuit.h"
 #include "sensors/sensors.h"
 #include "state_machine/handlers/config_handler.h"
 #include "state_machine/handlers/state_handler.h"
@@ -20,6 +21,7 @@ void handle_running(const StateMachine* const sm) {
     restart_sensors();
     reset_track();
     restart_pid();
+    restart_pure_pursuit();
 
     switch (sm->running_mode) {
         case RUNNING_INIT:

@@ -40,14 +40,12 @@ static inline uint32_t parse_uint32(const uint8_t* const payload) {
                       (payload[1] << 8) | payload[0]);
 }
 
-static inline float parse_float(const uint8_t* const payload) {
+static inline float parse_float(const uint8_t* const payload,
+                                uint8_t precision) {
     const uint16_t raw = parse_uint16(payload);
-    return (float)raw / 100.0f;
-}
-
-static inline float parse_float_extended(const uint8_t* const payload) {
-    const uint16_t raw = parse_uint16(payload);
-    return (float)raw / 10000.0f;
+    float value = (float)raw;
+    for (; precision > 0; precision--) value /= 10.0f;
+    return value;
 }
 
 static void handle_message(void) {
@@ -109,17 +107,17 @@ static void handle_message(void) {
             set_speed_kp(parse_uint16(current_msg.payload));
             break;
         case SPEED_KI:
-            set_speed_ki(parse_float_extended(current_msg.payload));
+            set_speed_ki(parse_float(current_msg.payload, 4));
             break;
         case SPEED_KD:
             set_speed_kd(parse_uint16(current_msg.payload));
             break;
         case BASE_SPEED:
-            set_speed(parse_float(current_msg.payload));
+            set_speed(parse_float(current_msg.payload, 2));
             break;
         case PID_ALPHA:
             // Convert from percentage to [0.0, 1.0] range
-            set_pwm_alpha(parse_float_extended(current_msg.payload));
+            set_pwm_alpha(parse_float(current_msg.payload, 4));
             break;
         case PID_CLAMP:
             set_pwm_clamp(parse_uint16(current_msg.payload));

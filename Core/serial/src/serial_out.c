@@ -16,15 +16,13 @@ static uint32_t last_log_time = 0;
 
 static uint8_t operation_data[OPERATION_DATA_SIZE] = {0};
 
-static inline uint16_t parse_float(const float value) {
-    return (uint16_t)(value * 100.0f + 0.5f);
+static inline uint16_t parse_float(float value, uint8_t precision) {
+    for (; precision > 0; precision--) value *= 10.0f;
+    return (uint16_t)(value + 0.5f);
 }
 
-static inline uint16_t parse_float_extended(const float value) {
-    return (uint16_t)(value * 10000.0f + 0.5f);
-}
-
-static inline int16_t parse_signed_float(const float value) {
+static inline int16_t parse_signed_float(float value, uint8_t precision) {
+    for (; precision > 0; precision--) value *= 10.0f;
     return (int16_t)(value + (value >= 0.0f ? 0.5f : -0.5f));
 }
 
@@ -34,15 +32,14 @@ static inline void update_operation_data(void) {
     operation_data[1] |= sensors->ir_sensors->right_sensor << 1;
 
     // Convert from cm to mm for higher precision
-    const int16_t x = parse_signed_float(track->x * 10.0f);
-    const int16_t y = parse_signed_float(track->y * 10.0f);
+    const int16_t x = parse_signed_float(track->x, 1);
+    const int16_t y = parse_signed_float(track->y, 1);
     operation_data[2] = x & 0xFF;
     operation_data[3] = (x >> 8);
     operation_data[4] = y & 0xFF;
     operation_data[5] = (y >> 8);
 
-    const int16_t heading =
-        parse_signed_float(sensors->encoders->heading * 10000.0f);
+    const int16_t heading = parse_signed_float(sensors->encoders->heading, 4);
     operation_data[6] = heading & 0xFF;
     operation_data[7] = (heading >> 8);
 }
@@ -124,19 +121,20 @@ void send_message(const SerialMessages msg) {
             send_data(msg, (const uint8_t*)&pid->speed_pid->kp);
             break;
         case SPEED_KI:
-            const uint16_t speed_ki = parse_float_extended(pid->speed_pid->ki);
+            const uint16_t speed_ki = parse_float(pid->speed_pid->ki, 4);
             send_data(msg, (const uint8_t*)&speed_ki);
             break;
         case SPEED_KD:
             send_data(msg, (const uint8_t*)&pid->speed_pid->kd);
             break;
         case BASE_SPEED:
-            const uint16_t base_speed = parse_float(pid->speed_pid->base_speed);
+            const uint16_t base_speed =
+                parse_float(pid->speed_pid->base_speed, 2);
             send_data(msg, (const uint8_t*)&base_speed);
             break;
         case PID_ALPHA:
             // Convert from [0.0, 1.0] range to percentage
-            const uint16_t alpha = parse_float_extended(pid->delta_pid->alpha);
+            const uint16_t alpha = parse_float(pid->delta_pid->alpha, 4);
             send_data(msg, (const uint8_t*)&alpha);
             break;
         case PID_CLAMP:

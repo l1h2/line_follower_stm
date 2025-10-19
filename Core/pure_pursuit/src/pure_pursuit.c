@@ -24,61 +24,62 @@ static PurePursuit pp = {
     .pid = NULL,
 };
 
-static float next_x = 0.0f;
-static float next_y = 0.0f;
-static float target_x = 0.0f;
-static float target_y = 0.0f;
-static float speed_left = 0.0f;
-static float speed_right = 0.0f;
+static uint32_t last_track_update = 0;
+static bool is_updating_sensors = false;
 static float inv_lookahead_sq =
     1.0f / ((float)LOOKAHEAD_CM * (float)LOOKAHEAD_CM);
 
-static uint32_t last_track_update = 0;
-static bool is_updating_sensors = false;
+static struct {
+    float next_x;
+    float next_y;
+    float target_x;
+    float target_y;
+    float speed_left;
+    float speed_right;
+    uint16_t waypoint_index;
+} pp_state = {0};
 
 #define WAYPOINT_COUNT 4
-#define TOTAL_DISTANCE 200.0f
 static const float waypoints_x[WAYPOINT_COUNT] = {0, 50, 50, 0};
 static const float waypoints_y[WAYPOINT_COUNT] = {0, 0, 50, 50};
-static const float distances[WAYPOINT_COUNT] = {0, 50, 100, 150};
-static uint8_t current_waypoint_index = 0;
+
+static inline bool out_of_range(void) {
+    const float dx = waypoints_x[pp_state.waypoint_index] - pp.track->x;
+    const float dy = waypoints_y[pp_state.waypoint_index] - pp.track->y;
+    return (dx * dx + dy * dy) >= (pp.lookahead * pp.lookahead);
+}
 
 static inline void update_next_waypoint(void) {
-    if (pp.track->distance + pp.lookahead >= TOTAL_DISTANCE) {
-        current_waypoint_index = 0;
-        reset_track();
+    for (uint16_t i = 0; i < WAYPOINT_COUNT; i++) {
+        if (out_of_range()) break;
+        pp_state.waypoint_index =
+            (pp_state.waypoint_index + 1) % WAYPOINT_COUNT;
     }
 
-    while (current_waypoint_index < WAYPOINT_COUNT - 1 &&
-           pp.track->distance + pp.lookahead >=
-               distances[current_waypoint_index]) {
-        current_waypoint_index++;
-    }
-
-    next_x = waypoints_x[current_waypoint_index];
-    next_y = waypoints_y[current_waypoint_index];
+    pp_state.next_x = waypoints_x[pp_state.waypoint_index];
+    pp_state.next_y = waypoints_y[pp_state.waypoint_index];
 }
 
 static inline void update_targets(void) {
     update_next_waypoint();
 
-    const float dx = next_x - pp.track->x;
-    const float dy = next_y - pp.track->y;
+    const float dx = pp_state.next_x - pp.track->x;
+    const float dy = pp_state.next_y - pp.track->y;
 
     const float ratio = pp.lookahead * fast_inv_sqrtf(dx * dx + dy * dy);
-    target_x = pp.track->x + dx * ratio;
-    target_y = pp.track->y + dy * ratio;
+    pp_state.target_x = pp.track->x + dx * ratio;
+    pp_state.target_y = pp.track->y + dy * ratio;
 }
 
 static inline void update_target_speeds(void) {
-    const float dx = target_x - pp.track->x;
-    const float dy = target_y - pp.track->y;
+    const float dx = pp_state.target_x - pp.track->x;
+    const float dy = pp_state.target_y - pp.track->y;
     const float y_r = pp.track->cos_heading * dy - pp.track->sin_heading * dx;
 
-    const float curvature = WHEEL_BASE_CM * y_r * inv_lookahead_sq;
+    const float curvature = EFFECTIVE_WHEEL_BASE_CM * y_r * inv_lookahead_sq;
 
-    speed_left = pp.pid->speed_pid->base_speed * (1 - curvature);
-    speed_right = pp.pid->speed_pid->base_speed * (1 + curvature);
+    pp_state.speed_left = pp.pid->speed_pid->base_speed * (1 - curvature);
+    pp_state.speed_right = pp.pid->speed_pid->base_speed * (1 + curvature);
 }
 
 static inline bool check_sensor_update(void) {
@@ -121,7 +122,7 @@ bool update_pure_pursuit(void) {
     update_targets();
     update_target_speeds();
 
-    set_speed_targets(speed_left, speed_right);
+    set_speed_targets(pp_state.speed_left, pp_state.speed_right);
     update_speed_errors();
 
     int16_t left_pwm;
@@ -133,10 +134,8 @@ bool update_pure_pursuit(void) {
 }
 
 void restart_pure_pursuit(void) {
-    pp.last_pp_time = 0;
-    last_track_update = 0;
+    pp_state = (typeof(pp_state)){0};
     is_updating_sensors = false;
-    current_waypoint_index = 0;
 }
 
 void set_lookahead(const uint8_t distance) {

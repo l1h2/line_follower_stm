@@ -64,8 +64,6 @@ void clear_speed_errors(void) {
     errors.right_delta_error = 0.0f;
     errors.left_error_sum = 0.0f;
     errors.right_error_sum = 0.0f;
-
-    clear_encoder_data();
 }
 
 void set_speed_targets(const float left_speed, const float right_speed) {

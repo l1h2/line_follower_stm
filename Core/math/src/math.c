@@ -3,6 +3,7 @@
 #include <stdint.h>
 
 #define MATH_PI_2 (2.0f * MATH_PI)
+#define ONE_OVER_SIX (1.0f / 6.0f)
 
 float fast_inv_sqrtf(const float x) {
     uint32_t i;
@@ -22,7 +23,7 @@ float fast_inv_sqrtf(const float x) {
 
 void sincos_poly_truncation(const float a, float* const s, float* const c) {
     const float a2 = a * a;
-    *s = a * (1.0f - a2 * (1.0f / 6.0f));
+    *s = a * (1.0f - a2 * ONE_OVER_SIX);
     *c = 1.0f - 0.5f * a2;
 }
 

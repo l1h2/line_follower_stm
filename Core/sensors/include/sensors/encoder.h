@@ -12,6 +12,12 @@
 // Distance between the wheels in cm
 #define WHEEL_BASE_CM (WHEEL_BASE_MM / 10.0f)
 
+// Correction factor for wheel base to improve accuracy
+#define WHEEL_BASE_CORRECTION_FACTOR 1.6f
+
+// Effective wheel base in cm after applying correction factor
+#define EFFECTIVE_WHEEL_BASE_CM (WHEEL_BASE_CM * WHEEL_BASE_CORRECTION_FACTOR)
+
 /**
  * @brief Initializes the encoder peripherals.
  */
