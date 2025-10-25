@@ -146,8 +146,33 @@ void debug_print_ir_sensors(void);
 void debug_print_errors(void);
 
 /**
- * @brief Prints the MPU-9250 sensor data, including accelerometer, gyroscope,
- * and temperature readings.
+ * @brief Prints the MPU-9250 accelerometer readings for X, Y, and Z axes.
+ */
+void debug_print_mpu_accelerations(void);
+
+/**
+ * @brief Prints the MPU-9250 gyroscope readings for X, Y, and Z axes.
+ */
+void debug_print_mpu_gyroscopes(void);
+
+/**
+ * @brief Prints the MPU-9250 gyroscope biases for X, Y, and Z axes.
+ */
+void debug_print_mpu_gyroscope_biases(void);
+
+/**
+ * @brief Prints the MPU-9250 angles: Roll, Pitch, and Yaw in degrees.
+ */
+void debug_print_mpu_angles(void);
+
+/**
+ * @brief Prints the MPU-9250 temperature reading.
+ */
+void debug_print_mpu_temperature(void);
+
+/**
+ * @brief Prints the MPU-9250 sensor data, including accelerometer,
+ * gyroscope, and temperature readings.
  */
 void debug_print_mpu_data(void);
 

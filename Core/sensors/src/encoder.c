@@ -83,20 +83,10 @@ bool update_encoder_data_async(const uint32_t interval) {
 }
 
 void clear_encoder_data(void) {
+    encoder_data = (EncoderData){0};
     left_encoder = 0;
     right_encoder = 0;
-    encoder_data.current_left_distance = 0.0f;
-    encoder_data.current_right_distance = 0.0f;
-
-    encoder_data.left_encoder = 0;
-    encoder_data.right_encoder = 0;
-    encoder_data.left_distance = 0.0f;
-    encoder_data.right_distance = 0.0f;
-    encoder_data.distance = 0.0f;
-    encoder_data.left_speed = 0.0f;
-    encoder_data.right_speed = 0.0f;
-    encoder_data.speed = 0.0f;
-    encoder_data.last_update_time = time();
+    current_time = time();
 }
 
 void start_encoders(void) {

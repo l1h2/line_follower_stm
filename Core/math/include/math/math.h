@@ -32,4 +32,18 @@ void normalize_unit_vector(float* const cos, float* const sin);
  */
 void normalize_angle(float* const angle);
 
+/**
+ * @brief Convert radians to degrees
+ * @param angle Angle in radians
+ * @return Angle in degrees
+ */
+float rad_to_deg(const float angle);
+
+/**
+ * @brief Convert degrees to radians
+ * @param angle Angle in degrees
+ * @return Angle in radians
+ */
+float deg_to_rad(const float angle);
+
 #endif  // PURE_PURSUIT_MATH_H

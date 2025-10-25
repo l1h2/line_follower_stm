@@ -54,5 +54,5 @@ bool update_sensors_async(const bool read_encoder) {
 void restart_sensors(void) {
     clear_ir_sensors();
     start_encoders();
-    clear_mpu_data();
+    restart_mpu();
 }

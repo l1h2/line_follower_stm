@@ -23,13 +23,16 @@
 #define MPU_REG_WHO_AM_I 0x75
 #define MPU_REG_CONFIG 0x1A
 #define MPU_ACCEL_CONFIG 0x1C
+#define MPU_ACCEL_CONFIG2 0x1D
 #define MPU_GYRO_CONFIG 0x1B
+#define MPU_REG_SMPLRT_DIV 0x19
 
 #define START_COMMAND 0x80
 #define CLOCK_SRC 0x01
-#define DLPF_CONFIG 0x03
-#define ACCEL_CONFIG 0x00  // +/- 2g
-#define GYRO_CONFIG 0x18   // +/- 2000 deg/s
+#define DLPF_CONFIG 0x01        // ~184Hz
+#define DLPF_ACCEL_CONFIG 0x01  // ~184Hz
+#define ACCEL_CONFIG 0x00       // +/- 2g
+#define GYRO_CONFIG 0x18        // +/- 2000 deg/s
 
 #define MPU_WHO_AM_I_9250_A 0x71
 #define MPU_WHO_AM_I_9250_B 0x73
@@ -89,7 +92,15 @@ bool init_spi(void) {
     mpu_write_register(MPU_REG_PWR_MGMT_1, CLOCK_SRC);
     mpu_write_register(MPU_ACCEL_CONFIG, ACCEL_CONFIG);
     mpu_write_register(MPU_GYRO_CONFIG, GYRO_CONFIG);
+
+    mpu_write_register(MPU_REG_SMPLRT_DIV, 0x00);
+    mpu_write_register(MPU_ACCEL_CONFIG2, DLPF_ACCEL_CONFIG);
     mpu_write_register(MPU_REG_CONFIG, DLPF_CONFIG);
+
+    for (uint8_t i = 0; i < 5; i++) {
+        if (!check_who_am_i()) return false;
+        delay(10);
+    }
 
     return check_who_am_i();
 }

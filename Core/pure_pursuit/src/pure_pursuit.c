@@ -2,7 +2,6 @@
 
 #include <stdlib.h>
 
-#include "logger/logger.h"
 #include "math/math.h"
 #include "motors/motors.h"
 #include "pid/controllers/speed_pid.h"

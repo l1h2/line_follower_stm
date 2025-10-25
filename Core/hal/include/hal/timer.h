@@ -13,6 +13,7 @@ void init_system_timer(void);
  * @brief Returns the current system time.
  *
  * @return The current system time in milliseconds.
+ * @warning This function may overflow after approximately 49.7 days.
  */
 uint32_t get_system_time(void);
 
@@ -20,6 +21,7 @@ uint32_t get_system_time(void);
  * @brief Returns the current system time in microseconds.
  *
  * @return The current system time in microseconds.
+ * @warning This function may overflow after approximately 71.5 minutes.
  */
 uint32_t get_system_time_us(void);
 

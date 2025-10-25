@@ -4,18 +4,7 @@
 
 #include "sensors/encoder.h"
 
-static SpeedErrors errors = {
-    .left_target_speed = 0.0f,
-    .right_target_speed = 0.0f,
-    .left_error = 0.0f,
-    .right_error = 0.0f,
-    .left_last_error = 0.0f,
-    .right_last_error = 0.0f,
-    .left_delta_error = 0.0f,
-    .right_delta_error = 0.0f,
-    .left_error_sum = 0.0f,
-    .right_error_sum = 0.0f,
-};
+static SpeedErrors errors = {0};
 
 static const EncoderData* encoders = NULL;
 
@@ -53,18 +42,7 @@ void update_speed_errors(void) {
     update_last_error();
 }
 
-void clear_speed_errors(void) {
-    errors.left_target_speed = 0.0f;
-    errors.right_target_speed = 0.0f;
-    errors.left_error = 0.0f;
-    errors.right_error = 0.0f;
-    errors.left_last_error = 0.0f;
-    errors.right_last_error = 0.0f;
-    errors.left_delta_error = 0.0f;
-    errors.right_delta_error = 0.0f;
-    errors.left_error_sum = 0.0f;
-    errors.right_error_sum = 0.0f;
-}
+void clear_speed_errors(void) { errors = (SpeedErrors){0}; }
 
 void set_speed_targets(const float left_speed, const float right_speed) {
     errors.left_target_speed = left_speed;

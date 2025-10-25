@@ -1,7 +1,10 @@
 #include "logger/logger_debug.h"
 
 #include "logger/logger_base.h"
+#include "math/math.h"
 #include "pid/errors/errors.h"
+#include "sensors/encoder.h"
+#include "sensors/mpu.h"
 #include "sensors/sensors.h"
 #include "sensors/vision.h"
 #include "timer/time.h"
@@ -9,6 +12,7 @@
 #define SENSOR_READ_DEBUG_TIMEOUT_US 3000
 
 static uint32_t last_log_time = 0;
+static uint32_t last_sensor_update = 0;
 
 void debug_print_char(const char c) { print_char(c); }
 void debug_print_bit(const uint8_t bit_position, const uint8_t byte) {
@@ -79,61 +83,101 @@ void debug_print_errors(void) {
     print_new_line();
 }
 
-void debug_print_mpu_data(void) {
-    const SensorState* const sensors = get_sensors();
+void debug_print_mpu_accelerations(void) {
+    const MpuData* const mpu = get_mpu_data();
 
     print_string("Accel [X Y Z]:  ");
-    print_signed_word(sensors->mpu_data->accel_x);
+    print_signed_word(mpu->accel_x);
     print_string("  /  ");
-    print_signed_word(sensors->mpu_data->accel_y);
+    print_signed_word(mpu->accel_y);
     print_string("  /  ");
-    print_signed_word(sensors->mpu_data->accel_z);
-    print_new_line();
-
-    print_string("Gyro  [X Y Z]:  ");
-    print_signed_word(sensors->mpu_data->gyro_x);
-    print_string("  /  ");
-    print_signed_word(sensors->mpu_data->gyro_y);
-    print_string("  /  ");
-    print_signed_word(sensors->mpu_data->gyro_z);
-    print_new_line();
-
-    print_string("Temp:  ");
-    print_signed_word(sensors->mpu_data->temp);
+    print_signed_word(mpu->accel_z);
     print_new_line();
 }
 
+void debug_print_mpu_gyroscopes(void) {
+    const MpuData* const mpu = get_mpu_data();
+
+    print_string("Gyro  [X Y Z]:  ");
+    print_signed_word(mpu->gyro_x);
+    print_string("  /  ");
+    print_signed_word(mpu->gyro_y);
+    print_string("  /  ");
+    print_signed_word(mpu->gyro_z);
+    print_new_line();
+}
+
+void debug_print_mpu_gyroscope_biases(void) {
+    const MpuData* const mpu = get_mpu_data();
+
+    print_string("Gyro Biases [X Y Z]:  ");
+    print_float(mpu->bias_gyro_x, 2);
+    print_string("  /  ");
+    print_float(mpu->bias_gyro_y, 2);
+    print_string("  /  ");
+    print_float(mpu->bias_gyro_z, 2);
+    print_new_line();
+}
+
+void debug_print_mpu_angles(void) {
+    const MpuData* const mpu = get_mpu_data();
+
+    print_string("Roll/Pitch/Yaw:  ");
+    print_float(rad_to_deg(mpu->roll), 2);
+    print_string("  /  ");
+    print_float(rad_to_deg(mpu->pitch), 2);
+    print_string("  /  ");
+    print_float(rad_to_deg(mpu->yaw), 2);
+    print_new_line();
+}
+
+void debug_print_mpu_temperature(void) {
+    const MpuData* const mpu = get_mpu_data();
+
+    print_string("Temp:  ");
+    print_signed_word(mpu->temp);
+    print_new_line();
+}
+
+void debug_print_mpu_data(void) {
+    debug_print_mpu_accelerations();
+    debug_print_mpu_gyroscopes();
+    debug_print_mpu_gyroscope_biases();
+    debug_print_mpu_angles();
+    debug_print_mpu_temperature();
+}
+
 void debug_print_encoder_pulses(void) {
-    const SensorState* const sensors = get_sensors();
+    const EncoderData* const encoders = get_encoder_data();
 
     print_string("Pulses [L R]:  ");
-    print_signed_long(sensors->encoders->left_encoder);
+    print_signed_long(encoders->left_encoder);
     print_string("  /  ");
-    print_signed_long(sensors->encoders->right_encoder);
+    print_signed_long(encoders->right_encoder);
     print_new_line();
 }
 
 void debug_print_encoder_distances(void) {
-    const SensorState* const sensors = get_sensors();
+    const EncoderData* const encoders = get_encoder_data();
 
     print_string("Distance (cm) [L R T]:  ");
-    print_float(sensors->encoders->left_distance, 2);
+    print_float(encoders->left_distance, 2);
     print_string("  /  ");
-    print_float(sensors->encoders->right_distance, 2);
+    print_float(encoders->right_distance, 2);
     print_string("  /  ");
-    print_float(sensors->encoders->distance, 2);
+    print_float(encoders->distance, 2);
     print_new_line();
 }
 
 void debug_print_encoder_speeds(void) {
-    const SensorState* const sensors = get_sensors();
+    const EncoderData* const encoders = get_encoder_data();
 
     print_string("Speed (cm/s) [L R T]:  ");
-    print_float(sensors->encoders->left_speed, 2);
+    print_float(encoders->left_speed, 2);
     print_string("  /  ");
-    print_float(sensors->encoders->right_speed, 2);
+    print_float(encoders->right_speed, 2);
     print_string("  /  ");
-    print_float(sensors->encoders->speed, 2);
+    print_float(encoders->speed, 2);
     print_new_line();
 }
 
@@ -143,8 +187,18 @@ void debug_print_encoder_data(void) {
     debug_print_encoder_speeds();
 }
 
+static inline void update_sensor_data_for_debug(void) {
+    if (!time_elapsed(last_sensor_update, SENSOR_UPDATE_INTERVAL_MS)) return;
+
+    last_sensor_update = time();
+    update_sensors(SENSOR_READ_DEBUG_TIMEOUT_US, false);
+}
+
 bool debug_print_diagnostics(void) {
-    if (!time_elapsed(last_log_time, LOG_INTERVAL)) return false;
+    if (!time_elapsed(last_log_time, LOG_INTERVAL)) {
+        update_sensor_data_for_debug();
+        return false;
+    }
 
     last_log_time = time();
     update_errors(SENSOR_READ_DEBUG_TIMEOUT_US, true);

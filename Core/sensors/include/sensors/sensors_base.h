@@ -20,13 +20,19 @@ typedef struct {
  * @brief Structure to hold the MPU-9250 sensor data.
  */
 typedef struct {
-    int16_t accel_x;  // Acceleration in X-axis
-    int16_t accel_y;  // Acceleration in Y-axis
-    int16_t accel_z;  // Acceleration in Z-axis
-    int16_t temp;     // Temperature
-    int16_t gyro_x;   // Gyroscope in X-axis
-    int16_t gyro_y;   // Gyroscope in Y-axis
-    int16_t gyro_z;   // Gyroscope in Z-axis
+    int16_t accel_x;    // Acceleration in X-axis
+    int16_t accel_y;    // Acceleration in Y-axis
+    int16_t accel_z;    // Acceleration in Z-axis
+    int16_t temp;       // Temperature
+    int16_t gyro_x;     // Gyroscope in X-axis
+    int16_t gyro_y;     // Gyroscope in Y-axis
+    int16_t gyro_z;     // Gyroscope in Z-axis
+    float bias_gyro_x;  // Gyroscope bias in X-axis
+    float bias_gyro_y;  // Gyroscope bias in Y-axis
+    float bias_gyro_z;  // Gyroscope bias in Z-axis
+    float yaw;          // Yaw angle in radians
+    float pitch;        // Pitch angle in radians
+    float roll;         // Roll angle in radians
 } MpuData;
 
 /**

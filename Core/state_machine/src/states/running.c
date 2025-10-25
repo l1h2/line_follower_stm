@@ -3,6 +3,7 @@
 #include "logger/logger.h"
 #include "pid/pid.h"
 #include "pure_pursuit/pure_pursuit.h"
+#include "sensors/mpu.h"
 #include "sensors/sensors.h"
 #include "state_machine/handlers/config_handler.h"
 #include "state_machine/handlers/state_handler.h"
@@ -22,6 +23,8 @@ void handle_running(const StateMachine* const sm) {
     reset_track();
     restart_pid();
     restart_pure_pursuit();
+
+    mpu_calibrate_gyro();
 
     switch (sm->running_mode) {
         case RUNNING_INIT:

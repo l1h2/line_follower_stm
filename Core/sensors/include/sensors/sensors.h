@@ -3,6 +3,8 @@
 
 #include "sensors/sensors_base.h"
 
+#define SENSOR_UPDATE_INTERVAL_MS 1  // Base update interval in milliseconds
+
 /**
  * @brief Initializes the sensors by setting up necessary configurations and
  * obtaining initial data.
