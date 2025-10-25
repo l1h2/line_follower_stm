@@ -1,8 +1,9 @@
 #include "math/math.h"
 
+#include <math.h>
 #include <stdint.h>
 
-#define MATH_PI_2 (2.0f * MATH_PI)
+#define MATH_2_PI (2.0f * MATH_PI)
 #define RAD_TO_DEG (180.0f / MATH_PI)
 #define DEG_TO_RAD (MATH_PI / 180.0f)
 #define ONE_OVER_SIX (1.0f / 6.0f)
@@ -37,12 +38,8 @@ void normalize_unit_vector(float* const cos, float* const sin) {
 }
 
 void normalize_angle(float* const angle) {
-    while (*angle > MATH_PI) {
-        *angle -= MATH_PI_2;
-    }
-    while (*angle < -MATH_PI) {
-        *angle += MATH_PI_2;
-    }
+    while (*angle > MATH_PI) *angle -= MATH_2_PI;
+    while (*angle < -MATH_PI) *angle += MATH_2_PI;
 }
 
 float rad_to_deg(const float angle) { return (angle * RAD_TO_DEG); }

@@ -38,4 +38,10 @@ bool update_track(const bool encoder_updated);
  */
 void update_positions(void);
 
+/**
+ * @brief Sets the IMU fusion alpha value for heading correction.
+ * @param alpha The alpha value to set (between 0 and 1).
+ */
+void set_imu_alpha(const float alpha);
+
 #endif  // TRACK_H

@@ -39,7 +39,7 @@ static inline void update_operation_data(void) {
     operation_data[4] = y & 0xFF;
     operation_data[5] = (y >> 8);
 
-    const int16_t heading = parse_signed_float(sensors->encoders->heading, 4);
+    const int16_t heading = parse_signed_float(track->heading, 4);
     operation_data[6] = heading & 0xFF;
     operation_data[7] = (heading >> 8);
 }
@@ -152,6 +152,16 @@ void send_message(const SerialMessages msg) {
             break;
         case SPEED_KFF:
             send_data(msg, (const uint8_t*)&pid->speed_pid->kff);
+            break;
+        case CURVATURE_GAIN:
+            const uint16_t gain =
+                parse_float(sensors->encoders->wheel_base_correction, 2);
+            send_data(msg, (const uint8_t*)&gain);
+            break;
+        case IMU_ALPHA:
+            // Convert from [0.0, 1.0] range to percentage
+            const uint16_t imu_alpha = parse_float(track->imu_alpha, 4);
+            send_data(msg, (const uint8_t*)&imu_alpha);
             break;
         default:
             debug_print("Attempted to send unknown message");

@@ -39,6 +39,8 @@
     X(SPEED_KFF, 2)              \
     X(BASE_SPEED, 2)             \
     X(LOOKAHEAD, 1)              \
+    X(CURVATURE_GAIN, 2)         \
+    X(IMU_ALPHA, 2)              \
     X(OPERATION_DATA, OPERATION_DATA_SIZE)
 
 // Maximum payload size among all messages

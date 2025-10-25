@@ -9,6 +9,7 @@
 #include "track/observer.h"
 
 #define MIN_ARC_ANGLE_RAD 0.3f
+#define IMU_FUSION_ALPHA 1.0f
 #define DETECTION_DEBOUNCE_TIME_MS 30
 #define MARKER_COUNTER_THRESHOLD 6
 #define CROSSING_COUNTER_THRESHOLD 1
@@ -17,6 +18,7 @@ static TrackCounters track = {0};
 
 static const ErrorStruct* errors = NULL;
 static uint32_t last_true_check_time = 0;
+static float prev_mpu_yaw = 0.0f;
 static bool heading_vec_initialized = false;
 
 typedef enum { LINE, CROSSING, CURVE, MARKER } MemoryCounters;
@@ -34,6 +36,7 @@ static inline void reset_memory(void) {
 static inline void reset_headings(void) {
     track.sin_heading = 0.0f;
     track.cos_heading = 1.0f;
+    prev_mpu_yaw = 0.0f;
     heading_vec_initialized = false;
 }
 
@@ -47,10 +50,10 @@ static inline void complete_lap(void) {
     track.section = 0;
 
     // TODO: Get exact distance for track markers
-    track.x = -60;
-    track.y = 0;
+    // track.x = -60;
+    // track.y = 0;
 
-    reset_headings();
+    // reset_headings();
     reset_memory();
 }
 
@@ -62,16 +65,18 @@ static inline void start_lap(void) {
     track.crossings = 0;
     track.curve_markers = 0;
 
-    track.x = 0;
-    track.y = 0;
+    // track.x = 0;
+    // track.y = 0;
 
-    reset_headings();
+    // reset_headings();
     reset_memory();
 }
 
 static inline void anchor_heading_vector(const float heading) {
     track.cos_heading = cosf(heading);
     track.sin_heading = sinf(heading);
+    prev_mpu_yaw = heading;
+    track.heading = heading;
     heading_vec_initialized = true;
 }
 
@@ -81,14 +86,25 @@ static inline void update_distance(void) {
     if (track.distance < 0) track.distance = 0;
 }
 
+static inline float get_delta_angle(void) {
+    const float enc_angle = errors->sensors->encoders->current_angle;
+    const float current_yaw = errors->sensors->mpu_data->yaw;
+
+    float delta_yaw = current_yaw - prev_mpu_yaw;
+    normalize_angle(&delta_yaw);
+    prev_mpu_yaw = current_yaw;
+
+    return track.imu_alpha * delta_yaw + (1.0f - track.imu_alpha) * enc_angle;
+}
+
 // TODO: Add XY resets based on markers
 static inline void update_position(void) {
     const float dist = errors->sensors->encoders->current_distance;
-    const float angle = errors->sensors->encoders->current_angle;
+    const float angle = get_delta_angle();
     const float half_step = 0.5f * angle;
 
     if (!heading_vec_initialized) {
-        anchor_heading_vector(errors->sensors->encoders->heading - angle);
+        anchor_heading_vector(errors->sensors->mpu_data->yaw - angle);
     }
 
     float s_half, c_half;
@@ -114,6 +130,9 @@ static inline void update_position(void) {
     track.cos_heading = cos_h * c_full - sin_h * s_full;
     track.sin_heading = sin_h * c_full + cos_h * s_full;
     normalize_unit_vector(&track.cos_heading, &track.sin_heading);
+
+    track.heading += angle;
+    normalize_angle(&track.heading);
 }
 
 static inline void update_line(void) {
@@ -207,6 +226,7 @@ static inline bool update_track_counters(void) {
 const TrackCounters* init_track(const ErrorStruct* const error_struct) {
     init_observer(error_struct);
     errors = error_struct;
+    track.imu_alpha = IMU_FUSION_ALPHA;
 
     return &track;
 }
@@ -214,7 +234,10 @@ const TrackCounters* init_track(const ErrorStruct* const error_struct) {
 const TrackCounters* get_track(void) { return &track; }
 
 void reset_track(void) {
+    const float imu_alpha = track.imu_alpha;
     track = (TrackCounters){0};
+    track.imu_alpha = imu_alpha;
+
     reset_headings();
     reset_memory();
 }
@@ -233,3 +256,5 @@ void update_positions(void) {
     update_distance();
     update_position();
 }
+
+void set_imu_alpha(const float alpha) { track.imu_alpha = alpha; }

@@ -71,11 +71,15 @@ static inline void update_targets(void) {
 }
 
 static inline void update_target_speeds(void) {
+    update_targets();
+
     const float dx = pp_state.target_x - pp.track->x;
     const float dy = pp_state.target_y - pp.track->y;
     const float y_r = pp.track->cos_heading * dy - pp.track->sin_heading * dx;
 
-    const float curvature = EFFECTIVE_WHEEL_BASE_CM * y_r * inv_lookahead_sq;
+    const float curvature =
+        pp.pid->errors->sensors->encoders->effective_wheel_base * y_r *
+        inv_lookahead_sq;
 
     pp_state.speed_left = pp.pid->speed_pid->base_speed * (1 - curvature);
     pp_state.speed_right = pp.pid->speed_pid->base_speed * (1 + curvature);
@@ -115,19 +119,14 @@ bool update_peripheral_sensors(void) {
 bool update_pure_pursuit(void) {
     if (!update_pending_base_speed_pid()) return false;
 
-    update_base_speed_pid();
+    update_base_speed_pid_time();
     update_encoder_data();
     update_positions();
-    update_targets();
     update_target_speeds();
 
     set_speed_targets(pp_state.speed_left, pp_state.speed_right);
     update_speed_errors();
-
-    int16_t left_pwm;
-    int16_t right_pwm;
-    get_base_speed_pid(&left_pwm, &right_pwm);
-    set_motors(left_pwm, right_pwm);
+    update_base_speed_pid();
 
     return true;
 }

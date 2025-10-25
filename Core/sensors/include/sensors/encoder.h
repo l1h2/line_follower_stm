@@ -6,18 +6,6 @@
 
 #include "sensors/sensors_base.h"
 
-// Distance between the wheels in mm
-#define WHEEL_BASE_MM 143.0f
-
-// Distance between the wheels in cm
-#define WHEEL_BASE_CM (WHEEL_BASE_MM / 10.0f)
-
-// Correction factor for wheel base to improve accuracy
-#define WHEEL_BASE_CORRECTION_FACTOR 1.6f
-
-// Effective wheel base in cm after applying correction factor
-#define EFFECTIVE_WHEEL_BASE_CM (WHEEL_BASE_CM * WHEEL_BASE_CORRECTION_FACTOR)
-
 /**
  * @brief Initializes the encoder peripherals.
  */
@@ -60,5 +48,12 @@ void clear_encoder_data(void);
  * encoder data.
  */
 void start_encoders(void);
+
+/**
+ * @brief Sets the wheel base correction factor for curvature gain
+ * calculation.
+ * @param k The wheel base correction factor.
+ */
+void set_curvature_gain(const float k);
 
 #endif  // ENCODER_H

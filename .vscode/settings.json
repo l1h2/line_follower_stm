@@ -106,6 +106,7 @@
     "pure_pursuit.h": "c",
     "track.h": "c",
     "running_pure_pursuit.h": "c",
-    "math.h": "c"
+    "math.h": "c",
+    "observer.h": "c"
   }
 }

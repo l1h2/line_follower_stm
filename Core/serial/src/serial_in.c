@@ -4,9 +4,11 @@
 #include "logger/logger.h"
 #include "pid/pid.h"
 #include "pure_pursuit/pure_pursuit.h"
+#include "sensors/encoder.h"
 #include "serial/serial_base.h"
 #include "serial/serial_out.h"
 #include "state_machine/handlers/config_handler.h"
+#include "track/track.h"
 #include "turbine/turbine.h"
 
 static SerialMessage current_msg = {INVALID_MESSAGE, 0, {0}};
@@ -42,8 +44,7 @@ static inline uint32_t parse_uint32(const uint8_t* const payload) {
 
 static inline float parse_float(const uint8_t* const payload,
                                 uint8_t precision) {
-    const uint16_t raw = parse_uint16(payload);
-    float value = (float)raw;
+    float value = (float)parse_uint16(payload);
     for (; precision > 0; precision--) value /= 10.0f;
     return value;
 }
@@ -130,6 +131,13 @@ static void handle_message(void) {
             break;
         case SPEED_KFF:
             set_speed_kff(parse_uint16(current_msg.payload));
+            break;
+        case CURVATURE_GAIN:
+            set_curvature_gain(parse_float(current_msg.payload, 2));
+            break;
+        case IMU_ALPHA:
+            // Convert from percentage to [0.0, 1.0] range
+            set_imu_alpha(parse_float(current_msg.payload, 4));
             break;
         default:
             debug_print("Received unknown message");

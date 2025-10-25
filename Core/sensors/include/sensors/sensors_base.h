@@ -30,9 +30,9 @@ typedef struct {
     float bias_gyro_x;  // Gyroscope bias in X-axis
     float bias_gyro_y;  // Gyroscope bias in Y-axis
     float bias_gyro_z;  // Gyroscope bias in Z-axis
-    float yaw;          // Yaw angle in radians
-    float pitch;        // Pitch angle in radians
-    float roll;         // Roll angle in radians
+    float yaw;          // Yaw angle in radians [-π, π]
+    float pitch;        // Pitch angle in radians [-π, π]
+    float roll;         // Roll angle in radians [-π, π]
 } MpuData;
 
 /**
@@ -49,12 +49,14 @@ typedef struct {
     float right_distance;          // Right distance in cm
     float distance;                // Distance in cm
     float current_angle;           // Current angle in radians
-    float heading;                 // Estimated heading in radians
+    float heading;                 // Estimated heading in radians [-π, π]
     float left_speed;              // Speed of the left wheel in cm/s
     float right_speed;             // Speed of the right wheel in cm/s
     float speed;                   // Average speed of the robot in cm/s
     float current_interval;        // Time interval since last update in seconds
     uint32_t last_update_time;     // Timestamp of the last update in ms
+    float effective_wheel_base;    // Effective wheel base value in cm
+    float wheel_base_correction;   // Wheel base correction factor
 } EncoderData;
 
 /**

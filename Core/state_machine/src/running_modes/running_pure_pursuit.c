@@ -18,11 +18,11 @@ void running_pure_pursuit(const StateMachine* const sm) {
     while (sm->can_run) {
         if (!update_peripheral_sensors()) continue;
 
-        // check_stop(update_track(false));
+        check_stop(update_track(false));
         process_serial_messages();
 
         if (!update_pure_pursuit()) continue;
-        // debug_print_encoder_distances();
+
         if (sm->log_data) send_message(OPERATION_DATA);
     }
 

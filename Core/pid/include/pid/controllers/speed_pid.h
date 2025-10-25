@@ -17,11 +17,9 @@ const BaseSpeedPid* init_base_speed_pid(const ErrorStruct* const error_struct);
 const BaseSpeedPid* get_base_speed_pid_ptr(void);
 
 /**
- * @brief Calculate and return the speed PID output for left and right motors.
- * @param left_pwm Pointer to store the calculated PWM for the left motor.
- * @param right_pwm Pointer to store the calculated PWM for the right motor.
+ * @brief Update the speed PID controller and set motor PWMs.
  */
-void get_base_speed_pid(int16_t* const left_pwm, int16_t* const right_pwm);
+void update_base_speed_pid(void);
 
 /**
  * @brief Check if an update is pending for the speed PID controller.
@@ -32,7 +30,7 @@ bool update_pending_base_speed_pid(void);
 /**
  * @brief Update the last PID update time to the current time.
  */
-void update_base_speed_pid(void);
+void update_base_speed_pid_time(void);
 
 /**
  * @brief Set the proportional gain (Kp) for the speed PID controller.

@@ -110,22 +110,20 @@ const BaseSpeedPid* init_base_speed_pid(const ErrorStruct* const error_struct) {
 
 const BaseSpeedPid* get_base_speed_pid_ptr(void) { return &base_pid; }
 
-void get_base_speed_pid(int16_t* const left_pwm, int16_t* const right_pwm) {
+void update_base_speed_pid(void) {
     update_p();
     update_i();
     update_d();
     update_ff();
     update_pwm();
-
-    if (left_pwm != NULL) *left_pwm = pid_struct.left_pwm;
-    if (right_pwm != NULL) *right_pwm = pid_struct.right_pwm;
+    set_motors(pid_struct.left_pwm, pid_struct.right_pwm);
 }
 
 bool update_pending_base_speed_pid(void) {
     return time_elapsed(base_pid.last_pid_time, base_pid.frame_interval);
 }
 
-void update_base_speed_pid(void) { base_pid.last_pid_time = time(); }
+void update_base_speed_pid_time(void) { base_pid.last_pid_time = time(); }
 
 void set_base_speed_kp(const uint16_t kp) { base_pid.kp = kp; }
 

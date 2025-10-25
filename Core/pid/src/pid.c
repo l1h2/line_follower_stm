@@ -95,15 +95,11 @@ bool update_pid(void) {
 bool update_speed_pid(void) {
     if (!update_pending_base_speed_pid()) return false;
 
+    update_base_speed_pid_time();
     update_encoder_data();
     set_speed_targets(pid.speed_pid->base_speed, pid.speed_pid->base_speed);
     update_speed_errors();
     update_base_speed_pid();
-
-    int16_t left_pwm;
-    int16_t right_pwm;
-    get_base_speed_pid(&left_pwm, &right_pwm);
-    set_motors(left_pwm, right_pwm);
 
     return true;
 }

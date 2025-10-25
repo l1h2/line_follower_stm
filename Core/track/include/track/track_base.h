@@ -24,10 +24,12 @@ typedef struct {
     float x;                     // X position in cm
     float y;                     // Y position in cm
     float distance;              // Distance traveled in cm
+    float heading;               // Heading angle in radians [-π, π]
     float sin_heading;           // Sine of the heading angle
     float cos_heading;           // Cosine of the heading angle
     uint8_t section;             // Current section of the track
     uint8_t laps;                // Current lap count
+    float imu_alpha;             // IMU alpha value for heading correction
 } TrackCounters;
 
 #endif  // TRACK_BASE_H
