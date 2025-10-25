@@ -45,15 +45,11 @@ static struct {
 } pid_struct = {0};
 
 static inline void update_p(void) {
-    if (base_pid.kp == 0) return;
-
     pid_struct.left_p = base_pid.kp * speed_errors->left_error;
     pid_struct.right_p = base_pid.kp * speed_errors->right_error;
 }
 
 static inline void update_i(void) {
-    if (base_pid.ki == 0) return;
-
     pid_struct.left_i =
         base_pid.ki * speed_errors->left_error_sum * base_pid.frame_interval;
     pid_struct.right_i =
@@ -61,8 +57,6 @@ static inline void update_i(void) {
 }
 
 static inline void update_d(void) {
-    if (base_pid.kd == 0) return;
-
     pid_struct.left_d =
         base_pid.kd * speed_errors->left_delta_error / base_pid.frame_interval;
     pid_struct.right_d =
@@ -70,16 +64,18 @@ static inline void update_d(void) {
 }
 
 static inline void update_ff(void) {
-    if (base_pid.kff == 0) return;
-
-    pid_struct.left_ff = base_pid.kff * speed_errors->left_target_speed;
-    pid_struct.right_ff = base_pid.kff * speed_errors->right_target_speed;
+    pid_struct.left_ff = base_pid.kff * speed_errors->left_delta_target_speed /
+                         base_pid.frame_interval;
+    pid_struct.right_ff = base_pid.kff *
+                          speed_errors->right_delta_target_speed /
+                          base_pid.frame_interval;
 }
 
 static inline void update_pwm(void) {
-    float left_out = pid_struct.left_p + pid_struct.left_i + pid_struct.left_d;
-    float right_out =
-        pid_struct.right_p + pid_struct.right_i + pid_struct.right_d;
+    float left_out = pid_struct.left_p + pid_struct.left_i + pid_struct.left_d +
+                     pid_struct.left_ff;
+    float right_out = pid_struct.right_p + pid_struct.right_i +
+                      pid_struct.right_d + pid_struct.right_ff;
 
     if (left_out > pid_struct.max_pwm) {
         left_out = pid_struct.max_pwm;

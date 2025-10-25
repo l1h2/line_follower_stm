@@ -1,0 +1,8 @@
+#include "track/tracks/base_triangle.h"
+
+#include "config.h"
+
+#if SELECTED_TRACK == BASE_TRIANGLE
+const float track_x[WAYPOINT_COUNT] = {0, 50, 0};
+const float track_y[WAYPOINT_COUNT] = {0, 25, 50};
+#endif

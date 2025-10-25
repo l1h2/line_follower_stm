@@ -10,6 +10,7 @@
 #include "sensors/sensors.h"
 #include "timer/time.h"
 #include "track/track.h"
+#include "track/track_selector.h"
 
 #define LOOKAHEAD_CM 5
 #define FRAME_INTERVAL_MS 10UL       // ms
@@ -38,10 +39,6 @@ static struct {
     uint16_t waypoint_index;
 } pp_state = {0};
 
-#define WAYPOINT_COUNT 4
-static const float waypoints_x[WAYPOINT_COUNT] = {0, 50, 50, 0};
-static const float waypoints_y[WAYPOINT_COUNT] = {0, 0, 50, 50};
-
 static inline bool out_of_range(void) {
     const float dx = waypoints_x[pp_state.waypoint_index] - pp.track->x;
     const float dy = waypoints_y[pp_state.waypoint_index] - pp.track->y;
@@ -49,10 +46,10 @@ static inline bool out_of_range(void) {
 }
 
 static inline void update_next_waypoint(void) {
-    for (uint16_t i = 0; i < WAYPOINT_COUNT; i++) {
+    for (uint16_t i = 0; i < waypoint_count; i++) {
         if (out_of_range()) break;
         pp_state.waypoint_index =
-            (pp_state.waypoint_index + 1) % WAYPOINT_COUNT;
+            (pp_state.waypoint_index + 1) % waypoint_count;
     }
 
     pp_state.next_x = waypoints_x[pp_state.waypoint_index];

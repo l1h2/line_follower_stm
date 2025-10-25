@@ -107,6 +107,9 @@
     "track.h": "c",
     "running_pure_pursuit.h": "c",
     "math.h": "c",
-    "observer.h": "c"
+    "observer.h": "c",
+    "base_square.h": "c",
+    "base_triangle.h": "c",
+    "compare": "c"
   }
 }

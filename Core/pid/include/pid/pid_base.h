@@ -10,16 +10,18 @@
  * @brief Structure to hold speed error values for PID control.
  */
 typedef struct {
-    float left_target_speed;   // Target speed for the left motor in cm/s
-    float right_target_speed;  // Target speed for the right motor in cm/s
-    float left_error;          // Error for the left motor in cm/s
-    float right_error;         // Error for the right motor in cm/s
-    float left_last_error;     // Last error for the left motor in cm/s
-    float right_last_error;    // Last error for the right motor in cm/s
-    float left_delta_error;    // Delta error for the left motor in cm/s
-    float right_delta_error;   // Delta error for the right motor in cm/s
-    float left_error_sum;      // Sum of errors for the left motor in cm/s
-    float right_error_sum;     // Sum of errors for the right motor in cm/s
+    float left_target_speed;        // Target speed for the left motor in cm/s
+    float right_target_speed;       // Target speed for the right motor in cm/s
+    float left_error;               // Error for the left motor in cm/s
+    float right_error;              // Error for the right motor in cm/s
+    float left_last_error;          // Last error for the left motor in cm/s
+    float right_last_error;         // Last error for the right motor in cm/s
+    float left_delta_error;         // Delta error for the left motor in cm/s
+    float right_delta_error;        // Delta error for the right motor in cm/s
+    float left_error_sum;           // Sum of errors for the left motor in cm/s
+    float right_error_sum;          // Sum of errors for the right motor in cm/s
+    float left_delta_target_speed;  // Delta target for the left motor in cm/s
+    float right_delta_target_speed;  // Delta target for the right motor in cm/s
 } SpeedErrors;
 
 /**

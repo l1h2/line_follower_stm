@@ -3,4 +3,12 @@
 
 #define DEBUG_MODE  // Comment to disable debug mode
 
+#define BASE_SQUARE 0       // 0.5 meter square track (default)
+#define INVERSE_SQUARE 1    // 0.5 meter inverse square track
+#define BASE_TRIANGLE 2     // 0.5 meter triangle track
+#define INVERSE_TRIANGLE 3  // 0.5 meter inverse triangle track
+
+// Default selected track (override with -DSELECTED_TRACK=base_triangle)
+#define SELECTED_TRACK INVERSE_TRIANGLE
+
 #endif  // LINE_FOLLOWER_H
