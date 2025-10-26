@@ -5,11 +5,11 @@
 #if SELECTED_TRACK == BASE_SQUARE
 #include "track/tracks/base_square.h"
 #elif SELECTED_TRACK == INVERSE_SQUARE
-#include "track/tracks/base_triangle.h"
+#include "track/tracks/inverse_square.h"
 #elif SELECTED_TRACK == BASE_TRIANGLE
 #include "track/tracks/base_triangle.h"
 #elif SELECTED_TRACK == INVERSE_TRIANGLE
-#include "track/tracks/base_triangle.h"
+#include "track/tracks/inverse_triangle.h"
 #else
 #include "track/tracks/base_square.h"
 #endif

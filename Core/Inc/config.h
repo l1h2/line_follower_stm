@@ -9,6 +9,6 @@
 #define INVERSE_TRIANGLE 3  // 0.5 meter inverse triangle track
 
 // Default selected track (override with -DSELECTED_TRACK=base_triangle)
-#define SELECTED_TRACK INVERSE_TRIANGLE
+#define SELECTED_TRACK INVERSE_SQUARE
 
 #endif  // LINE_FOLLOWER_H

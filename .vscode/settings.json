@@ -110,6 +110,7 @@
     "observer.h": "c",
     "base_square.h": "c",
     "base_triangle.h": "c",
-    "compare": "c"
+    "compare": "c",
+    "inverse_square.h": "c"
   }
 }
