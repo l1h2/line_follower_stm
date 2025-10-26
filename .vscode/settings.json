@@ -111,6 +111,9 @@
     "base_square.h": "c",
     "base_triangle.h": "c",
     "compare": "c",
-    "inverse_square.h": "c"
+    "inverse_square.h": "c",
+    "star.h": "c",
+    "track_selector.h": "c",
+    "inverse_triangle.h": "c"
   }
 }

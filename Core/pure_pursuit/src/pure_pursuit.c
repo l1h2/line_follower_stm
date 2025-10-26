@@ -46,10 +46,10 @@ static inline bool out_of_range(void) {
 }
 
 static inline void update_next_waypoint(void) {
-    for (uint16_t i = 0; i < waypoint_count; i++) {
+    for (uint16_t i = 0; i < WAYPOINT_COUNT; i++) {
         if (out_of_range()) break;
         pp_state.waypoint_index =
-            (pp_state.waypoint_index + 1) % waypoint_count;
+            (pp_state.waypoint_index + 1) % WAYPOINT_COUNT;
     }
 
     pp_state.next_x = waypoints_x[pp_state.waypoint_index];
