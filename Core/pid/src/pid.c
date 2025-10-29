@@ -13,7 +13,7 @@
 #include "timer/time.h"
 
 #define BASE_PWM 300
-#define ACCELERATION_STEP 1  // PWM units per update
+#define ACCELERATION_STEP 10  // PWM units per update
 
 static PidStruct pid = {
     .base_pwm = BASE_PWM,
@@ -62,8 +62,8 @@ static int16_t get_new_pwm(const int16_t delta_term) {
 static void update_motors(void) {
     const int16_t delta_pwm = get_delta_pwm_pid();
 
-    const int16_t left_pwm = get_new_pwm(delta_pwm);
-    const int16_t right_pwm = get_new_pwm(-delta_pwm);
+    const int16_t left_pwm = get_new_pwm(-delta_pwm);
+    const int16_t right_pwm = get_new_pwm(delta_pwm);
 
     set_motors(left_pwm, right_pwm);
 }
@@ -106,6 +106,8 @@ bool update_speed_pid(void) {
 
 void restart_pid(void) {
     pid.current_pwm = pid.base_pwm;
+    pid.max_pwm = get_max_pwm();
+    pid.min_pwm = -pid.max_pwm;
     clear_errors();
     clear_speed_errors();
 }

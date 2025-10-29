@@ -9,8 +9,11 @@
 #define INVERSE_TRIANGLE 3  // 0.5 meter inverse triangle track
 #define STAR 4              // Star-shaped track
 #define HEART 5             // Heart-shaped track
+#define PET 6               // PET track
+#define PET_COMPLEX 7       // PET track with all waypoints
+#define WAYPOINT_TEST 8     // Test track for generated waypoints
 
 // Default selected track (override with -DSELECTED_TRACK=base_triangle)
-#define SELECTED_TRACK HEART
+#define SELECTED_TRACK PET_COMPLEX
 
 #endif  // LINE_FOLLOWER_H

@@ -15,6 +15,12 @@
 #include "track/tracks/star.h"
 #elif SELECTED_TRACK == HEART
 #include "track/tracks/heart.h"
+#elif SELECTED_TRACK == PET
+#include "track/tracks/pet.h"
+#elif SELECTED_TRACK == PET_COMPLEX
+#include "track/tracks/pet_complex.h"
+#elif SELECTED_TRACK == WAYPOINT_TEST
+#include "track/tracks/waypoint_test.h"
 #else
 #include "track/tracks/base_square.h"
 #endif

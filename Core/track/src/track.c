@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#include "logger/logger.h"
 #include "math/math.h"
 #include "timer/time.h"
 #include "track/observer.h"
@@ -11,7 +12,7 @@
 #define MIN_ARC_ANGLE_RAD 0.3f
 #define IMU_FUSION_ALPHA 1.0f
 #define DETECTION_DEBOUNCE_TIME_MS 30
-#define MARKER_COUNTER_THRESHOLD 6
+#define MARKER_COUNTER_THRESHOLD 12
 #define CROSSING_COUNTER_THRESHOLD 1
 
 static TrackCounters track = {0};
@@ -175,6 +176,7 @@ static inline void update_section_for_crossings(void) {
     if (track.section == 0) return;
 
     track.section++;
+    debug_print("Crossing");
 }
 
 static inline void update_section_for_markers(void) {
@@ -183,6 +185,7 @@ static inline void update_section_for_markers(void) {
     } else {
         complete_lap();
     }
+    debug_print("Marker");
 }
 
 static inline bool process_event(const MemoryCounters event) {

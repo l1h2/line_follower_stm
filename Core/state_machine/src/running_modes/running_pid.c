@@ -25,8 +25,8 @@ void running_pid(const StateMachine* const sm) {
 
         check_stop(update_track(
             update_encoder_data_async(pid->speed_pid->frame_interval)));
-        if (sm->log_data) send_message(OPERATION_DATA);
 
+        if (sm->log_data) send_message(OPERATION_DATA);
         process_serial_messages();
     }
 

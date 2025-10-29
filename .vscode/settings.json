@@ -114,6 +114,8 @@
     "inverse_square.h": "c",
     "star.h": "c",
     "track_selector.h": "c",
-    "inverse_triangle.h": "c"
+    "inverse_triangle.h": "c",
+    "pet_complex.h": "c",
+    "waypoint_test.h": "c"
   }
 }
