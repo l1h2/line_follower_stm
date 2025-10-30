@@ -40,8 +40,8 @@ static struct {
 } pp_state = {0};
 
 static inline bool out_of_range(void) {
-    const float dx = waypoints_x[pp_state.waypoint_index] / 10 - pp.track->x;
-    const float dy = waypoints_y[pp_state.waypoint_index] / 10 - pp.track->y;
+    const float dx = waypoints_x[pp_state.waypoint_index] - pp.track->x;
+    const float dy = waypoints_y[pp_state.waypoint_index] - pp.track->y;
     return (dx * dx + dy * dy) >= (pp.lookahead * pp.lookahead);
 }
 
@@ -52,8 +52,8 @@ static inline void update_next_waypoint(void) {
             (pp_state.waypoint_index + 1) % WAYPOINT_COUNT;
     }
 
-    pp_state.next_x = waypoints_x[pp_state.waypoint_index] / 10;
-    pp_state.next_y = waypoints_y[pp_state.waypoint_index] / 10;
+    pp_state.next_x = waypoints_x[pp_state.waypoint_index];
+    pp_state.next_y = waypoints_y[pp_state.waypoint_index];
 }
 
 static inline void update_targets(void) {
