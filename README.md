@@ -2,6 +2,8 @@
 
 This project implements a line-follower robot using an STM32 microcontroller, `IR` sensors for vision, encoders and an `MPU9050` for navigation. The project is written entirely in C using the STM32 LL (Low-Layer) library for direct hardware access and control.
 
+<!-- Add gif of robot in competition -->
+
 ## Contents
 
 - [Features](#features)
@@ -408,6 +410,51 @@ The [main track mapping functionality](Core/track/src/track.c) processes sensor 
 <!-- Add track example image -->
 
 Under [tracks](Core/track/include/track/tracks), pre-defined track maps are stored as arrays of spacial coordinates representing the path of the track. These maps can be selected for use in the `Pure Pursuit Control` mode by setting the appropriate track in [config.h](Core/Inc/config.h#L17), allowing the robot to navigate the track based on the mapped data rather than relying solely on real-time sensor input.
+
+When adding new tracks the following steps must be followed:
+
+1. Create a new header file `track_name.h` in [tracks](Core/track/include/track/tracks) for the new track map in the format:
+
+   ```c
+   #ifndef TRACK_NAME_H
+   #define TRACK_NAME_H
+
+   #define WAYPOINT_COUNT N
+
+   extern const float waypoints_x[WAYPOINT_COUNT];
+   extern const float waypoints_y[WAYPOINT_COUNT];
+
+   #endif // TRACK_NAME_H
+   ```
+
+   Where `N` is the number of waypoints in the track, and `waypoints_x` and `waypoints_y` are arrays containing the `x` and `y` coordinates of each waypoint respectively.
+
+2. Implement the waypoint arrays in a corresponding `track_name.c` file in [tracks](Core/track/src/tracks) in the format:
+
+   ```c
+   #include "track/tracks/track_name.h"
+
+   #include "config.h"
+
+   #if SELECTED_TRACK == TRACK_NAME
+   const float waypoints_x[WAYPOINT_COUNT] = {x1, x2, x3, ..., xN};
+   const float waypoints_y[WAYPOINT_COUNT] = {y1, y2, y3, ..., yN};
+   #endif
+   ```
+
+   Where `x1, x2, ..., xN` and `y1, y2, ..., yN` are the coordinates of each waypoint in the track.
+
+3. Update the [config.h](Core/Inc/config.h) file to include the new track in the option:
+
+   ```c
+   #define TRACK_NAME X // Where X is the next available integer value
+   ```
+
+4. (Optional) Set the `SELECTED_TRACK` macro in [config.h](Core/Inc/config.h#L17) to the new track name to use it in the application.
+
+   ```c
+   #define SELECTED_TRACK TRACK_NAME
+   ```
 
 ### Stopping
 
