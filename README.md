@@ -44,7 +44,7 @@ This project implements a line-follower robot using an STM32 microcontroller, `I
 - **Encoders**: Wheel encoders for each motor to monitor speed and distance.
 - **MPU9050**: Inertial Measurement Unit (IMU) for orientation and movement tracking.
 - **HC-05 Bluetooth Module**: For wireless communication and debugging.
-<!-- Add topic about power conversions -->
+- **Power Supply**: Powered by a `2S` `LiPo` battery pack with onboard voltage regulation for '5V' and '3.3V' rails.
 - **Vacuum Turbine**: Central turbine suction system, powered by a dedicated motor driver, combined with a skirted area to generate vacuum pressure and improve stability.
 - **Hardware Abstraction Layer (HAL)**: Provides low-level interaction with the `STM32` `LL` library and other peripheral hardware.
 - **Serial Communication Protocol**: Custom lightweight protocol for communication between the robot and controller application via `USART`.
@@ -69,7 +69,7 @@ The 3D printed base serves as the structural foundation of the robot, providing 
 - **Motors and Wheels**: Mounts for the left and right motors, along with their respective wheels and encoders.
 - **Turbine and Skirt**: A central mount for the vacuum turbine motor and a skirted area to create a vacuum seal with the ground.
 - **Sensors**: Mounts for the array of `IR` sensors used for line detection and side sensors for track markers.
-- **Battery Compartment**: A designated area to securely hold the `3S` `LiPo` battery pack.
+- **Battery Compartment**: A designated area to securely hold the `2S` `LiPo` battery pack.
 
 #### Sensors
 
@@ -99,16 +99,17 @@ It contains the following main components:
 - **Connector for the motors**: Connectors for the left, right, and turbine motors.
 - **Connectors for Encoders**: Connectors for the wheel encoders to monitor speed and distance.
 - **Connector for HC-05 Bluetooth Module**: Connector for the `HC-05` Bluetooth module for wireless communication.
-- **Connector for the battery**: Connector for the `3S` `LiPo` battery pack used to power the robot.
+- **Connector for the battery**: Connector for the `2S` `LiPo` battery pack used to power the robot.
 - **Power Regulation Circuitry**: Voltage regulators to provide the necessary power rails for the microcontroller and peripherals.
 
 In the current version of the design, the `MPU9050` IMU is mounted externally on top of the PCB and connected with soldered wires directly to the `SPI` pins. However, future revisions of the PCB will include the `MPU9050` mounted directly on the board for a more compact design.
 
 #### Power Supply
 
-<!-- Confirm and expand on power conversions -->
+The robot is powered by a `2S` `LiPo` battery pack providing a nominal voltage of `7.4V`. The power supply circuitry on the PCB includes:
 
-The robot is powered by a `3S` `LiPo` battery pack providing a nominal voltage of `11.1V`. The power supply circuitry on the PCB includes voltage regulators to provide the necessary `5V` and `3.3V` rails required by the microcontroller and other components.
+- A `5V` Buck Converter to step down the battery voltage to a stable `5V` rail without significant heat dissipation.
+- A `3.3V` Linear Regulator to provide a clean `3.3V` rail for the `STM32` microcontroller and other peripherals that require `3.3V` operation.
 
 ## Software Setup
 
