@@ -1,6 +1,6 @@
 # Line Follower Robot STM32
 
-This project implements a line-follower robot using an STM32 microcontroller, `IR` sensors for vision, encoders and an `MPU9050` for navigation. The project is written entirely in C using the STM32 LL (Low-Layer) library for direct hardware access and control.
+This project implements a line-follower robot using an STM32 microcontroller, `IR` sensors for vision, encoders and an `MPU9050` for navigation. The project is written entirely in `C` using the `STM32 LL` (Low-Layer) library for direct hardware access and control.
 
 <div align="center">
   <img src="docs/images/line_follower_exposition.gif" alt="Line Follower Robot">
