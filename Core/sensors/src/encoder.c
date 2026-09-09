@@ -113,5 +113,5 @@ void start_encoders(void) {
 
 void set_curvature_gain(const float k) {
     encoder_data.wheel_base_correction = k;
-    encoder_data.effective_wheel_base = EFFECTIVE_WHEEL_BASE_CM * k;
+    encoder_data.effective_wheel_base = WHEEL_BASE_CM * k;
 }

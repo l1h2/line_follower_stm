@@ -130,7 +130,7 @@ To build and flash the project, the following toolchain is required:
 - **NVIC**: Set up to handle interrupts from `USART` communication to enable performing non-blocking data transmission and reception.
 - **RCC**: Configured to enable high speed clock with external `25 MHz` crystal oscillator as shown in the [Clock Configuration](#clock-configuration).
 - **SYS**: System configuration for basic settings.
-- **TIM2**: Performs PWM generation for motors and turbine control. Using a prescaler of `4` and a counter period of `999` to achieve a PWM frequency of `24.5 kHz`.
+- **TIM2**: Performs PWM generation for motors and turbine control. Using a prescaler of `4` and a counter period of `999` to achieve a PWM frequency of `19,2 kHz`.
 - **TIM3 & TIM4**: Configured as encoder interfaces for left and right wheel encoders respectively, counting on `rising edges` with a prescaler of `0` and a counter period of `65535`.
 - **SPI**: Set up as `Full-Duplex Master` for communication with the `MPU9050` IMU at `24 MBits/s`, `8 data bits`, `CPOL Low`, `CPHA 1Edge`, and `Hardware NSS Output Signal`.
 - **USART**: Set up for serial communication with the `HC-05` Bluetooth module at `115200 bps`, `8 data bits`, `1 stop bit` and `no parity`.
@@ -244,7 +244,6 @@ Also the [config.h](Core/Inc/config.h) file contains global macro definitions us
 10. **State Machine Module**
 
     Located in [Core/state_machine/](Core/state_machine), this is the main module that manages the robot's states and transitions. It controls the robot's behavior and is responsible for managing the entire operation lifecycle. After the initial setup performed by the `CubeMx` generated code in [main.c](Core/Src/main.c), control is yielded to this module and it's never returned. It has the following states:
-
     - `INIT`: Initializes all modules and peripherals.
     - `IDLE`: Waits for a start command via serial communication.
     - `RUNNING`: The robot is operating according to the selected `RUNNING_MODE`.
@@ -357,7 +356,6 @@ This is the main operational state of the robot, where it performs the task sele
 4. **[PID Control](Core/state_machine/src/running_modes/running_pid.c)**
 
    In this mode, the robot uses [`PID` controllers](Core/pid) to follow the line based on real-time readings from the `IR` sensors. The robot continuously adjusts its motor speeds using `PID` algorithms to minimize the error between the desired line position and the actual position detected by the sensors. There are two controllers working together in this mode:
-
    - **[Base `PWM` Controller](Core/pid/include/pid/controllers/base_pwm_pid.h)**: Responsible for setting the base `PWM` value for both motors, effectively controlling the overall speed of the robot. Useful for slowing down on curved paths or speeding up on straight sections.
 
    - **[Delta `PWM` Controller](Core/pid/include/pid/controllers/delta_pid.h)**: Responsible for adjusting the difference in `PWM` values between the left and right motors, effectively controlling the steering of the robot to follow the line accurately.
