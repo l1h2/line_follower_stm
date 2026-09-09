@@ -34,7 +34,21 @@ void clear_mpu_data(void);
 void restart_mpu(void);
 
 /**
- * @brief Calibrates the gyroscope of the MPU-9250 sensor.
+ * @brief Starts a gyroscope calibration run, clearing the accumulators.
+ * @note Must be called before mpu_calibrate_gyro_async().
+ */
+void start_mpu_gyro_calibration(void);
+
+/**
+ * @brief Advances the gyroscope calibration by at most one sample.
+ * @return true once the calibration has finished, false while still sampling.
+ * @note If the calibration is interrupted, start_mpu_gyro_calibration() must be
+ * called again to reset the accumulators.
+ */
+bool mpu_calibrate_gyro_async(void);
+
+/**
+ * @brief Calibrates the gyroscope of the MPU-9250 sensor, blocking until done.
  */
 void mpu_calibrate_gyro(void);
 

@@ -21,6 +21,8 @@
 #include "track/tracks/pet_complex.h"
 #elif SELECTED_TRACK == WAYPOINT_TEST
 #include "track/tracks/waypoint_test.h"
+#elif SELECTED_TRACK == PET_TEST
+#include "track/tracks/pet_test.h"
 #else
 #include "track/tracks/base_square.h"
 #endif

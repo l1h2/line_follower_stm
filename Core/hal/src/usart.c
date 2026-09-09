@@ -22,12 +22,10 @@ static inline uint8_t next_rx_index(const uint8_t index) {
 }
 
 static void handle_tx_interrupt(void) {
-    if (tx_tail != tx_head) {
-        LL_USART_TransmitData8(USART1, tx_buf[tx_tail]);
-        tx_tail = next_tx_index(tx_tail);
-    } else {
-        LL_USART_DisableIT_TXE(USART1);
-    }
+    LL_USART_TransmitData8(USART1, tx_buf[tx_tail]);
+    tx_tail = next_tx_index(tx_tail);
+
+    if (tx_tail == tx_head) LL_USART_DisableIT_TXE(USART1);
 }
 
 static void handle_rx_interrupt(void) {

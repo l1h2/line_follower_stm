@@ -5,7 +5,6 @@
 #include "hal/spi.h"
 #include "logger/logger.h"
 #include "math/math.h"
-#include "serial/serial_in.h"
 #include "timer/time.h"
 
 #define MPU_SAMPLE_RATE 1000  // Hz
@@ -25,6 +24,12 @@ static float pv_gyro_z = 0;
 static bool integrators_initialized = false;
 static uint32_t last_update_time = 0;
 static uint32_t current_time = 0;
+
+static float sum_gyro_x = 0;
+static float sum_gyro_y = 0;
+static float sum_gyro_z = 0;
+static uint16_t calibration_samples = 0;
+static uint32_t calibration_sample_time = 0;
 
 static inline void update_readings(void) {
     read_registers(ACCEL_REG_X, mpu_data_values, TOTAL_REGISTERS);
@@ -132,28 +137,31 @@ void restart_mpu(void) {
     integrators_initialized = false;
 }
 
-void mpu_calibrate_gyro(void) {
+void start_mpu_gyro_calibration(void) {
     debug_print("Calibrating MPU gyroscope");
 
-    float sum_gyro_x = 0;
-    float sum_gyro_y = 0;
-    float sum_gyro_z = 0;
+    sum_gyro_x = 0;
+    sum_gyro_y = 0;
+    sum_gyro_z = 0;
+    calibration_samples = 0;
+    calibration_sample_time = 0;
+}
 
-    uint16_t sampled = 0;
-    uint32_t sample_time = 0;
-    while (sampled < CALIBRATION_SAMPLES) {
-        if (!time_elapsed(sample_time, CALIBRATION_INTERVAL)) continue;
-
-        sample_time = time();
-        update_readings();
-
-        sum_gyro_x += (float)mpu_data.gyro_x;
-        sum_gyro_y += (float)mpu_data.gyro_y;
-        sum_gyro_z += (float)mpu_data.gyro_z;
-        sampled++;
-
-        process_serial_messages();
+bool mpu_calibrate_gyro_async(void) {
+    if (calibration_samples >= CALIBRATION_SAMPLES) return true;
+    if (!time_elapsed(calibration_sample_time, CALIBRATION_INTERVAL)) {
+        return false;
     }
+
+    calibration_sample_time = time();
+    update_readings();
+
+    sum_gyro_x += (float)mpu_data.gyro_x;
+    sum_gyro_y += (float)mpu_data.gyro_y;
+    sum_gyro_z += (float)mpu_data.gyro_z;
+    calibration_samples++;
+
+    if (calibration_samples < CALIBRATION_SAMPLES) return false;
 
     mpu_data.bias_gyro_x = sum_gyro_x / (float)CALIBRATION_SAMPLES;
     mpu_data.bias_gyro_y = sum_gyro_y / (float)CALIBRATION_SAMPLES;
@@ -163,4 +171,10 @@ void mpu_calibrate_gyro(void) {
     debug_print_mpu_gyroscope_biases();
 
     restart_mpu();
+    return true;
+}
+
+void mpu_calibrate_gyro(void) {
+    start_mpu_gyro_calibration();
+    while (!mpu_calibrate_gyro_async());
 }

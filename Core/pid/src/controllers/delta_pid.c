@@ -32,7 +32,7 @@ static inline int16_t get_p(void) {
     return delta_pid.kp * errors->error;
 }
 
-static inline int16_t get_i(void) {
+static inline int32_t get_i(void) {
     if (delta_pid.ki == 0) return 0;
 
     clamped_error_sum += errors->error;
@@ -42,16 +42,18 @@ static inline int16_t get_i(void) {
         clamped_error_sum = -delta_pid.clamp;
     }
 
-    return delta_pid.ki * clamped_error_sum * delta_pid.frame_interval;
+    return (int32_t)delta_pid.ki * clamped_error_sum *
+           (int32_t)delta_pid.frame_interval;
 }
 
-static inline int16_t get_d(void) {
+static inline int32_t get_d(void) {
     if (delta_pid.kd == 0) return 0;
 
     filtered_delta_error = delta_pid.alpha * errors->delta_error +
                            (1.0f - delta_pid.alpha) * filtered_delta_error;
 
-    return delta_pid.kd * filtered_delta_error / delta_pid.frame_interval;
+    return (int32_t)((float)delta_pid.kd * filtered_delta_error /
+                     (float)delta_pid.frame_interval);
 }
 
 const DeltaPid* init_delta_pwm_pid(const ErrorStruct* const error_struct) {
@@ -61,7 +63,7 @@ const DeltaPid* init_delta_pwm_pid(const ErrorStruct* const error_struct) {
 
 const DeltaPid* get_delta_pwm_pid_ptr(void) { return &delta_pid; }
 
-int16_t get_delta_pwm_pid(void) { return get_p() + get_i() + get_d(); }
+int32_t get_delta_pwm_pid(void) { return get_p() + get_i() + get_d(); }
 
 bool update_pending_delta_pwm_pid(void) {
     return time_elapsed(delta_pid.last_pid_time, delta_pid.frame_interval);

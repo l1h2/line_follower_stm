@@ -5,6 +5,7 @@
 #include "pure_pursuit/pure_pursuit.h"
 #include "sensors/mpu.h"
 #include "sensors/sensors.h"
+#include "serial/serial_in.h"
 #include "state_machine/handlers/config_handler.h"
 #include "state_machine/handlers/state_handler.h"
 #include "track/track.h"
@@ -24,7 +25,8 @@ void handle_running(const StateMachine* const sm) {
     restart_pid();
     restart_pure_pursuit();
 
-    mpu_calibrate_gyro();
+    start_mpu_gyro_calibration();
+    while (!mpu_calibrate_gyro_async()) process_serial_messages();
 
     switch (sm->running_mode) {
         case RUNNING_INIT:

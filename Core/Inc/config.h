@@ -15,6 +15,6 @@
 #define PET_TEST 9
 
 // Default selected track (override with -DSELECTED_TRACK=base_triangle)
-#define SELECTED_TRACK PET_TEST
+#define SELECTED_TRACK BASE_SQUARE
 
 #endif  // LINE_FOLLOWER_H

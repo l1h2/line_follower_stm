@@ -24,7 +24,7 @@ const DeltaPid* get_delta_pwm_pid_ptr(void);
  * @brief Calculate and return the Delta PWM PID value.
  * @return The calculated Delta PWM PID value.
  */
-int16_t get_delta_pwm_pid(void);
+int32_t get_delta_pwm_pid(void);
 
 /**
  * @brief Check if an update is pending for the Delta PWM PID controller.
