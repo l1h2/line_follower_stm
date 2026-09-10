@@ -173,5 +173,3 @@ void set_speed_kd(const uint16_t kd) { set_base_speed_kd(kd); }
 void set_speed_kff(const uint16_t kff) { set_base_speed_kff(kff); }
 
 void set_speed(const float speed) { set_base_speed(speed); }
-
-int16_t get_speed_pwm(void) { return get_base_speed_pwm(); }
