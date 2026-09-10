@@ -111,6 +111,11 @@ bool update_errors_async(const bool read_encoder) {
     return true;
 }
 
+void update_line_error(void) {
+    update_error();
+    update_last_error();
+}
+
 void clear_errors(void) {
     errors.error = 0;
     errors.last_error = 0;

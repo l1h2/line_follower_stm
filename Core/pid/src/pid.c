@@ -49,8 +49,6 @@ static inline void update_current_pwm(void) {
 }
 
 static int16_t get_new_pwm(const int32_t delta_term) {
-    update_current_pwm();
-
     const int32_t pwm = (int32_t)pid.current_pwm + delta_term;
 
     if (pwm > pid.max_pwm) return pid.max_pwm;
@@ -61,6 +59,7 @@ static int16_t get_new_pwm(const int32_t delta_term) {
 
 static void update_motors(void) {
     const int32_t delta_pwm = get_delta_pwm_pid();
+    update_current_pwm();
 
     const int16_t left_pwm = get_new_pwm(-delta_pwm);
     const int16_t right_pwm = get_new_pwm(delta_pwm);

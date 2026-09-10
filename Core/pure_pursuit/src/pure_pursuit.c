@@ -5,6 +5,7 @@
 #include "math/math.h"
 #include "motors/motors.h"
 #include "pid/controllers/speed_pid.h"
+#include "pid/errors/errors.h"
 #include "pid/errors/speed_errors.h"
 #include "sensors/encoder.h"
 #include "sensors/sensors.h"
@@ -93,6 +94,7 @@ static inline bool check_sensor_update(void) {
 
     is_updating_sensors = false;
     stop_async_sensors_read();
+    update_line_error();
     return true;
 }
 

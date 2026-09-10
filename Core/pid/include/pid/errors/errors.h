@@ -42,6 +42,14 @@ void update_errors(const uint16_t timeout, const bool read_encoder);
 bool update_errors_async(const bool read_encoder);
 
 /**
+ * @brief Recomputes the line error from the latest IR sensor reading.
+ * @note For modes that read the sensors on their own and only need the error
+ * as an observation, without running the line following PID. The error sum and
+ * the delta error are left untouched so the PID is not wound up while idle.
+ */
+void update_line_error(void);
+
+/**
  * @brief Clears the error struct by resetting its values.
  */
 void clear_errors(void);
