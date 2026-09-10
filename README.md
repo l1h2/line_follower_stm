@@ -382,6 +382,10 @@ This is the main operational state of the robot, where it performs the task sele
 
    Similar to the `PID Control` mode, the robot can transmit `OPERATION_DATA` packets via serial communication after every control loop iteration, containing information about the current spacial position of the robot. This data can be used by the controller application to visualize the robot's path and performance during operation.
 
+6. **[Position Correction](Core/state_machine/src/running_modes/running_position_correction.c)**
+
+   In this mode, the robot uses the same [Pure Pursuit Algorithm](Core/pure_pursuit) as the `Pure Pursuit Control` mode, with an additional position correction layer applied on top of it.
+
 From this state, the robot can either transition back to the `IDLE` state if failing to initialize the selected `RUNNING_MODE`, or transition to the `STOPPED` state upon completing the operation set by the selected `RUNNING_MODE`. The robot can complete the operation based on different stop conditions, such as:
 
 - Receiving a stop command via serial communication.
@@ -389,7 +393,7 @@ From this state, the robot can either transition back to the `IDLE` state if fai
 - Covering a predefined distance.
 - After a predefined time duration.
 
-The specific stop condition can be configured via serial commands with the `STOP_MODE` option, and the available modes can be found in [state_machine_base.h](Core/state_machine/include/state_machine/state_machine_base.h#L24).
+The specific stop condition can be configured via serial commands with the `STOP_MODE` option, and the available modes can be found in [state_machine_base.h](Core/state_machine/include/state_machine/state_machine_base.h#L25).
 
 #### [Stopped State](Core/state_machine/src/states/stopped.c)
 
@@ -459,7 +463,7 @@ When adding new tracks the following steps must be followed:
 
 ### Stopping
 
-The robot can stop its operation based on different stop conditions, which can be configured via serial commands using the `STOP_MODE` option. The available stop modes are defined in [state_machine_base.h](Core/state_machine/include/state_machine/state_machine_base.h#L24) and include:
+The robot can stop its operation based on different stop conditions, which can be configured via serial commands using the `STOP_MODE` option. The available stop modes are defined in [state_machine_base.h](Core/state_machine/include/state_machine/state_machine_base.h#L25) and include:
 
 - **Manual Stop**: The robot stops upon receiving a stop command via serial communication.
 - **Lap Completion**: The robot stops after completing a predefined number of laps.

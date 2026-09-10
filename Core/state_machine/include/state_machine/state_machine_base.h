@@ -9,12 +9,13 @@
  * @brief Enumeration of running modes for the robot.
  */
 typedef enum {
-    RUNNING_INIT,          // Initial running mode
-    RUNNING_SENSOR_TEST,   // Sensor testing mode
-    RUNNING_TURBINE_TEST,  // Turbine testing mode
-    RUNNING_ENCODER_TEST,  // Encoder testing mode
-    RUNNING_PID,           // PID control mode
-    RUNNING_PURE_PURSUIT   // Pure pursuit mode
+    RUNNING_INIT,                // Initial running mode
+    RUNNING_SENSOR_TEST,         // Sensor testing mode
+    RUNNING_TURBINE_TEST,        // Turbine testing mode
+    RUNNING_ENCODER_TEST,        // Encoder testing mode
+    RUNNING_PID,                 // PID control mode
+    RUNNING_PURE_PURSUIT,        // Pure pursuit mode
+    RUNNING_POSITION_CORRECTION  // Pure pursuit with position correction mode
 } RunningModes;
 
 /**
