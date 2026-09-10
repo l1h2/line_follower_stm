@@ -1,6 +1,6 @@
 #include "sensors/sensors.h"
 
-#include <stdlib.h>
+#include <stddef.h>
 
 #include "sensors/encoder.h"
 #include "sensors/mpu.h"

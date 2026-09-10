@@ -1,6 +1,6 @@
 #include "pid/errors/speed_errors.h"
 
-#include <stdlib.h>
+#include <stddef.h>
 
 #include "sensors/encoder.h"
 

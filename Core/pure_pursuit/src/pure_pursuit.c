@@ -1,6 +1,6 @@
 #include "pure_pursuit/pure_pursuit.h"
 
-#include <stdlib.h>
+#include <stddef.h>
 
 #include "math/math.h"
 #include "motors/motors.h"

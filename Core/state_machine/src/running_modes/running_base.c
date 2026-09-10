@@ -1,6 +1,6 @@
 #include "state_machine/running_modes/running_base.h"
 
-#include <stdlib.h>
+#include <stddef.h>
 
 #include "logger/logger.h"
 #include "serial/serial_in.h"

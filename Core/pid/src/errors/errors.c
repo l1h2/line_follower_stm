@@ -1,6 +1,6 @@
 #include "pid/errors/errors.h"
 
-#include <stdlib.h>
+#include <stddef.h>
 
 #include "hal/ir_sensors.h"
 #include "pid/errors/speed_errors.h"
