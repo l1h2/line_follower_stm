@@ -38,6 +38,11 @@ static inline void update_delta_speed(void) {
         errors.right_target_speed - last_right_target_speed;
 }
 
+static inline void update_last_target_speed(void) {
+    last_left_target_speed = errors.left_target_speed;
+    last_right_target_speed = errors.right_target_speed;
+}
+
 const SpeedErrors* init_speed_errors(const ErrorStruct* const error_struct) {
     encoders = error_struct->sensors->encoders;
     return &errors;
@@ -51,6 +56,7 @@ void update_speed_errors(void) {
     update_delta_error();
     update_last_error();
     update_delta_speed();
+    update_last_target_speed();
 }
 
 void clear_speed_errors(void) {

@@ -88,13 +88,15 @@ void print_float(float value, uint8_t decimal_places) {
         value = -value;
     }
 
+    decimal_places = (decimal_places > 4) ? 4 : decimal_places;
+    if (decimal_places) value += 0.5f / (float)DIVS[decimal_places];
+
     const uint32_t int_part = (uint32_t)(value);
     print_long(int_part);
 
     if (decimal_places == 0) return;
 
-    decimal_places = (decimal_places > 4) ? 4 : decimal_places;
-    value = (value - (float)int_part) + (0.5f / (float)DIVS[decimal_places]);
+    value -= (float)int_part;
 
     usart_transmit('.');
     for (int8_t i = decimal_places; i > 0; i--) {

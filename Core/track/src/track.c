@@ -76,7 +76,6 @@ static inline void start_lap(void) {
 static inline void anchor_heading_vector(const float heading) {
     track.cos_heading = cosf(heading);
     track.sin_heading = sinf(heading);
-    prev_mpu_yaw = heading;
     track.heading = heading;
     heading_vec_initialized = true;
 }
