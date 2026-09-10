@@ -10,6 +10,10 @@ This document describes the lightweight serial protocol used between the control
   - [Byte Diagrams](#byte-diagrams)
 - [Payload Definitions](#payload-definitions)
 - [Messages](#messages)
+  - [Enumerated Values](#enumerated-values)
+    - [Robot State](#robot-state)
+    - [Running Mode](#running-mode)
+    - [Stop Mode](#stop-mode)
   - [Operation Data](#operation-data)
   - [Acknowledgment](#acknowledgment)
 - [Timing and Performance](#timing-and-performance)
@@ -93,9 +97,9 @@ The protocol defines a set of messages for communication between the controller 
 | PING            |   1 |            0 | N/A        | Keep-alive / ping               | —                                      |
 | START           |   2 |            0 | N/A        | Start signal                    | —                                      |
 | STOP            |   3 |            0 | N/A        | Stop signal                     | —                                      |
-| STATE           |   4 |            1 | uint8_t    | Robot state from state machine  | enum value                             |
-| RUNNING_MODE    |   5 |            1 | uint8_t    | Running mode                    | enum value                             |
-| STOP_MODE       |   6 |            1 | uint8_t    | Stop mode                       | enum value                             |
+| STATE           |   4 |            1 | uint8_t    | Robot state from state machine  | see [Robot State](#robot-state)        |
+| RUNNING_MODE    |   5 |            1 | uint8_t    | Running mode                    | see [Running Mode](#running-mode)      |
+| STOP_MODE       |   6 |            1 | uint8_t    | Stop mode                       | see [Stop Mode](#stop-mode)            |
 | LAPS            |   7 |            1 | uint8_t    | Stop after laps                 | lap count                              |
 | STOP_TIME       |   8 |            1 | uint8_t    | Stop after time                 | seconds                                |
 | STOP_DISTANCE   |   9 |            2 | uint16_t   | Stop after distance             | centimeters                            |
@@ -122,6 +126,49 @@ The protocol defines a set of messages for communication between the controller 
 | OPERATION_DATA  |  30 |            8 | uint8_t[8] | Operation/telemetry data packet | composite telemetry struct (see below) |
 
 These messages can be used to change the robot's configuration, control its operation, and retrieve status information.
+
+### Enumerated Values
+
+Three messages carry a single-byte enum ordinal rather than a numeric quantity: `STATE`, `RUNNING_MODE` and `STOP_MODE`. The tables below map each transmitted value to its meaning, as declared in [state_machine_base.h](../Core/state_machine/include/state_machine/state_machine_base.h).
+
+The values are implicit C enum ordinals, starting at 0 and incrementing in declaration order. They are not stable identifiers: inserting a name in the middle of one of these enums shifts every value after it, so the firmware and the controller app must be updated together whenever that happens.
+
+#### Robot State
+
+Sent by the `STATE` message (ID 4), which reports `current_state` of the state machine. This message is robot → controller only; the controller cannot force a state directly, it drives transitions with `START` and `STOP`.
+
+| Value | Name            | Description                                         |
+| ----: | :-------------- | :-------------------------------------------------- |
+|     0 | `STATE_INIT`    | Initial state, hardware and modules being set up    |
+|     1 | `STATE_IDLE`    | Idle, waiting for a `START` command                 |
+|     2 | `STATE_RUNNING` | Running, executing laps in the current running mode |
+|     3 | `STATE_STOPPED` | Stopped after a run, waiting for restart            |
+|     4 | `STATE_ERROR`   | Error state, handling errors                        |
+
+#### Running Mode
+
+Sent and accepted by the `RUNNING_MODE` message (ID 5). It selects which control loop runs while in `STATE_RUNNING`.
+
+| Value | Name                          | Description                                  |
+| ----: | :---------------------------- | :------------------------------------------- |
+|     0 | `RUNNING_INIT`                | Initial running mode, no control loop active |
+|     1 | `RUNNING_SENSOR_TEST`         | Sensor testing mode                          |
+|     2 | `RUNNING_TURBINE_TEST`        | Turbine testing mode                         |
+|     3 | `RUNNING_ENCODER_TEST`        | Encoder testing mode                         |
+|     4 | `RUNNING_PID`                 | Line-following with PID control              |
+|     5 | `RUNNING_PURE_PURSUIT`        | Pure pursuit mode                            |
+|     6 | `RUNNING_POSITION_CORRECTION` | Pure pursuit with position correction        |
+
+#### Stop Mode
+
+Sent and accepted by the `STOP_MODE` message (ID 6). It selects the condition that ends a run, with the threshold itself carried by a separate message.
+
+| Value | Name                 | Description                                    | Related Message               |
+| ----: | :------------------- | :--------------------------------------------- | :---------------------------- |
+|     0 | `STOP_MODE_NONE`     | No stop condition, runs until a `STOP` command | —                             |
+|     1 | `STOP_MODE_TIME`     | Stop after a certain time                      | `STOP_TIME` (seconds)         |
+|     2 | `STOP_MODE_LAPS`     | Stop after completing a number of laps         | `LAPS` (lap count)            |
+|     3 | `STOP_MODE_DISTANCE` | Stop after covering a certain distance         | `STOP_DISTANCE` (centimeters) |
 
 ### Operation Data
 
