@@ -29,7 +29,7 @@ static void read_message(void) {
     if (usart_data_available() < (1 + expected_size)) return;
 
     current_msg.message = (SerialMessages)usart_read_char();
-    usart_read_buffer(current_msg.payload, expected_size);
+    if (expected_size) usart_read_buffer(current_msg.payload, expected_size);
     current_msg.size = expected_size;
 }
 

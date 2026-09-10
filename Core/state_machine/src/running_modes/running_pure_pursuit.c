@@ -32,8 +32,8 @@ void running_pure_pursuit(const StateMachine* const sm) {
 void running_pure_pursuit_to_stopped(void) {
     const PidStruct* pid = get_pid();
 
-    const uint8_t max_pwm_save = pid->max_pwm;
-    uint8_t max_pwm = max_pwm_save;
+    const uint16_t max_pwm_save = pid->max_pwm;
+    uint16_t max_pwm = max_pwm_save;
 
     while (pid->max_pwm) {
         if (!update_pid()) continue;
