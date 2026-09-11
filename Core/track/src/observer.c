@@ -9,6 +9,9 @@
 // Threshold for max error possible in a side marker detection
 #define SIDE_MARKERS_ERROR_THRESHOLD 4
 
+// Widest run of sensors the line alone can cover
+#define CORRECTION_SENSORS_LIMIT 3
+
 static const ErrorStruct* errors = NULL;
 static uint8_t total_sensors = 0;
 
@@ -58,6 +61,25 @@ bool check_crossing(void) {
     }
 
     return active_count >= CROSSING_SENSORS_THRESHOLD;
+}
+
+bool check_correctable_line(void) {
+    const uint8_t central_sensors =
+        errors->sensors->ir_sensors->central_sensors_state;
+
+    uint8_t active_count = 0;
+    bool found_gap = false;
+
+    for (uint8_t i = 0; i < total_sensors; i++) {
+        if (central_sensors & (1 << i)) {
+            if (found_gap) return false;
+            if (++active_count > CORRECTION_SENSORS_LIMIT) return false;
+        } else if (active_count) {
+            found_gap = true;
+        }
+    }
+
+    return active_count != 0;
 }
 
 bool check_curve_marker(void) {

@@ -33,6 +33,15 @@ bool check_non_contiguous_sensors(void);
 bool check_crossing(void);
 
 /**
+ * @brief Checks if the line is clean enough to correct the position.
+ * @return true if a single narrow run of sensors is on the line, false
+ * otherwise.
+ * @note The width limit comes from the line and the sensor spacing, so it is
+ * fixed rather than tuned, and independent of the other thresholds.
+ */
+bool check_correctable_line(void);
+
+/**
  * @brief Checks if a curve marker is detected based on side sensor states and
  * error threshold.
  * @return true if a curve marker is detected, false otherwise.
