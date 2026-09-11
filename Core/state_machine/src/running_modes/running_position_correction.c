@@ -19,6 +19,7 @@ void running_position_correction(const StateMachine* const sm) {
         if (!update_peripheral_sensors()) continue;
 
         check_stop(update_track(false));
+        apply_position_correction(get_lookahead_index());
         process_serial_messages();
 
         if (!update_pure_pursuit()) continue;

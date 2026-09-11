@@ -10,7 +10,6 @@
 
 /**
  * @brief Initializes the Pure Pursuit controller with the given track counters.
- *
  * @param track Pointer to the TrackCounters structure containing track
  * information.
  * @param pid Pointer to the PidStruct structure for PID control.
@@ -45,10 +44,16 @@ void restart_pure_pursuit(void);
 
 /**
  * @brief Sets the lookahead distance for the Pure Pursuit controller.
- *
  * @param distance Lookahead distance in centimeters. Must be greater than
  * 0.
  */
 void set_lookahead(const uint8_t distance);
+
+/**
+ * @brief Retrieves the current waypoint index used by the Pure Pursuit
+ * controller.
+ * @return The current waypoint index.
+ */
+uint16_t get_lookahead_index(void);
 
 #endif  // PURE_PURSUIT_H

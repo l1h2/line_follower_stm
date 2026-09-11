@@ -39,6 +39,14 @@ bool update_track(const bool encoder_updated);
 void update_positions(void);
 
 /**
+ * @brief Applies position correction based on the lookahead index.
+ * @param lookahead_index The last waypoint used by the pure pursuit controller.
+ * @note This function modifies the track's x and y positions based on the
+ * correction calculated from the IR sensor readings.
+ */
+void apply_position_correction(const uint16_t lookahead_index);
+
+/**
  * @brief Sets the IMU fusion alpha value for heading correction.
  * @param alpha The alpha value to set (between 0 and 1).
  */

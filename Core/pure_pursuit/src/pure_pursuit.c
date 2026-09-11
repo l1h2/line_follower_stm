@@ -139,3 +139,5 @@ void set_lookahead(const uint8_t distance) {
     pp.lookahead = distance;
     inv_lookahead_sq = 1.0f / ((float)distance * (float)distance);
 }
+
+uint16_t get_lookahead_index(void) { return pp_state.waypoint_index; }

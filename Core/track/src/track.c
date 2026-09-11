@@ -1,13 +1,14 @@
 #include "track/track.h"
 
 #include <math.h>
+#include <stddef.h>
 #include <stdint.h>
-#include <stdlib.h>
 
 #include "logger/logger.h"
 #include "math/math.h"
 #include "timer/time.h"
 #include "track/observer.h"
+#include "track/position_correction.h"
 
 #define MIN_ARC_ANGLE_RAD 0.3f
 #define IMU_FUSION_ALPHA 1.0f
@@ -152,7 +153,7 @@ static inline void update_line(void) {
     }
 }
 
-static bool check_memory(const MemoryCounters counter_type) {
+static inline bool check_memory(const MemoryCounters counter_type) {
     if (counter_type != memory.last) {
         memory.last = counter_type;
         memory.counter = 1;
@@ -227,6 +228,7 @@ static inline bool update_track_counters(void) {
 
 const TrackCounters* init_track(const ErrorStruct* const error_struct) {
     init_observer(error_struct);
+    init_position_correction(&track);
     errors = error_struct;
     track.imu_alpha = IMU_FUSION_ALPHA;
 
@@ -242,6 +244,7 @@ void reset_track(void) {
 
     reset_headings();
     reset_memory();
+    reset_position_correction();
 }
 
 bool update_track(const bool encoder_updated) {
@@ -257,6 +260,16 @@ bool update_track(const bool encoder_updated) {
 void update_positions(void) {
     update_distance();
     update_position();
+}
+
+void apply_position_correction(const uint16_t lookahead_index) {
+    float x_corr = 0.0f;
+    float y_corr = 0.0f;
+
+    get_correction(&x_corr, &y_corr, lookahead_index);
+
+    track.x += x_corr;
+    track.y += y_corr;
 }
 
 void set_imu_alpha(const float alpha) { track.imu_alpha = alpha; }

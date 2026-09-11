@@ -6,7 +6,6 @@
 
 #include "sensors/sensors.h"
 #include "track/observer.h"
-#include "track/track_base.h"
 #include "track/track_selector.h"
 
 #define SENSOR_BAR_OFFSET_CM 9.7f  // Rotation center to sensor bar, forward
@@ -203,9 +202,6 @@ void init_position_correction(const TrackCounters* t) {
 
 void get_correction(float* x_corr, float* y_corr,
                     const uint16_t lookahead_index) {
-    *x_corr = 0.0f;
-    *y_corr = 0.0f;
-
     if (!check_correctable_line()) return;
 
     update_waypoint_index(lookahead_index);

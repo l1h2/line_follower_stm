@@ -25,8 +25,6 @@ void reset_position_correction(void);
  * @param x_corr Receives the X correction in cm.
  * @param y_corr Receives the Y correction in cm.
  * @param lookahead_index Waypoint pure pursuit is currently steering towards.
- * @note Both outputs are set to zero when the observation is not clean enough
- * to correct from, so the caller can apply them unconditionally.
  * @note Corrects lateral displacement only. Position along the line is not
  * observable from the line sensors, and heading is left to the IMU.
  * @note The cursor is derived from the lookahead waypoint on every call, so
