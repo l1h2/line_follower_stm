@@ -9,8 +9,12 @@
 #include "state_machine/running_modes/running_base.h"
 #include "track/track.h"
 
-void running_pure_pursuit(const StateMachine* const sm) {
-    debug_print("RUNNING_PURE_PURSUIT Mode: Handling running logic");
+void running_pure_pursuit(const StateMachine* const sm,
+                          const bool position_correction) {
+    position_correction
+        ? debug_print(
+              "RUNNING_POSITION_CORRECTION Mode: Handling running logic")
+        : debug_print("RUNNING_PURE_PURSUIT Mode: Handling running logic");
 
     start_turbine_if_needed();
     set_start_time();
@@ -21,12 +25,14 @@ void running_pure_pursuit(const StateMachine* const sm) {
         check_stop(update_track(false));
         process_serial_messages();
 
-        if (!update_pure_pursuit()) continue;
+        if (!update_pure_pursuit(position_correction)) continue;
 
         if (sm->log_data) send_message(OPERATION_DATA);
     }
 
-    debug_print("Finalizing RUNNING_PURE_PURSUIT mode");
+    position_correction
+        ? debug_print("Finalizing RUNNING_POSITION_CORRECTION mode")
+        : debug_print("Finalizing RUNNING_PURE_PURSUIT mode");
 }
 
 void running_pure_pursuit_to_stopped(void) {

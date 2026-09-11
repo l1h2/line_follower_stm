@@ -6,8 +6,11 @@
 /**
  * @brief Handles the running pure pursuit mode logic.
  * @param sm Pointer to the state machine structure.
+ * @param position_correction Boolean flag indicating whether to enable position
+ * correction mode.
  */
-void running_pure_pursuit(const StateMachine* const sm);
+void running_pure_pursuit(const StateMachine* const sm,
+                          const bool position_correction);
 
 /**
  * @brief Handles the transition from running pure pursuit mode to stopped

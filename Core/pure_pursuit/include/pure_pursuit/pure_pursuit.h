@@ -33,9 +33,11 @@ bool update_peripheral_sensors(void);
 
 /**
  * @brief Updates the Pure Pursuit controller.
+ * @param position_correction Boolean flag indicating whether to apply position
+ * correction.
  * @return true if the update was performed, false otherwise.
  */
-bool update_pure_pursuit(void);
+bool update_pure_pursuit(const bool position_correction);
 
 /**
  * @brief Restarts the Pure Pursuit controller, resetting its internal state.
@@ -48,12 +50,5 @@ void restart_pure_pursuit(void);
  * 0.
  */
 void set_lookahead(const uint8_t distance);
-
-/**
- * @brief Retrieves the current waypoint index used by the Pure Pursuit
- * controller.
- * @return The current waypoint index.
- */
-uint16_t get_lookahead_index(void);
 
 #endif  // PURE_PURSUIT_H

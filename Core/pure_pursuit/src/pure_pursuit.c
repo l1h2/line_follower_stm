@@ -115,12 +115,13 @@ bool update_peripheral_sensors(void) {
     return true;
 }
 
-bool update_pure_pursuit(void) {
+bool update_pure_pursuit(const bool position_correction) {
     if (!update_pending_base_speed_pid()) return false;
 
     update_base_speed_pid_time();
     update_encoder_data();
     update_positions();
+    if (position_correction) apply_position_correction(pp_state.waypoint_index);
     update_target_speeds();
 
     set_speed_targets(pp_state.speed_left, pp_state.speed_right);
@@ -139,5 +140,3 @@ void set_lookahead(const uint8_t distance) {
     pp.lookahead = distance;
     inv_lookahead_sq = 1.0f / ((float)distance * (float)distance);
 }
-
-uint16_t get_lookahead_index(void) { return pp_state.waypoint_index; }

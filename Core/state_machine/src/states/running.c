@@ -14,7 +14,6 @@
 // Running modes
 #include "state_machine/running_modes/running_encoder_test.h"
 #include "state_machine/running_modes/running_pid.h"
-#include "state_machine/running_modes/running_position_correction.h"
 #include "state_machine/running_modes/running_pure_pursuit.h"
 #include "state_machine/running_modes/running_sensor_test.h"
 #include "state_machine/running_modes/running_turbine_test.h"
@@ -57,11 +56,11 @@ void handle_running(const StateMachine* const sm) {
             break;
         case RUNNING_PURE_PURSUIT:
             debug_print("Running mode set to RUNNING_PURE_PURSUIT");
-            running_pure_pursuit(sm);
+            running_pure_pursuit(sm, false);
             break;
         case RUNNING_POSITION_CORRECTION:
             debug_print("Running mode set to RUNNING_POSITION_CORRECTION");
-            running_position_correction(sm);
+            running_pure_pursuit(sm, true);
             break;
         default:
             debug_print("Unknown running mode set, going back to IDLE state");
@@ -99,7 +98,7 @@ static bool handle_running_to_stopped(const RunningModes running_mode) {
             running_pure_pursuit_to_stopped();
             break;
         case RUNNING_POSITION_CORRECTION:
-            running_position_correction_to_stopped();
+            running_pure_pursuit_to_stopped();
             break;
         default:
             debug_print("Unknown running mode, going to error state");
