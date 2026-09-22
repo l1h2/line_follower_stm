@@ -1,25 +1,26 @@
 #include "track/track.h"
 
+#include <float.h>
 #include <math.h>
 #include <stddef.h>
 #include <stdint.h>
 
 #include "logger/logger.h"
 #include "math/math.h"
-#include "timer/time.h"
+#include "sensors/encoder.h"
 #include "track/observer.h"
 #include "track/position_correction.h"
 
 #define MIN_ARC_ANGLE_RAD 0.3f
 #define IMU_FUSION_ALPHA 1.0f
-#define DETECTION_DEBOUNCE_TIME_MS 30
-#define MARKER_COUNTER_THRESHOLD 12
+#define DETECTION_DEBOUNCE_DISTANCE_CM 6.0f
+#define MARKER_DISTANCE_THRESHOLD_CM 1.1f
+#define MEMORY_GAP_DISTANCE_CM 2.0f
 #define CROSSING_COUNTER_THRESHOLD 1
 
 static TrackCounters track = {0};
 
 static const ErrorStruct* errors = NULL;
-static uint32_t last_true_check_time = 0;
 static float prev_mpu_yaw = 0.0f;
 static bool heading_vec_initialized = false;
 
@@ -28,11 +29,26 @@ typedef enum { LINE, CROSSING, CURVE, MARKER } MemoryCounters;
 static struct {
     uint8_t counter;
     MemoryCounters last;
-} memory = {0, LINE};
+    float distance;
+    float last_distance;
+} memory = {0, LINE, 0.0f, 0.0f};
 
 static inline void reset_memory(void) {
     memory.counter = 0;
     memory.last = LINE;
+    memory.distance = 0.0f;
+}
+
+static struct {
+    float current;
+    float step;
+    float last_event;
+} odometer = {0.0f, 0.0f, -FLT_MAX};
+
+static inline void reset_odometer(void) {
+    odometer.current = get_live_distance();
+    odometer.step = 0.0f;
+    odometer.last_event = -FLT_MAX;
 }
 
 static inline void reset_headings(void) {
@@ -153,20 +169,28 @@ static inline void update_line(void) {
     }
 }
 
+static inline void update_odometer(void) {
+    const float distance = get_live_distance();
+    odometer.step = distance - odometer.current;
+    odometer.current = distance;
+}
+
 static inline bool check_memory(const MemoryCounters counter_type) {
-    if (counter_type != memory.last) {
+    if (counter_type != memory.last ||
+        odometer.current - memory.last_distance > MEMORY_GAP_DISTANCE_CM) {
+        reset_memory();
         memory.last = counter_type;
-        memory.counter = 1;
-        return false;
     }
 
+    memory.last_distance = odometer.current;
     memory.counter++;
+    memory.distance += odometer.step;
 
-    if (counter_type == CROSSING &&
-        memory.counter <= CROSSING_COUNTER_THRESHOLD) {
+    if (counter_type == CROSSING) {
+        if (memory.counter < CROSSING_COUNTER_THRESHOLD) return false;
+    } else if (memory.distance < MARKER_DISTANCE_THRESHOLD_CM) {
         return false;
     }
-    if (memory.counter <= MARKER_COUNTER_THRESHOLD) return false;
 
     reset_memory();
     return true;
@@ -191,7 +215,7 @@ static inline void update_section_for_markers(void) {
 static inline bool process_event(const MemoryCounters event) {
     if (!check_memory(event)) return false;
 
-    last_true_check_time = time();
+    odometer.last_event = odometer.current;
 
     switch (event) {
         case CROSSING:
@@ -213,7 +237,10 @@ static inline bool process_event(const MemoryCounters event) {
 }
 
 static inline bool update_track_counters(void) {
-    if (!time_elapsed(last_true_check_time, DETECTION_DEBOUNCE_TIME_MS)) {
+    update_odometer();
+
+    if (odometer.current - odometer.last_event <
+        DETECTION_DEBOUNCE_DISTANCE_CM) {
         return false;
     }
 
@@ -244,6 +271,7 @@ void reset_track(void) {
 
     reset_headings();
     reset_memory();
+    reset_odometer();
     reset_position_correction();
 }
 

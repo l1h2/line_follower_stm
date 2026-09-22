@@ -69,6 +69,11 @@ void init_encoder(void) {
 
 const EncoderData* get_encoder_data(void) { return &encoder_data; }
 
+float get_live_distance(void) {
+    const int32_t pulses = (int32_t)get_encoder_left() + get_encoder_right();
+    return encoder_data.distance + (float)pulses * (CM_PER_PULSE / 2.0f);
+}
+
 void restart_encoders(void) { set_encoders(0); }
 
 void update_encoder_data(void) {

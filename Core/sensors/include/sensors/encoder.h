@@ -18,6 +18,14 @@ void init_encoder(void);
 const EncoderData* get_encoder_data(void);
 
 /**
+ * @brief Gets the distance travelled including the pulses counted since the
+ * last encoder data update.
+ * @note Reads the encoder counters without restarting them.
+ * @return The distance in cm.
+ */
+float get_live_distance(void);
+
+/**
  * @brief Restarts the encoder counters by setting them to zero.
  */
 void restart_encoders(void);
