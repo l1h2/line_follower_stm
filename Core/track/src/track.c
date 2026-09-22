@@ -163,10 +163,10 @@ static inline bool check_memory(const MemoryCounters counter_type) {
     memory.counter++;
 
     if (counter_type == CROSSING &&
-        memory.counter < CROSSING_COUNTER_THRESHOLD) {
+        memory.counter <= CROSSING_COUNTER_THRESHOLD) {
         return false;
     }
-    if (memory.counter < MARKER_COUNTER_THRESHOLD) return false;
+    if (memory.counter <= MARKER_COUNTER_THRESHOLD) return false;
 
     reset_memory();
     return true;
