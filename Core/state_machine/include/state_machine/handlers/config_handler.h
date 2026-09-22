@@ -84,6 +84,12 @@ void set_stop_time(const uint8_t stop_time);
 void set_stop_distance(const uint16_t stop_distance);
 
 /**
+ * @brief Sets the number of right side markers for the robot to stop.
+ * @param stop_markers The number of debounced right sensor activations.
+ */
+void set_stop_markers(const uint8_t stop_markers);
+
+/**
  * @brief Sets the log_data flag for the state machine.
  * @param log_data The value to set for the log_data flag.
  */

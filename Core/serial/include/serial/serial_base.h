@@ -41,7 +41,8 @@
     X(LOOKAHEAD, 1)              \
     X(CURVATURE_GAIN, 2)         \
     X(IMU_ALPHA, 2)              \
-    X(OPERATION_DATA, OPERATION_DATA_SIZE)
+    X(OPERATION_DATA, OPERATION_DATA_SIZE) \
+    X(STOP_MARKERS, 1)
 
 // Maximum payload size among all messages
 #define SERIAL_MESSAGE_MAX_PAYLOAD 8

@@ -143,6 +143,9 @@ void send_message(const SerialMessages msg) {
         case STOP_DISTANCE:
             send_data(msg, (const uint8_t*)&sm->stop_distance);
             break;
+        case STOP_MARKERS:
+            send_data(msg, (const uint8_t*)&sm->stop_markers);
+            break;
         case OPERATION_DATA:
             update_operation_data();
             send_data(msg, operation_data);

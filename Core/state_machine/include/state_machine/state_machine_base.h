@@ -27,6 +27,7 @@ typedef enum {
     STOP_MODE_TIME,      // Stop after a certain time
     STOP_MODE_LAPS,      // Stop after completing a number of laps
     STOP_MODE_DISTANCE,  // Stop after covering a certain distance
+    STOP_MODE_MARKERS,   // Stop after a number of right side markers
 } StopModes;
 
 /**
@@ -57,6 +58,7 @@ typedef struct {
     uint32_t start_time;         // Time robot started running
     uint32_t stop_time;          // Time in milliseconds for the robot to stop
     uint16_t stop_distance;      // Distance in cm for the robot to stop
+    uint8_t stop_markers;        // Right side markers for the robot to stop
     bool log_data;               // Flag indicating if data should be logged
 } StateMachine;
 

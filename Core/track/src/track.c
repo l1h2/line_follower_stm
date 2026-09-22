@@ -8,6 +8,7 @@
 #include "logger/logger.h"
 #include "math/math.h"
 #include "sensors/encoder.h"
+#include "timer/time.h"
 #include "track/observer.h"
 #include "track/position_correction.h"
 
@@ -17,6 +18,7 @@
 #define MARKER_DISTANCE_THRESHOLD_CM 1.1f
 #define MEMORY_GAP_DISTANCE_CM 2.0f
 #define CROSSING_COUNTER_THRESHOLD 1
+#define RIGHT_MARKER_DEBOUNCE_MS 30
 
 static TrackCounters track = {0};
 
@@ -49,6 +51,16 @@ static inline void reset_odometer(void) {
     odometer.current = get_live_distance();
     odometer.step = 0.0f;
     odometer.last_event = -FLT_MAX;
+}
+
+static struct {
+    bool active;
+    uint32_t last_time;
+} right_trigger = {false, 0};
+
+static inline void reset_right_trigger(void) {
+    right_trigger.active = false;
+    right_trigger.last_time = 0;
 }
 
 static inline void reset_headings(void) {
@@ -169,6 +181,20 @@ static inline void update_line(void) {
     }
 }
 
+static inline void update_right_markers(void) {
+    const bool active = errors->sensors->ir_sensors->right_sensor;
+    const bool activated = active && !right_trigger.active;
+    right_trigger.active = active;
+
+    if (!activated ||
+        !time_elapsed(right_trigger.last_time, RIGHT_MARKER_DEBOUNCE_MS)) {
+        return;
+    }
+
+    right_trigger.last_time = time();
+    track.right_markers++;
+}
+
 static inline void update_odometer(void) {
     const float distance = get_live_distance();
     odometer.step = distance - odometer.current;
@@ -272,6 +298,7 @@ void reset_track(void) {
     reset_headings();
     reset_memory();
     reset_odometer();
+    reset_right_trigger();
     reset_position_correction();
 }
 
@@ -282,6 +309,7 @@ bool update_track(const bool encoder_updated) {
     }
 
     update_line();
+    update_right_markers();
     return update_track_counters();
 }
 

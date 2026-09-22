@@ -27,6 +27,10 @@ static inline void check_stop_distance(void) {
     if (track->distance >= sm->stop_distance) set_can_run(false);
 }
 
+static inline void check_stop_markers(void) {
+    if (track->right_markers >= sm->stop_markers) set_can_run(false);
+}
+
 void init_running_modes(const TrackCounters* const track_counters) {
     track = track_counters;
     sm = get_state_machine();
@@ -45,6 +49,9 @@ void check_stop(const bool track_updated) {
             break;
         case STOP_MODE_DISTANCE:
             check_stop_distance();
+            break;
+        case STOP_MODE_MARKERS:
+            check_stop_markers();
             break;
     }
 }

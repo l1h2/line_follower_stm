@@ -124,6 +124,7 @@ The protocol defines a set of messages for communication between the controller 
 | CURVATURE_GAIN  |  28 |            2 | float      | Wheel base correction           | 0 - 3, with 2 decimal places           |
 | IMU_ALPHA       |  29 |            2 | float      | IMU filter alpha                | 0 - 100%, with 2 decimal places        |
 | OPERATION_DATA  |  30 |            8 | uint8_t[8] | Operation/telemetry data packet | composite telemetry struct (see below) |
+| STOP_MARKERS    |  31 |            1 | uint8_t    | Stop after right side markers   | marker count                           |
 
 These messages can be used to change the robot's configuration, control its operation, and retrieve status information.
 
@@ -169,6 +170,9 @@ Sent and accepted by the `STOP_MODE` message (ID 6). It selects the condition th
 |     1 | `STOP_MODE_TIME`     | Stop after a certain time                      | `STOP_TIME` (seconds)         |
 |     2 | `STOP_MODE_LAPS`     | Stop after completing a number of laps         | `LAPS` (lap count)            |
 |     3 | `STOP_MODE_DISTANCE` | Stop after covering a certain distance         | `STOP_DISTANCE` (centimeters) |
+|     4 | `STOP_MODE_MARKERS`  | Stop after a number of right side markers      | `STOP_MARKERS` (marker count) |
+
+`STOP_MODE_MARKERS` counts debounced activations of the right side sensor, i.e. transitions from off to on. After each counted activation, new activations are ignored for a small debounce window, so sensor bounce on the same marker is not counted twice. Every activation counts, crossings included, so the target should include them.
 
 ### Operation Data
 
@@ -234,6 +238,7 @@ Where N is the payload size in bytes.
 | CURVATURE_GAIN |                2 |          434.0 |              260.4 |
 | IMU_ALPHA      |                2 |          434.0 |              260.4 |
 | OPERATION_DATA |                8 |          954.8 |              781.2 |
+| STOP_MARKERS   |                1 |          347.2 |              173.6 |
 
 The robot is configured to handle `USART` transmissions asynchronously using interrupts and ring buffers as seen in [usart.c](../Core/hal/src/usart.c), allowing it to process incoming and outgoing messages without blocking its main operation loop. However, to ensure no messages are skipped during transmission, once the buffer is full, the sending function will block until there is space available in the buffer to add the new data. This means that if the buffer fills up faster than it flushes data, the sending function may introduce delays to the main program flow.
 

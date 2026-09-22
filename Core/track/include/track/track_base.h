@@ -18,6 +18,7 @@ typedef struct {
     uint8_t crossings;           // Crossings detected
     uint8_t curve_markers;       // Curve markers detected
     uint8_t track_markers;       // Track markers detected
+    uint8_t right_markers;       // Debounced right sensor activations
     uint8_t lost_left_counter;   // Robot lost to the left of the line
     uint8_t lost_right_counter;  // Robot lost to the right of the line
     uint8_t lost_pitch_counter;  // Robot lost due to the pitch

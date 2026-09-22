@@ -126,6 +126,9 @@ static void handle_message(void) {
         case STOP_DISTANCE:
             set_stop_distance(parse_uint16(current_msg.payload));
             break;
+        case STOP_MARKERS:
+            set_stop_markers((uint8_t)current_msg.payload[0]);
+            break;
         case LOOKAHEAD:
             set_lookahead((uint8_t)current_msg.payload[0]);
             break;

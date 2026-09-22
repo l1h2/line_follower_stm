@@ -392,6 +392,7 @@ From this state, the robot can either transition back to the `IDLE` state if fai
 - Completing a predefined number of laps.
 - Covering a predefined distance.
 - After a predefined time duration.
+- Counting a predefined number of right side markers.
 
 The specific stop condition can be configured via serial commands with the `STOP_MODE` option, and the available modes can be found in [state_machine_base.h](Core/state_machine/include/state_machine/state_machine_base.h#L25).
 
@@ -469,5 +470,6 @@ The robot can stop its operation based on different stop conditions, which can b
 - **Lap Completion**: The robot stops after completing a predefined number of laps.
 - **Distance Covered**: The robot stops after covering a predefined distance.
 - **Time Duration**: The robot stops after a predefined time duration.
+- **Marker Count**: The robot stops after the right side sensor counts a predefined number of markers.
 
-The specific parameters for each stop mode, such as the number of laps, distance, or time duration, can also be set via serial commands. This allows for flexible control over the robot's operation and stopping conditions without needing to modify and recompile the code.
+The specific parameters for each stop mode, such as the number of laps, distance, time duration, or marker count, can also be set via serial commands. This allows for flexible control over the robot's operation and stopping conditions without needing to modify and recompile the code.
