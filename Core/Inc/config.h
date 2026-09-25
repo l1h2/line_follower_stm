@@ -13,8 +13,9 @@
 #define PET_COMPLEX 7       // PET track with all waypoints
 #define WAYPOINT_TEST 8     // Test track for generated waypoints
 #define PET_TEST 9
+#define PET_10_LAPS 10      // PET track recorded over 10 laps
 
 // Default selected track (override with -DSELECTED_TRACK=base_triangle)
-#define SELECTED_TRACK BASE_SQUARE
+#define SELECTED_TRACK PET_10_LAPS
 
 #endif  // LINE_FOLLOWER_H
