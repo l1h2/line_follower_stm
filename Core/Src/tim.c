@@ -102,7 +102,7 @@ void MX_TIM3_Init(void)
   PA6   ------> TIM3_CH1
   PA7   ------> TIM3_CH2
   */
-  GPIO_InitStruct.Pin = MOTOR_RIGHT_ENCODER_C2_Pin|MOTOR_RIGHT_ENCODER_C1_Pin;
+  GPIO_InitStruct.Pin = MOTOR_LEFT_ENCODER_C2_Pin|MOTOR_LEFT_ENCODER_C1_Pin;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
   GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
   GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
@@ -155,7 +155,7 @@ void MX_TIM4_Init(void)
   PB6   ------> TIM4_CH1
   PB7   ------> TIM4_CH2
   */
-  GPIO_InitStruct.Pin = MOTOR_LEFT_ENCODER_C2_Pin|MOTOR_LEFT_ENCODER_C1_Pin;
+  GPIO_InitStruct.Pin = MOTOR_RIGHT_ENCODER_C2_Pin|MOTOR_RIGHT_ENCODER_C1_Pin;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
   GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
   GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
