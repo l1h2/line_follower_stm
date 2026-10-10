@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 // Minimum number of sensors for crossing detection
-#define CROSSING_SENSORS_THRESHOLD 4
+#define CROSSING_SENSORS_THRESHOLD 5
 
 // Threshold for max error possible in a side marker detection
 #define SIDE_MARKERS_ERROR_THRESHOLD 4
