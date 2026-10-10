@@ -186,7 +186,7 @@ The `OPERATION_DATA` message (ID 30) is used to send a composite telemetry data 
 |      4 | Y Pos    |  2   | Y position                       | in mm                                             |
 |      6 | Heading  |  2   | Heading angle                    | in radians [-π, π], with 4 decimal places         |
 
-- The IR State field uses a bitmask to represent the state of the central infrared sensors, where each bit corresponds to a specific sensor from left to right at a top-down view of the robot.
+- The IR State field uses a bitmask to represent the state of the central infrared sensors, where each bit corresponds to a specific sensor. Looking at the robot from above, bit 0 is the leftmost sensor and bit 7 the rightmost.
 - The Flags field uses individual bits to represent the state of the left and right infrared sensors, with additional bits reserved for future use.
 
 The parsing and construction of this message can be found in [serial_out.c](../Core/serial/src/serial_out.c#L29).

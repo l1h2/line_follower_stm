@@ -43,7 +43,7 @@ static inline void update_error(void) {
         count++;
     }
 
-    errors.error = new_error * ERROR_WEIGHT / count - AVG_ERROR;
+    errors.error = AVG_ERROR - new_error * ERROR_WEIGHT / count;
 }
 
 static inline void update_error_sum(void) {

@@ -71,8 +71,8 @@ void MX_GPIO_Init(void)
   LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /**/
-  GPIO_InitStruct.Pin = SENSOR_IR_0_Pin|SENSOR_IR_1_Pin|SENSOR_IR_2_Pin|SENSOR_IR_3_Pin
-                          |SENSOR_IR_4_Pin|SENSOR_IR_5_Pin|SENSOR_IR_6_Pin|SENSOR_IR_7_Pin;
+  GPIO_InitStruct.Pin = SENSOR_IR_7_Pin|SENSOR_IR_6_Pin|SENSOR_IR_5_Pin|SENSOR_IR_4_Pin
+                          |SENSOR_IR_3_Pin|SENSOR_IR_2_Pin|SENSOR_IR_1_Pin|SENSOR_IR_0_Pin;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
   LL_GPIO_Init(GPIOB, &GPIO_InitStruct);

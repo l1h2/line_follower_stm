@@ -36,11 +36,11 @@ void debug_print(const char* str) { print(str); }
 
 void debug_print_central_ir_sensors(void) {
     const SensorState* const sensors = get_sensors();
+    const uint8_t total = sensors->ir_sensors->total_central_sensors;
 
-    for (int8_t i = sensors->ir_sensors->total_central_sensors - 1; i >= 0;
-         i--) {
+    for (uint8_t i = 0; i < total; i++) {
         print_bit(i, sensors->ir_sensors->central_sensors_state);
-        if (i > 0) print_string(" - ");
+        if (i < total - 1) print_string(" - ");
     }
     print_new_line();
 }
@@ -48,10 +48,11 @@ void debug_print_central_ir_sensors(void) {
 static inline void debug_print_ir_sensor_times(
     const SensorState* const sensors) {
     const uint16_t* const times = get_central_ir_sensor_times();
-    for (int8_t i = sensors->ir_sensors->total_central_sensors - 1; i >= 0;
-         i--) {
+    const uint8_t total = sensors->ir_sensors->total_central_sensors;
+
+    for (uint8_t i = 0; i < total; i++) {
         print_word(times[i]);
-        if (i > 0) print_string(" - ");
+        if (i < total - 1) print_string(" - ");
     }
 }
 
@@ -73,7 +74,7 @@ void debug_print_errors(void) {
     const ErrorStruct* const errors = get_errors();
 
     print_string("Error byte: ");
-    print_binary(errors->sensors->ir_sensors->central_sensors_state);
+    print_reverse_binary(errors->sensors->ir_sensors->central_sensors_state);
     print_string(" - Error: ");
     print_signed_byte(errors->error);
     print_string(" - Last error: ");

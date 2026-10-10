@@ -93,12 +93,12 @@ void Error_Handler(void);
 #define MOTOR_LEFT_ENCODER_C2_GPIO_Port GPIOA
 #define MOTOR_LEFT_ENCODER_C1_Pin LL_GPIO_PIN_7
 #define MOTOR_LEFT_ENCODER_C1_GPIO_Port GPIOA
-#define SENSOR_IR_0_Pin LL_GPIO_PIN_0
-#define SENSOR_IR_0_GPIO_Port GPIOB
-#define SENSOR_IR_1_Pin LL_GPIO_PIN_1
-#define SENSOR_IR_1_GPIO_Port GPIOB
-#define SENSOR_IR_2_Pin LL_GPIO_PIN_10
-#define SENSOR_IR_2_GPIO_Port GPIOB
+#define SENSOR_IR_7_Pin LL_GPIO_PIN_0
+#define SENSOR_IR_7_GPIO_Port GPIOB
+#define SENSOR_IR_6_Pin LL_GPIO_PIN_1
+#define SENSOR_IR_6_GPIO_Port GPIOB
+#define SENSOR_IR_5_Pin LL_GPIO_PIN_10
+#define SENSOR_IR_5_GPIO_Port GPIOB
 #define MPU_NCS_Pin LL_GPIO_PIN_12
 #define MPU_NCS_GPIO_Port GPIOB
 #define MPU_SCL_Pin LL_GPIO_PIN_13
@@ -117,20 +117,20 @@ void Error_Handler(void);
 #define MOTOR_LEFT_IN_2_4_GPIO_Port GPIOA
 #define MOTOR_LEFT_IN_1_3_Pin LL_GPIO_PIN_12
 #define MOTOR_LEFT_IN_1_3_GPIO_Port GPIOA
-#define SENSOR_IR_3_Pin LL_GPIO_PIN_3
-#define SENSOR_IR_3_GPIO_Port GPIOB
-#define SENSOR_IR_4_Pin LL_GPIO_PIN_4
+#define SENSOR_IR_4_Pin LL_GPIO_PIN_3
 #define SENSOR_IR_4_GPIO_Port GPIOB
-#define SENSOR_IR_5_Pin LL_GPIO_PIN_5
-#define SENSOR_IR_5_GPIO_Port GPIOB
+#define SENSOR_IR_3_Pin LL_GPIO_PIN_4
+#define SENSOR_IR_3_GPIO_Port GPIOB
+#define SENSOR_IR_2_Pin LL_GPIO_PIN_5
+#define SENSOR_IR_2_GPIO_Port GPIOB
 #define MOTOR_RIGHT_ENCODER_C2_Pin LL_GPIO_PIN_6
 #define MOTOR_RIGHT_ENCODER_C2_GPIO_Port GPIOB
 #define MOTOR_RIGHT_ENCODER_C1_Pin LL_GPIO_PIN_7
 #define MOTOR_RIGHT_ENCODER_C1_GPIO_Port GPIOB
-#define SENSOR_IR_6_Pin LL_GPIO_PIN_8
-#define SENSOR_IR_6_GPIO_Port GPIOB
-#define SENSOR_IR_7_Pin LL_GPIO_PIN_9
-#define SENSOR_IR_7_GPIO_Port GPIOB
+#define SENSOR_IR_1_Pin LL_GPIO_PIN_8
+#define SENSOR_IR_1_GPIO_Port GPIOB
+#define SENSOR_IR_0_Pin LL_GPIO_PIN_9
+#define SENSOR_IR_0_GPIO_Port GPIOB
 #ifndef NVIC_PRIORITYGROUP_0
 #define NVIC_PRIORITYGROUP_0         ((uint32_t)0x00000007) /*!< 0 bit  for pre-emption priority,
                                                                  4 bits for subpriority */
