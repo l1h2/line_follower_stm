@@ -1,6 +1,7 @@
 #include "pid/controllers/base_pwm_pid.h"
 
 #include <stddef.h>
+#include <stdlib.h>
 
 #include "timer/time.h"
 
@@ -53,7 +54,7 @@ const BasePwmPid* init_base_pwm_pid(const ErrorStruct* const error_struct) {
 const BasePwmPid* get_base_pwm_pid_ptr(void) { return &base_pwm_pid; }
 
 int16_t get_base_pwm_pid(void) {
-    return get_ff() - (get_p() + get_i() + get_d());
+    return get_ff() - abs(get_p() + get_i() + get_d());
 }
 
 bool update_pending_base_pwm_pid(void) {
