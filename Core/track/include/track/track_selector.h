@@ -28,7 +28,7 @@
 #elif SELECTED_TRACK == PET_SMALL
 #include "track/tracks/pet_small.h"
 #else
-#include "track/tracks/base_square.h"
+#error "SELECTED_TRACK has no matching track header in track_selector.h"
 #endif
 
 #endif  // TRACK_SELECTOR_H
