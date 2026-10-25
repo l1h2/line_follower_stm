@@ -25,6 +25,8 @@
 #include "track/tracks/pet_test.h"
 #elif SELECTED_TRACK == PET_10_LAPS
 #include "track/tracks/pet_10_laps.h"
+#elif SELECTED_TRACK == PET_SMALL
+#include "track/tracks/pet_small.h"
 #else
 #include "track/tracks/base_square.h"
 #endif
