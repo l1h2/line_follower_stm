@@ -115,6 +115,18 @@ void update_base_speed_pid(void) {
     set_motors(pid_struct.left_pwm, pid_struct.right_pwm);
 }
 
+void get_base_speed_pwm(int16_t* const left_pwm, int16_t* const right_pwm) {
+    if (left_pwm != NULL) *left_pwm = pid_struct.left_pwm;
+    if (right_pwm != NULL) *right_pwm = pid_struct.right_pwm;
+}
+
+void clear_base_speed_pwm(void) {
+    pid_struct.left_pwm = 0;
+    pid_struct.right_pwm = 0;
+    pid_struct.last_left_pwm = 0;
+    pid_struct.last_right_pwm = 0;
+}
+
 bool update_pending_base_speed_pid(void) {
     return time_elapsed(base_pid.last_pid_time, base_pid.frame_interval);
 }

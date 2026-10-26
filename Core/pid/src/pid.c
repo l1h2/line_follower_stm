@@ -106,7 +106,9 @@ bool update_speed_pid(void) {
 void restart_pid(void) {
     pid.current_pwm = pid.base_pwm;
     clear_errors();
+    clear_delta_pwm_pid();
     clear_speed_errors();
+    clear_base_speed_pwm();
 }
 
 void set_base_pwm(const uint16_t pwm) {

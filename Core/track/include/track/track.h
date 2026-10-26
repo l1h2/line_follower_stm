@@ -34,6 +34,15 @@ void reset_track(void);
 bool update_track(const bool encoder_updated);
 
 /**
+ * @brief Returns the track observations held since the previous call, and
+ * clears them.
+ * @return The last accepted event and whether the right side sensor was seen.
+ * @note Called once per telemetry message, so each observation is sent only
+ * once.
+ */
+TrackTelemetry consume_track_telemetry(void);
+
+/**
  * @brief Updates the robot's position and distance traveled.
  */
 void update_positions(void);

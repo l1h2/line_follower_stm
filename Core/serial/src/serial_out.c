@@ -3,7 +3,9 @@
 #include <stddef.h>
 
 #include "logger/logger.h"
+#include "pid/controllers/speed_pid.h"
 #include "timer/time.h"
+#include "track/track.h"
 #include "turbine/turbine.h"
 
 static const StateMachine* sm = NULL;
@@ -15,6 +17,8 @@ static const PurePursuit* pure_pursuit = NULL;
 static uint32_t last_log_time = 0;
 
 static uint8_t operation_data[OPERATION_DATA_SIZE] = {0};
+static uint8_t extended_data[EXTENDED_DATA_SIZE] = {0};
+static TrackTelemetry track_telemetry = {0};
 
 static inline uint16_t parse_float(float value, uint8_t precision) {
     for (; precision > 0; precision--) value *= 10.0f;
@@ -26,10 +30,18 @@ static inline int16_t parse_signed_float(float value, uint8_t precision) {
     return (int16_t)(value + (value >= 0.0f ? 0.5f : -0.5f));
 }
 
+static inline void pack_int16(uint8_t* const data, const int16_t value) {
+    data[0] = value & 0xFF;
+    data[1] = (value >> 8);
+}
+
 static inline void update_operation_data(void) {
+    track_telemetry = consume_track_telemetry();
+
     operation_data[0] = sensors->ir_sensors->central_sensors_state;
     operation_data[1] = sensors->ir_sensors->left_sensor;
     operation_data[1] |= sensors->ir_sensors->right_sensor << 1;
+    operation_data[1] |= (track_telemetry.event & 0x03) << 2;
 
     // Convert from cm to mm for higher precision
     const int16_t x = parse_signed_float(track->x, 1);
@@ -42,6 +54,31 @@ static inline void update_operation_data(void) {
     const int16_t heading = parse_signed_float(track->heading, 4);
     operation_data[6] = heading & 0xFF;
     operation_data[7] = (heading >> 8);
+}
+
+static inline void update_extended_data(void) {
+    update_operation_data();
+    for (uint8_t i = 0; i < OPERATION_DATA_SIZE; i++) {
+        extended_data[i] = operation_data[i];
+    }
+
+    pack_int16(&extended_data[8],
+               parse_signed_float(sensors->encoders->left_speed, 1));
+    pack_int16(&extended_data[10],
+               parse_signed_float(sensors->encoders->right_speed, 1));
+    pack_int16(
+        &extended_data[12],
+        parse_signed_float(pid->errors->speed_errors->left_target_speed, 1));
+    pack_int16(
+        &extended_data[14],
+        parse_signed_float(pid->errors->speed_errors->right_target_speed, 1));
+
+    int16_t left_pwm, right_pwm;
+    get_base_speed_pwm(&left_pwm, &right_pwm);
+    pack_int16(&extended_data[16], left_pwm);
+    pack_int16(&extended_data[18], right_pwm);
+
+    extended_data[20] = track_telemetry.right_sensor;
 }
 
 void init_serial_out(const StateMachine* const state_machine,
@@ -150,6 +187,10 @@ void send_message(const SerialMessages msg) {
             update_operation_data();
             send_data(msg, operation_data);
             break;
+        case EXTENDED_DATA:
+            update_extended_data();
+            send_data(msg, extended_data);
+            break;
         case LOOKAHEAD:
             send_data(msg, (const uint8_t*)&pure_pursuit->lookahead);
             break;
@@ -178,9 +219,9 @@ void send_messages(const SerialMessages* msgs, const uint8_t count) {
 }
 
 void send_all_messages(void) {
-    // Skip command signals and operation data
+    // Skips command signals and telemetry data
     for (uint8_t i = STOP + 1; i < SERIAL_MESSAGE_COUNT; i++) {
-        if (i == OPERATION_DATA) continue;
+        if (i == OPERATION_DATA || i == EXTENDED_DATA) continue;
         send_message((SerialMessages)i);
     }
 }

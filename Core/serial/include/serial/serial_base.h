@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 #define OPERATION_DATA_SIZE 8  // Size of the operation data message
+#define EXTENDED_DATA_SIZE 21  // Size of the extended data message
 
 /**
  * @brief Macro to define serial messages and their sizes.
@@ -42,10 +43,11 @@
     X(CURVATURE_GAIN, 2)         \
     X(IMU_ALPHA, 2)              \
     X(OPERATION_DATA, OPERATION_DATA_SIZE) \
-    X(STOP_MARKERS, 1)
+    X(STOP_MARKERS, 1)           \
+    X(EXTENDED_DATA, EXTENDED_DATA_SIZE)
 
 // Maximum payload size among all messages
-#define SERIAL_MESSAGE_MAX_PAYLOAD 8
+#define SERIAL_MESSAGE_MAX_PAYLOAD EXTENDED_DATA_SIZE
 
 #define SERIAL_FRAME_START 0xAA  // Start byte for framing
 

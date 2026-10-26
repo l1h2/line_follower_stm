@@ -36,6 +36,7 @@
 #define debug_print_encoder_speeds() ((void)0)
 #define debug_print_encoder_data() ((void)0)
 #define debug_print_diagnostics() ((void)0)
+#define debug_print_run_config() ((void)0)
 #endif  // DEBUG_MODE
 
 #endif  // LOGGER_H

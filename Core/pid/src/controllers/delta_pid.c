@@ -71,6 +71,11 @@ bool update_pending_delta_pwm_pid(void) {
 
 void update_delta_pwm_pid(void) { delta_pid.last_pid_time = time(); }
 
+void clear_delta_pwm_pid(void) {
+    filtered_delta_error = 0.0f;
+    clamped_error_sum = 0;
+}
+
 void set_delta_pwm_kp(const uint8_t kp) { delta_pid.kp = kp; }
 
 void set_delta_pwm_ki(const uint8_t ki) { delta_pid.ki = ki; }

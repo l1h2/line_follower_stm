@@ -38,6 +38,12 @@ bool update_pending_delta_pwm_pid(void);
 void update_delta_pwm_pid(void);
 
 /**
+ * @brief Clear the integral sum and the filtered derivative of the Delta PWM
+ * PID controller, so a run doesn't start with the previous run's values.
+ */
+void clear_delta_pwm_pid(void);
+
+/**
  * @brief Set the proportional gain (Kp) for the Delta PWM PID controller.
  * @param kp The new proportional gain value.
  */

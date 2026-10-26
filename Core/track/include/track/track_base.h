@@ -1,6 +1,7 @@
 #ifndef TRACK_BASE_H
 #define TRACK_BASE_H
 
+#include <stdbool.h>
 #include <stdint.h>
 
 /**
@@ -32,5 +33,14 @@ typedef struct {
     uint8_t laps;                // Current lap count
     float imu_alpha;             // IMU alpha value for heading correction
 } TrackCounters;
+
+/**
+ * @struct TrackTelemetry
+ * @brief Track observations held until a telemetry message consumes them.
+ */
+typedef struct {
+    uint8_t event;      // Last event: 0 none, 1 crossing, 2 curve, 3 marker
+    bool right_sensor;  // Right sensor active in any update
+} TrackTelemetry;
 
 #endif  // TRACK_BASE_H

@@ -30,8 +30,10 @@ void running_pure_pursuit(const StateMachine* const sm,
 
         if (!update_pure_pursuit(position_correction)) continue;
 
-        if (sm->log_data) send_message(OPERATION_DATA);
+        if (sm->log_data) send_message(EXTENDED_DATA);
     }
+
+    if (sm->log_data) send_message(EXTENDED_DATA);
 
     position_correction
         ? debug_print("Finalizing RUNNING_POSITION_CORRECTION mode")

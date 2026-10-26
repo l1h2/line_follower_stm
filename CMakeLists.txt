@@ -75,6 +75,18 @@ foreach(mod ${USER_MODULES})
     endif()
 endforeach()
 
+# Regenerate the build timestamp header on every build
+set(BUILD_INFO_DIR "${CMAKE_BINARY_DIR}/generated")
+add_custom_target(build_info
+    COMMAND ${CMAKE_COMMAND} -DOUTPUT_FILE=${BUILD_INFO_DIR}/build_info.h
+            -P ${CMAKE_SOURCE_DIR}/build_info.cmake
+    BYPRODUCTS ${BUILD_INFO_DIR}/build_info.h
+    COMMENT "Generating build_info.h"
+    VERBATIM
+)
+add_dependencies(${CMAKE_PROJECT_NAME} build_info)
+target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE "${BUILD_INFO_DIR}")
+
 # (Optional) Global compile options
 target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE
     -Wall -Wextra -Wundef -Wshadow -Wdouble-promotion

@@ -380,9 +380,9 @@ This is the main operational state of the robot, where it performs the task sele
 
    In this mode the robot uses two [speed `PID` controllers](Core/pid/include/pid/controllers/speed_pid.h) (one for each motor) to maintain a consistent speed while following the track. The target speed can be adjusted via serial commands, allowing for control over the robot's pace during operation.
 
-   Similar to the `PID Control` mode, the robot can transmit `OPERATION_DATA` packets via serial communication after every control loop iteration, containing information about the current spacial position of the robot. This data can be used by the controller application to visualize the robot's path and performance during operation.
+   Instead of the `OPERATION_DATA` packets of the `PID Control` mode, the robot can transmit [`EXTENDED_DATA`](docs/serial_protocol.md#extended-data) packets via serial communication after every control loop iteration. They contain the same sensor and position information, plus the measured speed, target speed and PWM of each wheel. This data can be used by the controller application to visualize the robot's path and performance during operation.
 
-6. **[Position Correction](Core/state_machine/src/running_modes/running_position_correction.c)**
+6. **[Position Correction](Core/state_machine/src/running_modes/running_pure_pursuit.c)**
 
    In this mode, the robot uses the same [Pure Pursuit Algorithm](Core/pure_pursuit) as the `Pure Pursuit Control` mode, with an additional position correction layer applied on top of it.
 

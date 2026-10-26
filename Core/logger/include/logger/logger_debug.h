@@ -207,4 +207,10 @@ void debug_print_encoder_data(void);
  */
 bool debug_print_diagnostics(void);
 
+/**
+ * @brief Prints the configuration of the run about to start: build, track,
+ * modes, stop conditions, controller gains and odometry parameters.
+ */
+void debug_print_run_config(void);
+
 #endif  // LOGGER_DEBUG_H

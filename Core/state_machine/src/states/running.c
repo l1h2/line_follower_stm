@@ -28,6 +28,8 @@ void handle_running(const StateMachine* const sm) {
     start_mpu_gyro_calibration();
     while (!mpu_calibrate_gyro_async()) process_serial_messages();
 
+    debug_print_run_config();
+
     switch (sm->running_mode) {
         case RUNNING_INIT:
             debug_print("No running mode set, going back to IDLE state");

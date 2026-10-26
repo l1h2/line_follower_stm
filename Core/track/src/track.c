@@ -63,6 +63,10 @@ static inline void reset_right_trigger(void) {
     right_trigger.last_time = 0;
 }
 
+static TrackTelemetry telemetry = {0};
+
+static inline void reset_telemetry(void) { telemetry = (TrackTelemetry){0}; }
+
 static inline void reset_headings(void) {
     track.sin_heading = 0.0f;
     track.cos_heading = 1.0f;
@@ -195,6 +199,11 @@ static inline void update_right_markers(void) {
     track.right_markers++;
 }
 
+static inline void update_telemetry_right_sensor(void) {
+    if (!errors->sensors->ir_sensors->right_sensor) return;
+    telemetry.right_sensor = true;
+}
+
 static inline void update_odometer(void) {
     const float distance = get_live_distance();
     odometer.step = distance - odometer.current;
@@ -259,6 +268,7 @@ static inline bool process_event(const MemoryCounters event) {
             return false;
     }
 
+    telemetry.event = (uint8_t)event;
     return true;
 }
 
@@ -299,6 +309,7 @@ void reset_track(void) {
     reset_memory();
     reset_odometer();
     reset_right_trigger();
+    reset_telemetry();
     reset_position_correction();
 }
 
@@ -310,7 +321,14 @@ bool update_track(const bool encoder_updated) {
 
     update_line();
     update_right_markers();
+    update_telemetry_right_sensor();
     return update_track_counters();
+}
+
+TrackTelemetry consume_track_telemetry(void) {
+    const TrackTelemetry consumed = telemetry;
+    reset_telemetry();
+    return consumed;
 }
 
 void update_positions(void) {

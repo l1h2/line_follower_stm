@@ -15,6 +15,7 @@ This document describes the lightweight serial protocol used between the control
     - [Running Mode](#running-mode)
     - [Stop Mode](#stop-mode)
   - [Operation Data](#operation-data)
+  - [Extended Data](#extended-data)
   - [Acknowledgment](#acknowledgment)
 - [Timing and Performance](#timing-and-performance)
 - [Examples](#examples)
@@ -85,46 +86,47 @@ For payload data the protocol uses `little-endian` byte order for multi-byte val
 |             3              |   -32.767 — +32.767 |
 |             4              |   -3.2767 — +3.2767 |
 
-The parsing functions can be found in [serial_out.c](../Core/serial/src/serial_out.c#L19) for sent messages and [serial_in.c](../Core/serial/src/serial_in.c#L45) for received messages.
+The parsing functions can be found in [serial_out.c](../Core/serial/src/serial_out.c#L23) for sent messages and [serial_in.c](../Core/serial/src/serial_in.c#L45) for received messages.
 
 ## Messages
 
 The protocol defines a set of messages for communication between the controller and the robot. Each message has a unique identifier, a predefined payload size, and a specific data type for its payload. The following table summarizes the available messages:
 
-| Message         |  Id | Payload Size | Data Type  | Description                     | Obs                                    |
-| --------------- | --: | -----------: | :--------- | ------------------------------- | :------------------------------------- |
-| INVALID_MESSAGE |   0 |            0 | N/A        | Invalid/unknown message         | —                                      |
-| PING            |   1 |            0 | N/A        | Keep-alive / ping               | —                                      |
-| START           |   2 |            0 | N/A        | Start signal                    | —                                      |
-| STOP            |   3 |            0 | N/A        | Stop signal                     | —                                      |
-| STATE           |   4 |            1 | uint8_t    | Robot state from state machine  | see [Robot State](#robot-state)        |
-| RUNNING_MODE    |   5 |            1 | uint8_t    | Running mode                    | see [Running Mode](#running-mode)      |
-| STOP_MODE       |   6 |            1 | uint8_t    | Stop mode                       | see [Stop Mode](#stop-mode)            |
-| LAPS            |   7 |            1 | uint8_t    | Stop after laps                 | lap count                              |
-| STOP_TIME       |   8 |            1 | uint8_t    | Stop after time                 | seconds                                |
-| STOP_DISTANCE   |   9 |            2 | uint16_t   | Stop after distance             | centimeters                            |
-| LOG_DATA        |  10 |            1 | uint8_t    | Enable/disable operation logs   | boolean (0/1)                          |
-| PID_KP          |  11 |            1 | uint8_t    | PID proportional gain           | -                                      |
-| PID_KI          |  12 |            1 | uint8_t    | PID integral gain               | -                                      |
-| PID_KD          |  13 |            2 | uint16_t   | PID derivative gain             | -                                      |
-| PID_KB          |  14 |            1 | uint8_t    | Base PWM PID break factor       | Kp for Base PWM                        |
-| PID_KFF         |  15 |            1 | uint8_t    | Base PWM PID feedforward gain   | -                                      |
-| PID_ALPHA       |  16 |            2 | float      | PID filter alpha for Kd         | 0 - 100%, with 2 decimal places        |
-| PID_CLAMP       |  17 |            2 | uint16_t   | PID clamp limit                 | -                                      |
-| PID_ACCEL       |  18 |            2 | uint16_t   | Base PWM PID acceleration limit | -                                      |
-| PID_BASE_PWM    |  19 |            2 | uint16_t   | Base PWM value                  | PWM units (0 - 1000)                   |
-| PID_MAX_PWM     |  20 |            2 | uint16_t   | Base PWM max value              | PWM units (0 - 1000)                   |
-| TURBINE_PWM     |  21 |            2 | uint16_t   | Turbine PWM value               | PWM units (0 - 1000)                   |
-| SPEED_KP        |  22 |            2 | uint16_t   | Speed PID proportional gain     | -                                      |
-| SPEED_KI        |  23 |            2 | float      | Speed PID integral gain         | 4 decimal places                       |
-| SPEED_KD        |  24 |            2 | uint16_t   | Speed PID derivative gain       | -                                      |
-| SPEED_KFF       |  25 |            2 | uint16_t   | Speed feedforward gain          | -                                      |
-| BASE_SPEED      |  26 |            2 | float      | Base speed value                | cm/s, with 2 decimal places            |
-| LOOKAHEAD       |  27 |            1 | uint8_t    | Pure-pursuit lookahead distance | centimeters                            |
-| CURVATURE_GAIN  |  28 |            2 | float      | Wheel base correction           | 0 - 3, with 2 decimal places           |
-| IMU_ALPHA       |  29 |            2 | float      | IMU filter alpha                | 0 - 100%, with 2 decimal places        |
-| OPERATION_DATA  |  30 |            8 | uint8_t[8] | Operation/telemetry data packet | composite telemetry struct (see below) |
-| STOP_MARKERS    |  31 |            1 | uint8_t    | Stop after right side markers   | marker count                           |
+| Message         |  Id | Payload Size | Data Type   | Description                     | Obs                                    |
+| --------------- | --: | -----------: | :---------- | ------------------------------- | :------------------------------------- |
+| INVALID_MESSAGE |   0 |            0 | N/A         | Invalid/unknown message         | —                                      |
+| PING            |   1 |            0 | N/A         | Keep-alive / ping               | —                                      |
+| START           |   2 |            0 | N/A         | Start signal                    | —                                      |
+| STOP            |   3 |            0 | N/A         | Stop signal                     | —                                      |
+| STATE           |   4 |            1 | uint8_t     | Robot state from state machine  | see [Robot State](#robot-state)        |
+| RUNNING_MODE    |   5 |            1 | uint8_t     | Running mode                    | see [Running Mode](#running-mode)      |
+| STOP_MODE       |   6 |            1 | uint8_t     | Stop mode                       | see [Stop Mode](#stop-mode)            |
+| LAPS            |   7 |            1 | uint8_t     | Stop after laps                 | lap count                              |
+| STOP_TIME       |   8 |            1 | uint8_t     | Stop after time                 | seconds                                |
+| STOP_DISTANCE   |   9 |            2 | uint16_t    | Stop after distance             | centimeters                            |
+| LOG_DATA        |  10 |            1 | uint8_t     | Enable/disable operation logs   | boolean (0/1)                          |
+| PID_KP          |  11 |            1 | uint8_t     | PID proportional gain           | -                                      |
+| PID_KI          |  12 |            1 | uint8_t     | PID integral gain               | -                                      |
+| PID_KD          |  13 |            2 | uint16_t    | PID derivative gain             | -                                      |
+| PID_KB          |  14 |            1 | uint8_t     | Base PWM PID break factor       | Kp for Base PWM                        |
+| PID_KFF         |  15 |            1 | uint8_t     | Base PWM PID feedforward gain   | -                                      |
+| PID_ALPHA       |  16 |            2 | float       | PID filter alpha for Kd         | 0 - 100%, with 2 decimal places        |
+| PID_CLAMP       |  17 |            2 | uint16_t    | PID clamp limit                 | -                                      |
+| PID_ACCEL       |  18 |            2 | uint16_t    | Base PWM PID acceleration limit | -                                      |
+| PID_BASE_PWM    |  19 |            2 | uint16_t    | Base PWM value                  | PWM units (0 - 1000)                   |
+| PID_MAX_PWM     |  20 |            2 | uint16_t    | Base PWM max value              | PWM units (0 - 1000)                   |
+| TURBINE_PWM     |  21 |            2 | uint16_t    | Turbine PWM value               | PWM units (0 - 1000)                   |
+| SPEED_KP        |  22 |            2 | uint16_t    | Speed PID proportional gain     | -                                      |
+| SPEED_KI        |  23 |            2 | float       | Speed PID integral gain         | 4 decimal places                       |
+| SPEED_KD        |  24 |            2 | uint16_t    | Speed PID derivative gain       | -                                      |
+| SPEED_KFF       |  25 |            2 | uint16_t    | Speed feedforward gain          | -                                      |
+| BASE_SPEED      |  26 |            2 | float       | Base speed value                | cm/s, with 2 decimal places            |
+| LOOKAHEAD       |  27 |            1 | uint8_t     | Pure-pursuit lookahead distance | centimeters                            |
+| CURVATURE_GAIN  |  28 |            2 | float       | Wheel base correction           | 0 - 3, with 2 decimal places           |
+| IMU_ALPHA       |  29 |            2 | float       | IMU filter alpha                | 0 - 100%, with 2 decimal places        |
+| OPERATION_DATA  |  30 |            8 | uint8_t[8]  | Operation/telemetry data packet | composite telemetry struct (see below) |
+| STOP_MARKERS    |  31 |            1 | uint8_t     | Stop after right side markers   | marker count                           |
+| EXTENDED_DATA   |  32 |           21 | uint8_t[21] | Extended telemetry packet       | composite telemetry struct (see below) |
 
 These messages can be used to change the robot's configuration, control its operation, and retrieve status information.
 
@@ -176,20 +178,56 @@ Sent and accepted by the `STOP_MODE` message (ID 6). It selects the condition th
 
 ### Operation Data
 
-The `OPERATION_DATA` message (ID 30) is used to send a composite telemetry data packet from the robot to the controller. This packet contains various operational parameters and sensor readings that provide insight into the robot's current state during operation. The payload structure for this message is defined as follows:
+The `OPERATION_DATA` message (ID 30) is used to send a composite telemetry data packet from the robot to the controller. This packet contains various operational parameters and sensor readings that provide insight into the robot's current state during operation. It is sent every `1 ms` control frame of the `RUNNING_PID` mode, while the pure pursuit modes send [`EXTENDED_DATA`](#extended-data) instead, whose first 8 bytes share this layout. The payload structure for this message is defined as follows:
 
-| Offset | Field    | Size | Description                      | Obs                                               |
-| -----: | :------- | :--: | :------------------------------- | :------------------------------------------------ |
-|      0 | IR State |  1   | Central IR sensors state bitmask | Bits 0..7: central sensors (0 = black, 1 = white) |
-|      1 | Flags    |  1   | Left/right IR + reserved bits    | Bit 0: Left; Bit 1: Right; Bits 2–7: reserved     |
-|      2 | X Pos    |  2   | X position                       | in mm                                             |
-|      4 | Y Pos    |  2   | Y position                       | in mm                                             |
-|      6 | Heading  |  2   | Heading angle                    | in radians [-π, π], with 4 decimal places         |
+| Offset | Field    | Size | Description                      | Obs                                                            |
+| -----: | :------- | :--: | :------------------------------- | :------------------------------------------------------------- |
+|      0 | IR State |  1   | Central IR sensors state bitmask | Bits 0..7: central sensors (0 = black, 1 = white)              |
+|      1 | Flags    |  1   | Left/right IR + track event      | Bit 0: Left; Bit 1: Right; Bits 2–3: Event; Bits 4–7: reserved |
+|      2 | X Pos    |  2   | X position                       | in mm                                                          |
+|      4 | Y Pos    |  2   | Y position                       | in mm                                                          |
+|      6 | Heading  |  2   | Heading angle                    | in radians [-π, π], with 4 decimal places                      |
 
 - The IR State field uses a bitmask to represent the state of the central infrared sensors, where each bit corresponds to a specific sensor. Looking at the robot from above, bit 0 is the leftmost sensor and bit 7 the rightmost.
-- The Flags field uses individual bits to represent the state of the left and right infrared sensors, with additional bits reserved for future use.
+- The Flags field uses individual bits to represent the state of the left and right infrared sensors, sampled when the message is built, and the track event described below. Bits 4–7 are reserved for future use.
 
-The parsing and construction of this message can be found in [serial_out.c](../Core/serial/src/serial_out.c#L29).
+The Event field (bits 2–3 of the Flags field) reports the track event accepted by the robot's track observer:
+
+| Value | Event                                |
+| ----: | :----------------------------------- |
+|     0 | None                                 |
+|     1 | Crossing                             |
+|     2 | Curve marker (left side)             |
+|     3 | Track marker (right side, start/end) |
+
+- The robot holds each accepted event until the next telemetry message, either `OPERATION_DATA` or `EXTENDED_DATA`, and clears it once sent. Every event therefore appears exactly once, in the first message after it happened, and all other messages carry 0.
+- In the `RUNNING_PID` mode the observer runs in the same `1 ms` iteration as the message, so the event appears in its own frame. In the pure pursuit modes the observer runs every `1 ms` while messages go out every `10 ms`, so an event waits up to `9 ms`.
+- The observer requires at least `6 cm` of travel between events, so at most one event can happen between two messages below about `545 cm/s`, faster than the robot can drive.
+- Events are tracked from the start of the run, so `LOG_DATA` should be enabled before `START`.
+
+The parsing and construction of this message can be found in [serial_out.c](../Core/serial/src/serial_out.c#L38).
+
+### Extended Data
+
+The `EXTENDED_DATA` message (ID 32) replaces `OPERATION_DATA` in the `RUNNING_PURE_PURSUIT` and `RUNNING_POSITION_CORRECTION` modes, and is sent once every `10 ms` pure pursuit frame. Its first 8 bytes have exactly the `OPERATION_DATA` layout, followed by the speed controllers' data for the same frame:
+
+| Offset | Field        | Size | Description                | Obs                                           |
+| -----: | :----------- | :--: | :------------------------- | :-------------------------------------------- |
+|      0 | Operation    |  8   | Same as `OPERATION_DATA`   | see [Operation Data](#operation-data)         |
+|      8 | Left Speed   |  2   | Left wheel measured speed  | signed, in cm/s, with 1 decimal place         |
+|     10 | Right Speed  |  2   | Right wheel measured speed | signed, in cm/s, with 1 decimal place         |
+|     12 | Left Target  |  2   | Left wheel target speed    | signed, in cm/s, with 1 decimal place         |
+|     14 | Right Target |  2   | Right wheel target speed   | signed, in cm/s, with 1 decimal place         |
+|     16 | Left PWM     |  2   | Left motor PWM             | PWM units (-1000 - 1000), positive is forward |
+|     18 | Right PWM    |  2   | Right motor PWM            | PWM units (-1000 - 1000), positive is forward |
+|     20 | Flags        |  1   | Extended flags             | Bit 0: Right sensor seen; Bits 1–7: reserved  |
+
+- The measured speeds are the encoder speeds the speed controllers used in the frame, and the targets are the speeds requested by pure pursuit. The PWM values are the controllers' outputs after the clamp, applied to the motors until the next frame.
+- Bit 0 of the Flags field is set when the right side sensor was active in any `1 ms` sensor update since the previous message. Unlike bit 1 of byte 1, which is sampled when the message is built, it also catches markers that pass between two `10 ms` frames.
+
+The run can stop on a `1 ms` update between two `10 ms` frames, so when the control loop exits the robot sends one more `EXTENDED_DATA` message, the stop record. It reports the event and right sensor activity since the last frame, with the IR state sampled at stop, while its position, heading, speeds, targets and PWM repeat the last frame, since those only update once per frame. If the run stops on a frame, it repeats that frame with no event and the right sensor flag cleared. The stop record is the last telemetry message of the run, sent before the `STATE` message reporting `STATE_STOPPED`, and is not on the frame timing, so it should not be counted as a control frame.
+
+The construction of this message can be found in [serial_out.c](../Core/serial/src/serial_out.c#L59).
 
 ### Acknowledgment
 
@@ -239,10 +277,13 @@ Where N is the payload size in bytes.
 | IMU_ALPHA      |                2 |          434.0 |              260.4 |
 | OPERATION_DATA |                8 |          954.8 |              781.2 |
 | STOP_MARKERS   |                1 |          347.2 |              173.6 |
+| EXTENDED_DATA  |               21 |         2083.2 |             1909.6 |
 
 The robot is configured to handle `USART` transmissions asynchronously using interrupts and ring buffers as seen in [usart.c](../Core/hal/src/usart.c), allowing it to process incoming and outgoing messages without blocking its main operation loop. However, to ensure no messages are skipped during transmission, once the buffer is full, the sending function will block until there is space available in the buffer to add the new data. This means that if the buffer fills up faster than it flushes data, the sending function may introduce delays to the main program flow.
 
 Considering the main operation loops of the robot run at a `1 kHz` frequency (every `1 ms`), the hardware is able to send on average up to `11 bytes/ms` (~11.52 bytes/ms) at `115200` baud. This means that as long as the total size of messages sent within each loop does not exceed `11 bytes`, there will be no delays introduced by the sending function.
+
+The pure pursuit modes are the exception: their control frame runs every `10 ms`, which allows up to `115 bytes` per frame, and they send one `EXTENDED_DATA` message (`24 bytes` with framing) per frame.
 
 It is important to remember that the protocol shares the same `USART` interface as the standard logs, so the total amount of data sent (logs + protocol messages) must be considered when calculating the average data rate to avoid delays. Preferentially, log messages should be avoided entirely inside high-frequency loops to ensure no delays occur.
 
@@ -285,9 +326,9 @@ When the robot sends an OPERATION_DATA message, the received message would be st
 |      4 | X Pos    | 0x10 0x27 | Example X position (10000 mm)                                                           |
 |      6 | Y Pos    | 0x20 0x4E | Example Y position (20000 mm)                                                           |
 |      8 | Heading  | 0x30 0x75 | Example heading (30000 in 0.0001 radians)                                               |
-|     10 | Checksum | 0x4C      | Checksum (0x1E XOR 0x5A XOR 0x03 XOR 0x10 XOR 0x27 XOR 0x20 XOR 0x4E XOR 0x30 XOR 0x75) |
+|     10 | Checksum | 0x5B      | Checksum (0x1E XOR 0x5A XOR 0x03 XOR 0x10 XOR 0x27 XOR 0x20 XOR 0x4E XOR 0x30 XOR 0x75) |
 
-The complete byte sequence received would be: `0xAA 0x1E 0x5A 0x03 0x10 0x27 0x20 0x4E 0x30 0x75 0x4C`
+The complete byte sequence received would be: `0xAA 0x1E 0x5A 0x03 0x10 0x27 0x20 0x4E 0x30 0x75 0x5B`
 
 ### Example 4: Sending a PID_KP update
 

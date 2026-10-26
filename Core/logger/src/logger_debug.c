@@ -1,13 +1,20 @@
 #include "logger/logger_debug.h"
 
+#include "build_info.h"
 #include "logger/logger_base.h"
 #include "math/math.h"
 #include "pid/errors/errors.h"
+#include "pid/pid.h"
+#include "pure_pursuit/pure_pursuit.h"
 #include "sensors/encoder.h"
 #include "sensors/mpu.h"
 #include "sensors/sensors.h"
 #include "sensors/vision.h"
+#include "state_machine/handlers/config_handler.h"
 #include "timer/time.h"
+#include "track/track.h"
+#include "track/track_selector.h"
+#include "turbine/turbine.h"
 
 #define SENSOR_READ_DEBUG_TIMEOUT_US 3000
 
@@ -223,4 +230,90 @@ bool debug_print_diagnostics(void) {
         "*");
 
     return true;
+}
+
+void debug_print_run_config(void) {
+    const StateMachine* const sm = get_state_machine();
+    const PidStruct* const pid = get_pid();
+    const EncoderData* const encoders = get_encoder_data();
+
+    print_string("Build:  ");
+    print(BUILD_TIMESTAMP);
+
+    print_string("Track [Name Waypoints]:  ");
+    print_string(TRACK_NAME);
+    print_string("  /  ");
+    print_word(WAYPOINT_COUNT);
+    print_new_line();
+
+    print_string("Modes [Running Stop Log]:  ");
+    print_word(sm->running_mode);
+    print_string("  /  ");
+    print_word(sm->stop_mode);
+    print_string("  /  ");
+    print_bool(sm->log_data);
+    print_new_line();
+
+    print_string("Stop [Laps Time(s) Distance(cm) Markers]:  ");
+    print_word(sm->laps);
+    print_string("  /  ");
+    print_long(sm->stop_time / 1000);
+    print_string("  /  ");
+    print_word(sm->stop_distance);
+    print_string("  /  ");
+    print_word(sm->stop_markers);
+    print_new_line();
+
+    print_string("Line PID [Kp Ki Kd Alpha Clamp]:  ");
+    print_word(pid->delta_pid->kp);
+    print_string("  /  ");
+    print_word(pid->delta_pid->ki);
+    print_string("  /  ");
+    print_word(pid->delta_pid->kd);
+    print_string("  /  ");
+    print_float(pid->delta_pid->alpha, 4);
+    print_string("  /  ");
+    print_word(pid->delta_pid->clamp);
+    print_new_line();
+
+    print_string("Base PWM PID [Kb Kff]:  ");
+    print_word(pid->base_pwm_pid->kp);
+    print_string("  /  ");
+    print_word(pid->base_pwm_pid->kff);
+    print_new_line();
+
+    print_string("PWM [Base Max Accel Turbine]:  ");
+    print_word(pid->base_pwm);
+    print_string("  /  ");
+    print_word(pid->max_pwm);
+    print_string("  /  ");
+    print_word(pid->acceleration);
+    print_string("  /  ");
+    print_word(get_turbine_pwm());
+    print_new_line();
+
+    print_string("Speed PID [Kp Ki Kd Kff]:  ");
+    print_word(pid->speed_pid->kp);
+    print_string("  /  ");
+    print_float(pid->speed_pid->ki, 4);
+    print_string("  /  ");
+    print_word(pid->speed_pid->kd);
+    print_string("  /  ");
+    print_word(pid->speed_pid->kff);
+    print_new_line();
+
+    print_string("Pure Pursuit [Base speed(cm/s) Lookahead(cm)]:  ");
+    print_float(pid->speed_pid->base_speed, 2);
+    print_string("  /  ");
+    print_word(get_pure_pursuit()->lookahead);
+    print_new_line();
+
+    print_string(
+        "Odometry [Effective wheel base(cm) Curvature gain IMU alpha]:  ");
+    print_float(encoders->effective_wheel_base, 2);
+    print_string("  /  ");
+    print_float(encoders->wheel_base_correction, 2);
+    print_string("  /  ");
+    print_float(get_track()->imu_alpha, 4);
+    print_new_line();
 }

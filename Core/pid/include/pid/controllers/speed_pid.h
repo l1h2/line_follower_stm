@@ -22,6 +22,19 @@ const BaseSpeedPid* get_base_speed_pid_ptr(void);
 void update_base_speed_pid(void);
 
 /**
+ * @brief Get the PWM values last applied to the motors by the speed PID.
+ * @param left_pwm Pointer to store the left motor PWM. Can be NULL.
+ * @param right_pwm Pointer to store the right motor PWM. Can be NULL.
+ */
+void get_base_speed_pwm(int16_t* const left_pwm, int16_t* const right_pwm);
+
+/**
+ * @brief Clear the PWM values kept by the speed PID, so they match the stopped
+ * motors until the first update of a run.
+ */
+void clear_base_speed_pwm(void);
+
+/**
  * @brief Check if an update is pending for the speed PID controller.
  * @return true if an update is pending, false otherwise.
  */
