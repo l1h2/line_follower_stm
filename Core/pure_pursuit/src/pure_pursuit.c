@@ -16,6 +16,7 @@
 #define LOOKAHEAD_CM 5
 #define FRAME_INTERVAL_MS 10UL       // ms
 #define SENSORS_UPDATE_INTERVAL 1UL  // ms
+#define SPEED_RAMP_STEP 5.0f         // cm/s positive acceleration per frame
 
 static PurePursuit pp = {
     .lookahead = LOOKAHEAD_CM,
@@ -35,6 +36,7 @@ static struct {
     float next_y;
     float target_x;
     float target_y;
+    float current_speed;
     float speed_left;
     float speed_right;
     uint16_t waypoint_index;
@@ -68,6 +70,18 @@ static inline void update_targets(void) {
     pp_state.target_y = pp.track->y + dy * ratio;
 }
 
+static inline void update_current_speed(void) {
+    const float base_speed = pp.pid->speed_pid->base_speed;
+    const float ramp_speed = pp_state.current_speed + SPEED_RAMP_STEP;
+
+    if (ramp_speed >= base_speed) {
+        pp_state.current_speed = base_speed;
+        return;
+    }
+
+    pp_state.current_speed = ramp_speed;
+}
+
 static inline void update_target_speeds(void) {
     update_targets();
 
@@ -79,8 +93,10 @@ static inline void update_target_speeds(void) {
         pp.pid->errors->sensors->encoders->effective_wheel_base * y_r *
         inv_lookahead_sq;
 
-    pp_state.speed_left = pp.pid->speed_pid->base_speed * (1 - curvature);
-    pp_state.speed_right = pp.pid->speed_pid->base_speed * (1 + curvature);
+    update_current_speed();
+
+    pp_state.speed_left = pp_state.current_speed * (1 - curvature);
+    pp_state.speed_right = pp_state.current_speed * (1 + curvature);
 }
 
 static inline bool check_sensor_update(void) {
