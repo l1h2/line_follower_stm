@@ -201,7 +201,7 @@ The project is structured to be compatible with any `CMake` compatible IDE or bu
 
 The application's entry point is the [main.c](Core/Src/main.c), which initializes the system with the generated code from `CubeMX` and yields control to the `state machine` module responsible for managing the robot's behavior.
 
-Also the [config.h](Core/Inc/config.h) file contains global macro definitions used throughout the project, allowing for easy configuration and tuning of various parameters. As well as global build options to limit the inclusion of certain modules to reduce the final binary size, such as the [DEBUG_MODE](Core/Inc/config.h#L4) macro to enable/disable debugging features, or the [SELECTED_TRACK](Core/Inc/config.h#L17) macro to choose the track mapping to be used.
+Also the [config.h](Core/Inc/config.h) file contains global macro definitions used throughout the project, allowing for easy configuration and tuning of various parameters. As well as global build options to limit the inclusion of certain modules to reduce the final binary size, such as the [DEBUG_MODE](Core/Inc/config.h#L4) macro to enable/disable debugging features, or the [SELECTED_TRACK](Core/Inc/config.h#L20) macro to choose the track mapping to be used.
 
 ### Key Components
 
@@ -370,7 +370,7 @@ This is the main operational state of the robot, where it performs the task sele
 
    In this mode, the robot uses the [Pure Pursuit Algorithm](Core/pure_pursuit) to follow a virtual line based on pre-mapped track data by using the encoders and `MPU9050` for navigation. The robot continuously calculates a lookahead point on the mapped track and adjusts its steering to follow that point, allowing for smoother navigation along the track.
 
-   The available track mappings can be found under [tracks](Core/track/include/track/tracks), and the currently selected track can be chosen in the [config.h](Core/Inc/config.h#L17) file. This is done to reduce the final binary size by excluding unnecessary track data, as the position arrays can be quite large depending on the track's complexity.
+   The available track mappings can be found under [tracks](Core/track/include/track/tracks), and the currently selected track can be chosen in the [config.h](Core/Inc/config.h#L20) file. This is done to reduce the final binary size by excluding unnecessary track data, as the position arrays can be quite large depending on the track's complexity.
 
    The lookahead distance can be adjusted via serial commands, allowing for tuning of the robot's responsiveness to the track curvature. A shorter lookahead distance results in more aggressive steering, while a longer distance provides smoother turns.
 
@@ -415,7 +415,7 @@ The [main track mapping functionality](Core/track/src/track.c) processes sensor 
 
 <!-- Add track example image -->
 
-Under [tracks](Core/track/include/track/tracks), pre-defined track maps are stored as arrays of spacial coordinates representing the path of the track. These maps can be selected for use in the `Pure Pursuit Control` mode by setting the appropriate track in [config.h](Core/Inc/config.h#L17), allowing the robot to navigate the track based on the mapped data rather than relying solely on real-time sensor input.
+Under [tracks](Core/track/include/track/tracks), pre-defined track maps are stored as arrays of spacial coordinates representing the path of the track. These maps can be selected for use in the `Pure Pursuit Control` mode by setting the appropriate track in [config.h](Core/Inc/config.h#L20), allowing the robot to navigate the track based on the mapped data rather than relying solely on real-time sensor input.
 
 When adding new tracks the following steps must be followed:
 
@@ -456,7 +456,17 @@ When adding new tracks the following steps must be followed:
    #define TRACK_NAME X // Where X is the next available integer value
    ```
 
-4. (Optional) Set the `SELECTED_TRACK` macro in [config.h](Core/Inc/config.h#L17) to the new track name to use it in the application.
+4. Add a branch for the new track to [track_selector.h](Core/track/include/track/track_selector.h), including its header and defining the name printed in the run logs:
+
+   ```c
+   #elif SELECTED_TRACK == TRACK_NAME
+   #include "track/tracks/track_name.h"
+   #define TRACK_NAME "TRACK_NAME"
+   ```
+
+   Where the string is the new track's name, e.g. `"PET_SMALL"`.
+
+5. (Optional) Set the `SELECTED_TRACK` macro in [config.h](Core/Inc/config.h#L20) to the new track name to use it in the application.
 
    ```c
    #define SELECTED_TRACK TRACK_NAME
