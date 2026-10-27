@@ -9,7 +9,8 @@
 #define KI 0
 #define KD 0
 #define KFF 0
-#define FRAME_INTERVAL 1  // ms
+#define FRAME_INTERVAL 1     // ms
+#define P_ERROR_THRESHOLD 1  // Minimum error value to apply breaks
 
 static BasePwmPid base_pwm_pid = {
     .kp = KP,
@@ -23,7 +24,9 @@ static BasePwmPid base_pwm_pid = {
 static const ErrorStruct* errors = NULL;
 
 static inline int16_t get_p(void) {
-    if (base_pwm_pid.kp == 0) return 0;
+    if (base_pwm_pid.kp == 0 || abs(errors->error) < P_ERROR_THRESHOLD) {
+        return 0;
+    }
 
     return base_pwm_pid.kp * errors->error;
 }
