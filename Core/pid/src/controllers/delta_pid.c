@@ -7,7 +7,7 @@
 #define KP 80
 #define KI 0
 #define KD 4000
-#define ALPHA 1.0f
+#define ALPHA 0.95f
 #define CLAMP 100
 #define FRAME_INTERVAL 1  // ms
 

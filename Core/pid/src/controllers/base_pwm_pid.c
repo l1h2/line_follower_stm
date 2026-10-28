@@ -5,7 +5,7 @@
 
 #include "timer/time.h"
 
-#define KP 50
+#define KP 70
 #define KI 0
 #define KD 0
 #define KFF 0

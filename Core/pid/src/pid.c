@@ -12,8 +12,8 @@
 #include "sensors/encoder.h"
 #include "timer/time.h"
 
-#define BASE_PWM 300
-#define ACCELERATION_STEP 10  // PWM units per update
+#define BASE_PWM 700
+#define ACCELERATION_STEP 50  // PWM units per update
 
 static PidStruct pid = {
     .base_pwm = BASE_PWM,

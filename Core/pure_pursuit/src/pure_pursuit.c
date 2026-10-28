@@ -13,7 +13,7 @@
 #include "track/track.h"
 #include "track/track_selector.h"
 
-#define LOOKAHEAD_CM 5
+#define LOOKAHEAD_CM 15
 #define FRAME_INTERVAL_MS 10UL       // ms
 #define SENSORS_UPDATE_INTERVAL 1UL  // ms
 #define SPEED_RAMP_STEP 5.0f         // cm/s positive acceleration per frame
